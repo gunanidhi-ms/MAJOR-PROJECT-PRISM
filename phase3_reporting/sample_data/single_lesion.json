@@ -1,0 +1,52 @@
+{
+  "study_id": "STUDY_SINGLE_001",
+  "modality": "CT",
+  "protocol": "CT KUB",
+  "study_date": "2026-07-18",
+  "patient_id": "PAT002",
+  "organs": [
+    {
+      "organ": "left_kidney",
+      "status": "normal",
+      "dimensions_mm": {
+        "length": 97,
+        "width": 44,
+        "ap": 39
+      },
+      "mean_density_hu": 31,
+      "location": "left renal fossa"
+    },
+    {
+      "organ": "right_kidney",
+      "status": "anomaly_detected",
+      "dimensions_mm": {
+        "length": 101,
+        "width": 47,
+        "ap": 41
+      },
+      "mean_density_hu": 30,
+      "location": "right renal fossa",
+      "anomalies": [
+        {
+          "anomaly_id": "A1",
+          "type": "lesion",
+          "location": "lower pole",
+          "shape": {
+            "volume_cc": 4.2,
+            "long_axis_mm": 22.4,
+            "short_axis_mm": 14.1,
+            "sphericity": 0.71,
+            "margin": "well-defined"
+          },
+          "density_hu": {
+            "mean": 18,
+            "min": -10,
+            "max": 45,
+            "std": 15
+          },
+          "confidence": 0.94
+        }
+      ]
+    }
+  ]
+}

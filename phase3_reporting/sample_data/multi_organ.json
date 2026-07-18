@@ -1,0 +1,110 @@
+{
+  "study_id": "STUDY_MULTI_ORGAN_001",
+  "modality": "CT",
+  "protocol": "CT Abdomen Pelvis",
+  "study_date": "2026-07-18",
+  "patient_id": "PAT004",
+  "organs": [
+    {
+      "organ": "liver",
+      "status": "anomaly_detected",
+      "dimensions_mm": {
+        "length": 168,
+        "width": 142,
+        "ap": 122
+      },
+      "mean_density_hu": 52,
+      "location": "right upper quadrant",
+      "anomalies": [
+        {
+          "anomaly_id": "A1",
+          "type": "lesion",
+          "location": "segment VI",
+          "shape": {
+            "volume_cc": 12.4,
+            "long_axis_mm": 31.2,
+            "short_axis_mm": 22.6,
+            "sphericity": 0.74,
+            "margin": "well-defined"
+          },
+          "density_hu": {
+            "mean": 35,
+            "min": 10,
+            "max": 68,
+            "std": 18
+          },
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "organ": "spleen",
+      "status": "normal",
+      "dimensions_mm": {
+        "length": 112,
+        "width": 68,
+        "ap": 52
+      },
+      "mean_density_hu": 48,
+      "location": "left upper quadrant"
+    },
+    {
+      "organ": "left_kidney",
+      "status": "normal",
+      "dimensions_mm": {
+        "length": 96,
+        "width": 44,
+        "ap": 39
+      },
+      "mean_density_hu": 32,
+      "location": "left renal fossa"
+    },
+    {
+      "organ": "right_kidney",
+      "status": "anomaly_detected",
+      "dimensions_mm": {
+        "length": 104,
+        "width": 48,
+        "ap": 43
+      },
+      "mean_density_hu": 29,
+      "location": "right renal fossa",
+      "anomalies": [
+        {
+          "anomaly_id": "A2",
+          "type": "cyst",
+          "location": "upper pole",
+          "shape": {
+            "volume_cc": 1.8,
+            "long_axis_mm": 14.2,
+            "short_axis_mm": 9.6,
+            "sphericity": 0.91,
+            "margin": "well-defined"
+          },
+          "density_hu": {
+            "mean": 5,
+            "min": 1,
+            "max": 12,
+            "std": 2
+          },
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "organ": "urinary_bladder",
+      "status": "normal",
+      "dimensions_mm": {
+        "length": 68,
+        "width": 58,
+        "ap": 52
+      },
+      "mean_density_hu": 14,
+      "location": "pelvis"
+    },
+    {
+      "organ": "pancreas",
+      "status": "not_visualised"
+    }
+  ]
+}
