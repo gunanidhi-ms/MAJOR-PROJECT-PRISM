@@ -31,9 +31,9 @@ class ValidationCheck(NamedTuple):
     reason: str = ""
 
 _MEASUREMENT_RE = re.compile(
-    r"\d+(?:\.\d+)?"             # first number
-    r"(?:\s*[\u00d7x]\s*\d+(?:\.\d+)?)*"  # optional x subsequent numbers
-    r"\s*mm",
+    r"\d+(?:\.\d+)?"                                      # first number
+    r"(?:(?:\s*mm)?\s*(?:[\u00d7x]|by)\s*\d+(?:\.\d+)?)*" # optional intermediate mm and 'x'/'by'
+    r"\s*mm",                                             # must end with mm
     re.IGNORECASE
 )
 
@@ -363,10 +363,17 @@ class ReportValidator:
         return densities
 
     def _norm(self, s: str) -> str:
+        # 1. Strip out all 'mm' units (we will safely append a single one at the end)
+        s = re.sub(r"\s*mm\s*", " ", s, flags=re.IGNORECASE)
+
+        # 2. Canonicalize separators (x, ×, by) to " x "
+        s = re.sub(r"\s*(?:[\u00d7x]|by)\s*", " x ", s, flags=re.IGNORECASE)
+
+        # 3. Clean up extra spaces
         s = re.sub(r"\s+", " ", s).strip().lower()
-        # Normalize multiplication signs
-        s = s.replace("\u00d7", "x")
-        return s
+
+        # 4. Re-append the standard unit
+        return s + " mm"
 
     def _fmt(self, val: float) -> str:
         return str(int(val)) if val == int(val) else str(val)
@@ -382,8 +389,11 @@ class ReportValidator:
             if organ.location:
                 terms.update(extract_words(organ.location))
             
-            if organ.anomalies:
-                numbers.add(str(len(organ.anomalies)))
+            # NOTE: anomaly count (e.g. "1") is intentionally NOT added to
+            # required numbers. The LLM may legitimately rephrase "1 anomaly"
+            # as "a lesion" — that is valid medical English and should not
+            # be rejected. Clinical numbers (measurements, densities,
+            # confidence) are enforced below.
             
             if organ.dimensions_mm:
                 dims = {k: v for k, v in organ.dimensions_mm.as_dict().items() if v is not None}

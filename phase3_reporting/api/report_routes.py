@@ -98,7 +98,7 @@ async def generate_report(
         ) from exc
 
     # ── Step 2: LLM refinement (best-effort) ──────────────────────── #
-    refined_text, source = llm.refine(template_result.findings_text)
+    refined_text, source = await llm.refine(template_result.findings_text)
 
     # ── Step 3: Validation ───────────────────────────────────────────── #
     if source == "llm":
@@ -342,7 +342,7 @@ async def list_reports(
 async def health(
     llm: LLMService = Depends(get_llm_service),
 ) -> Dict[str, Any]:
-    ollama_ok = llm.health_check()
+    ollama_ok = await llm.health_check()
     return {
         "status": "ok",
         "ollama_reachable": ollama_ok,

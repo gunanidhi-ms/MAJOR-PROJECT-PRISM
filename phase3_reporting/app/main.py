@@ -18,6 +18,8 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
+import httpx
+
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -62,6 +64,27 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     import pathlib
     pathlib.Path(settings.reports_dir).mkdir(parents=True, exist_ok=True)
+
+    # ── Model warm-up ────────────────────────────────────────────────── #
+    # Fire a tiny /api/chat request at startup so Ollama loads the model
+    # into memory NOW, before the first real request arrives.
+    # Without this, the first POST /generate-report bears the full
+    # cold-load penalty (~12-15 s), which can exceed the httpx timeout.
+    if not settings.skip_llm:
+        warmup_url = f"{settings.ollama_host.rstrip('/')}/api/chat"
+        warmup_payload = {
+            "model": settings.ollama_model,
+            "stream": False,
+            "options": {"num_predict": 1},
+            "messages": [{"role": "user", "content": "hi"}],
+        }
+        try:
+            logger.info("Warming up Ollama model '%s' …", settings.ollama_model)
+            async with httpx.AsyncClient(timeout=180) as client:
+                await client.post(warmup_url, json=warmup_payload)
+            logger.info("Ollama warm-up complete – model is loaded and ready.")
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Ollama warm-up failed (server may be offline): %s", exc)
 
     yield  # Application runs here
 

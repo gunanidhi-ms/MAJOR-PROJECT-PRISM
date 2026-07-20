@@ -65,7 +65,7 @@ class LLMService:
     #  Public API
     # ------------------------------------------------------------------ #
 
-    def refine(self, template_text: str) -> tuple[str, str]:
+    async def refine(self, template_text: str) -> tuple[str, str]:
         """
         Ask the LLM to refine the template text for grammar / fluency.
 
@@ -86,7 +86,7 @@ class LLMService:
             return template_text, "template"
 
         try:
-            refined = self._call_ollama(template_text)
+            refined = await self._call_ollama(template_text)
             logger.info("LLM refinement succeeded (%d chars).", len(refined))
             return refined, "llm"
         except LLMUnavailableError as exc:
@@ -98,15 +98,15 @@ class LLMService:
             )
             return template_text, "template"
 
-    def health_check(self) -> bool:
+    async def health_check(self) -> bool:
         """
         Return True if the Ollama server is reachable.
 
         Used by the /health endpoint and startup checks.
         """
         try:
-            with httpx.Client(timeout=5) as client:
-                response = client.get(f"{self.host}/api/tags")
+            async with httpx.AsyncClient(timeout=5) as client:
+                response = await client.get(f"{self.host}/api/tags")
                 return response.status_code == 200
         except Exception:  # noqa: BLE001
             return False
@@ -115,7 +115,7 @@ class LLMService:
     #  Private helpers
     # ------------------------------------------------------------------ #
 
-    def _call_ollama(self, template_text: str) -> str:
+    async def _call_ollama(self, template_text: str) -> str:
         """
         Make the actual HTTP call to Ollama's ``/api/chat`` endpoint.
 
@@ -133,7 +133,7 @@ class LLMService:
             "stream": False,
             "options": {
                 "temperature": self.temperature,
-                "num_predict": 2048,
+                "num_predict": 512,
             },
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT},
@@ -142,10 +142,11 @@ class LLMService:
         }
 
         logger.debug("Calling Ollama at %s  model=%s", url, self.model)
+        logger.debug("Payload lengths -> System: %d chars, User: %d chars", len(SYSTEM_PROMPT), len(payload["messages"][1]["content"]))
 
         try:
-            with httpx.Client(timeout=self.timeout) as client:
-                response = client.post(url, json=payload)
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                response = await client.post(url, json=payload)
         except httpx.ConnectError as exc:
             raise LLMUnavailableError(
                 f"Cannot connect to Ollama at {self.host}: {exc}"
@@ -171,3 +172,4 @@ class LLMService:
             ) from exc
 
         return content.strip()
+    
