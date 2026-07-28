@@ -1,0 +1,8017 @@
+[
+  {
+    "slice_id": 52,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.191581652343257886707971096614642105258",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 45,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 45,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:08.196863+00:00",
+    "findings": [
+      {
+        "bbox": [
+          250,
+          227,
+          18,
+          29
+        ],
+        "centroid": [
+          241.5,
+          258.2
+        ],
+        "area": 390,
+        "mean_hu": -892.41,
+        "hu_mean": -892.41,
+        "hu_max": -464.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 73.22,
+    "triage_time_ms": 73.18269999996119,
+    "slice_hu_mean": -7.2010817527771,
+    "slice_hu_std": 110.63494110107422,
+    "stats": {
+      "mean": -7.2010817527771,
+      "std": 110.63494110107422,
+      "median": -8.0,
+      "mad": 91.0,
+      "p005": -565.165,
+      "p01": -393.0,
+      "p99": 379.0,
+      "p995": 438.0,
+      "iqr": 182.0,
+      "p25": -98.0,
+      "p75": 84.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 53,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.57543966548478418045666022021560319177",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 44,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 44,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:08.336814+00:00",
+    "findings": [
+      {
+        "bbox": [
+          251,
+          231,
+          17,
+          27
+        ],
+        "centroid": [
+          244.4,
+          259.1
+        ],
+        "area": 380,
+        "mean_hu": -905.47,
+        "hu_mean": -905.47,
+        "hu_max": -459.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 79.35,
+    "triage_time_ms": 79.28710000123829,
+    "slice_hu_mean": -7.634994029998779,
+    "slice_hu_std": 109.68638610839844,
+    "stats": {
+      "mean": -7.634994029998779,
+      "std": 109.68638610839844,
+      "median": -7.0,
+      "mad": 90.0,
+      "p005": -595.16,
+      "p01": -388.0,
+      "p99": 375.0,
+      "p995": 440.0,
+      "iqr": 181.0,
+      "p25": -98.0,
+      "p75": 83.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 54,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.184032477891533079668772913498927900519",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 49,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 49,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:08.485180+00:00",
+    "findings": [
+      {
+        "bbox": [
+          250,
+          233,
+          19,
+          26
+        ],
+        "centroid": [
+          246.8,
+          259.4
+        ],
+        "area": 362,
+        "mean_hu": -919.25,
+        "hu_mean": -919.25,
+        "hu_max": 526.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          275,
+          258,
+          7,
+          9
+        ],
+        "centroid": [
+          262.2,
+          278.3
+        ],
+        "area": 37,
+        "mean_hu": -721.27,
+        "hu_mean": -721.27,
+        "hu_max": -463.0,
+        "hu_min": -981.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 86.42,
+    "triage_time_ms": 86.37369999996736,
+    "slice_hu_mean": -10.668963432312012,
+    "slice_hu_std": 108.99417114257812,
+    "stats": {
+      "mean": -10.668963432312012,
+      "std": 108.99417114257812,
+      "median": -10.0,
+      "mad": 90.0,
+      "p005": -589.65,
+      "p01": -389.0,
+      "p99": 379.0,
+      "p995": 433.0,
+      "iqr": 180.0,
+      "p25": -100.0,
+      "p75": 80.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 55,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.137677595047659225363576438763829734751",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 50,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 50,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:08.628402+00:00",
+    "findings": [
+      {
+        "bbox": [
+          250,
+          235,
+          20,
+          27
+        ],
+        "centroid": [
+          249.0,
+          259.8
+        ],
+        "area": 371,
+        "mean_hu": -924.4,
+        "hu_mean": -924.4,
+        "hu_max": 507.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          168,
+          343,
+          20,
+          8
+        ],
+        "centroid": [
+          346.3,
+          179.1
+        ],
+        "area": 47,
+        "mean_hu": -585.15,
+        "hu_mean": -585.15,
+        "hu_max": -472.0,
+        "hu_min": -796.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 81.01,
+    "triage_time_ms": 80.92439999927592,
+    "slice_hu_mean": -13.399556159973145,
+    "slice_hu_std": 108.63880157470703,
+    "stats": {
+      "mean": -13.399556159973145,
+      "std": 108.63880157470703,
+      "median": -14.0,
+      "mad": 91.0,
+      "p005": -665.025,
+      "p01": -387.0,
+      "p99": 363.0,
+      "p995": 425.84999999999854,
+      "iqr": 182.0,
+      "p25": -104.0,
+      "p75": 78.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 56,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.17391805384220260343766958339662202431",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 53,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 53,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:08.770257+00:00",
+    "findings": [
+      {
+        "bbox": [
+          249,
+          237,
+          23,
+          26
+        ],
+        "centroid": [
+          251.2,
+          260.0
+        ],
+        "area": 396,
+        "mean_hu": -915.29,
+        "hu_mean": -915.29,
+        "hu_max": 457.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          171,
+          349,
+          16,
+          10
+        ],
+        "centroid": [
+          353.4,
+          178.0
+        ],
+        "area": 56,
+        "mean_hu": -614.25,
+        "hu_mean": -614.25,
+        "hu_max": -461.0,
+        "hu_min": -952.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 81.03,
+    "triage_time_ms": 80.97100000122737,
+    "slice_hu_mean": -14.174689292907715,
+    "slice_hu_std": 108.23139190673828,
+    "stats": {
+      "mean": -14.174689292907715,
+      "std": 108.23139190673828,
+      "median": -15.0,
+      "mad": 89.0,
+      "p005": -697.5500000000001,
+      "p01": -396.0,
+      "p99": 365.7099999999991,
+      "p995": 449.5649999999987,
+      "iqr": 178.75,
+      "p25": -103.0,
+      "p75": 75.75
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 57,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.187761802560207406326512199016375146165",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 42,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 42,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:08.913849+00:00",
+    "findings": [
+      {
+        "bbox": [
+          247,
+          239,
+          28,
+          26
+        ],
+        "centroid": [
+          253.3,
+          260.1
+        ],
+        "area": 430,
+        "mean_hu": -920.21,
+        "hu_mean": -920.21,
+        "hu_max": -495.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          168,
+          343,
+          21,
+          15
+        ],
+        "centroid": [
+          351.3,
+          176.8
+        ],
+        "area": 85,
+        "mean_hu": -640.64,
+        "hu_mean": -640.64,
+        "hu_max": -490.0,
+        "hu_min": -932.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 81.72,
+    "triage_time_ms": 81.65600000029372,
+    "slice_hu_mean": -20.012680053710938,
+    "slice_hu_std": 114.964111328125,
+    "stats": {
+      "mean": -20.012680053710938,
+      "std": 114.964111328125,
+      "median": -18.0,
+      "mad": 94.0,
+      "p005": -810.6,
+      "p01": -448.2,
+      "p99": 367.59999999999854,
+      "p995": 433.0,
+      "iqr": 188.0,
+      "p25": -113.0,
+      "p75": 75.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 58,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.300926188062695952926729929979861876332",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 44,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 44,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:09.062473+00:00",
+    "findings": [
+      {
+        "bbox": [
+          244,
+          241,
+          35,
+          25
+        ],
+        "centroid": [
+          255.6,
+          260.6
+        ],
+        "area": 493,
+        "mean_hu": -913.49,
+        "hu_mean": -913.49,
+        "hu_max": -516.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          167,
+          346,
+          19,
+          12
+        ],
+        "centroid": [
+          351.3,
+          174.6
+        ],
+        "area": 73,
+        "mean_hu": -667.58,
+        "hu_mean": -667.58,
+        "hu_max": -512.0,
+        "hu_min": -1009.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 86.34,
+    "triage_time_ms": 86.30090000042401,
+    "slice_hu_mean": -24.712635040283203,
+    "slice_hu_std": 119.12737274169922,
+    "stats": {
+      "mean": -24.712635040283203,
+      "std": 119.12737274169922,
+      "median": -23.0,
+      "mad": 97.0,
+      "p005": -870.02,
+      "p01": -512.06,
+      "p99": 361.0,
+      "p995": 424.0199999999968,
+      "iqr": 193.0,
+      "p25": -120.0,
+      "p75": 73.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 59,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.326039366826563405316007370383451120720",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 61,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 61,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:09.226734+00:00",
+    "findings": [
+      {
+        "bbox": [
+          239,
+          243,
+          45,
+          25
+        ],
+        "centroid": [
+          257.6,
+          261.2
+        ],
+        "area": 569,
+        "mean_hu": -903.73,
+        "hu_mean": -903.73,
+        "hu_max": -509.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          181,
+          338,
+          13,
+          7
+        ],
+        "centroid": [
+          340.8,
+          186.3
+        ],
+        "area": 36,
+        "mean_hu": -660.89,
+        "hu_mean": -660.89,
+        "hu_max": -524.0,
+        "hu_min": -997.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          167,
+          347,
+          16,
+          8
+        ],
+        "centroid": [
+          349.8,
+          173.7
+        ],
+        "area": 40,
+        "mean_hu": -705.25,
+        "hu_mean": -705.25,
+        "hu_max": -540.0,
+        "hu_min": -922.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 102.68,
+    "triage_time_ms": 102.6410999984364,
+    "slice_hu_mean": -25.855775833129883,
+    "slice_hu_std": 119.37125396728516,
+    "stats": {
+      "mean": -25.855775833129883,
+      "std": 119.37125396728516,
+      "median": -23.0,
+      "mad": 97.0,
+      "p005": -895.8,
+      "p01": -585.8499999999999,
+      "p99": 353.0,
+      "p995": 416.0,
+      "iqr": 195.0,
+      "p25": -122.0,
+      "p75": 73.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 60,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.323572755374535516365148056919556581371",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 51,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 51,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:09.373916+00:00",
+    "findings": [
+      {
+        "bbox": [
+          234,
+          246,
+          54,
+          22
+        ],
+        "centroid": [
+          259.5,
+          261.3
+        ],
+        "area": 623,
+        "mean_hu": -915.7,
+        "hu_mean": -915.7,
+        "hu_max": -514.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 85.42,
+    "triage_time_ms": 85.37149999938265,
+    "slice_hu_mean": -27.524930953979492,
+    "slice_hu_std": 119.16450500488281,
+    "stats": {
+      "mean": -27.524930953979492,
+      "std": 119.16450500488281,
+      "median": -25.0,
+      "mad": 97.0,
+      "p005": -923.0,
+      "p01": -598.16,
+      "p99": 330.15999999999985,
+      "p995": 378.0,
+      "iqr": 195.0,
+      "p25": -123.0,
+      "p75": 72.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 61,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.269197046729949542671774361206739958439",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 71,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 71,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:09.530769+00:00",
+    "findings": [
+      {
+        "bbox": [
+          228,
+          248,
+          64,
+          22
+        ],
+        "centroid": [
+          261.2,
+          260.9
+        ],
+        "area": 691,
+        "mean_hu": -894.54,
+        "hu_mean": -894.54,
+        "hu_max": -519.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          203,
+          331,
+          14,
+          11
+        ],
+        "centroid": [
+          336.5,
+          209.7
+        ],
+        "area": 67,
+        "mean_hu": -672.25,
+        "hu_mean": -672.25,
+        "hu_max": -518.0,
+        "hu_min": -986.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          225,
+          349,
+          16,
+          18
+        ],
+        "centroid": [
+          358.1,
+          232.1
+        ],
+        "area": 133,
+        "mean_hu": -697.8,
+        "hu_mean": -697.8,
+        "hu_max": -524.0,
+        "hu_min": -1015.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 93.02,
+    "triage_time_ms": 92.97329999935755,
+    "slice_hu_mean": -28.205970764160156,
+    "slice_hu_std": 120.1788330078125,
+    "stats": {
+      "mean": -28.205970764160156,
+      "std": 120.1788330078125,
+      "median": -26.0,
+      "mad": 98.0,
+      "p005": -912.0,
+      "p01": -702.53,
+      "p99": 323.52999999999884,
+      "p995": 359.2649999999994,
+      "iqr": 196.0,
+      "p25": -124.0,
+      "p75": 72.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 62,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.52803586244421667165664872994983043353",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 67,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 67,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:09.686531+00:00",
+    "findings": [
+      {
+        "bbox": [
+          226,
+          251,
+          12,
+          9
+        ],
+        "centroid": [
+          255.5,
+          232.0
+        ],
+        "area": 45,
+        "mean_hu": -660.07,
+        "hu_mean": -660.07,
+        "hu_max": -529.0,
+        "hu_min": -847.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          222,
+          253,
+          75,
+          19
+        ],
+        "centroid": [
+          262.9,
+          259.6
+        ],
+        "area": 738,
+        "mean_hu": -874.16,
+        "hu_mean": -874.16,
+        "hu_max": -518.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          210,
+          261,
+          6,
+          6
+        ],
+        "centroid": [
+          263.6,
+          212.5
+        ],
+        "area": 30,
+        "mean_hu": -853.23,
+        "hu_mean": -853.23,
+        "hu_max": -551.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 92.76,
+    "triage_time_ms": 92.72380000038538,
+    "slice_hu_mean": -25.775676727294922,
+    "slice_hu_std": 121.09265899658203,
+    "stats": {
+      "mean": -25.775676727294922,
+      "std": 121.09265899658203,
+      "median": -25.0,
+      "mad": 98.0,
+      "p005": -919.0,
+      "p01": -662.48,
+      "p99": 354.47999999999956,
+      "p995": 407.4800000000032,
+      "iqr": 197.0,
+      "p25": -121.0,
+      "p75": 76.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 63,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.14548993924552157126377132789643858069",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 72,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 72,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:09.830999+00:00",
+    "findings": [
+      {
+        "bbox": [
+          212,
+          256,
+          46,
+          19
+        ],
+        "centroid": [
+          264.7,
+          239.1
+        ],
+        "area": 490,
+        "mean_hu": -895.71,
+        "hu_mean": -895.71,
+        "hu_max": -538.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          270,
+          258,
+          31,
+          13
+        ],
+        "centroid": [
+          264.1,
+          284.8
+        ],
+        "area": 272,
+        "mean_hu": -884.35,
+        "hu_mean": -884.35,
+        "hu_max": -529.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 80.24,
+    "triage_time_ms": 80.2019000002474,
+    "slice_hu_mean": -22.95774269104004,
+    "slice_hu_std": 123.8199234008789,
+    "stats": {
+      "mean": -22.95774269104004,
+      "std": 123.8199234008789,
+      "median": -21.0,
+      "mad": 101.0,
+      "p005": -900.98,
+      "p01": -655.0,
+      "p99": 357.0,
+      "p995": 404.9900000000016,
+      "iqr": 202.0,
+      "p25": -122.0,
+      "p75": 80.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 64,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.12658064244311769004300854616828688843",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 44,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 44,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:09.979707+00:00",
+    "findings": [
+      {
+        "bbox": [
+          275,
+          259,
+          30,
+          13
+        ],
+        "centroid": [
+          265.0,
+          290.0
+        ],
+        "area": 262,
+        "mean_hu": -864.26,
+        "hu_mean": -864.26,
+        "hu_max": -532.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          231,
+          353,
+          10,
+          10
+        ],
+        "centroid": [
+          358.0,
+          234.8
+        ],
+        "area": 59,
+        "mean_hu": -688.59,
+        "hu_mean": -688.59,
+        "hu_max": -526.0,
+        "hu_min": -906.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 85.12,
+    "triage_time_ms": 85.02030000090599,
+    "slice_hu_mean": -20.373933792114258,
+    "slice_hu_std": 122.98464965820312,
+    "stats": {
+      "mean": -20.373933792114258,
+      "std": 122.98464965820312,
+      "median": -18.0,
+      "mad": 101.0,
+      "p005": -600.74,
+      "p01": -455.0,
+      "p99": 374.0,
+      "p995": 421.369999999999,
+      "iqr": 202.0,
+      "p25": -120.0,
+      "p75": 82.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 65,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.245168544992364761204632555961984922148",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 100,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 100,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:10.147700+00:00",
+    "findings": [
+      {
+        "bbox": [
+          221,
+          231,
+          7,
+          9
+        ],
+        "centroid": [
+          234.9,
+          223.7
+        ],
+        "area": 42,
+        "mean_hu": -704.29,
+        "hu_mean": -704.29,
+        "hu_max": -538.0,
+        "hu_min": -980.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          211,
+          250,
+          42,
+          31
+        ],
+        "centroid": [
+          267.3,
+          234.9
+        ],
+        "area": 488,
+        "mean_hu": -876.62,
+        "hu_mean": -876.62,
+        "hu_max": -526.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          282,
+          260,
+          27,
+          12
+        ],
+        "centroid": [
+          265.6,
+          295.3
+        ],
+        "area": 253,
+        "mean_hu": -854.87,
+        "hu_mean": -854.87,
+        "hu_max": -520.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          161,
+          334,
+          15,
+          7
+        ],
+        "centroid": [
+          336.7,
+          168.8
+        ],
+        "area": 34,
+        "mean_hu": -628.03,
+        "hu_mean": -628.03,
+        "hu_max": -515.0,
+        "hu_min": -930.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          148,
+          336,
+          11,
+          10
+        ],
+        "centroid": [
+          340.4,
+          153.1
+        ],
+        "area": 43,
+        "mean_hu": -610.98,
+        "hu_mean": -610.98,
+        "hu_max": -512.0,
+        "hu_min": -888.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          229,
+          353,
+          8,
+          11
+        ],
+        "centroid": [
+          356.9,
+          233.0
+        ],
+        "area": 40,
+        "mean_hu": -651.22,
+        "hu_mean": -651.22,
+        "hu_max": -513.0,
+        "hu_min": -978.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 103.49,
+    "triage_time_ms": 103.4245999999257,
+    "slice_hu_mean": -17.906797409057617,
+    "slice_hu_std": 122.10492706298828,
+    "stats": {
+      "mean": -17.906797409057617,
+      "std": 122.10492706298828,
+      "median": -16.0,
+      "mad": 99.0,
+      "p005": -894.0,
+      "p01": -669.4,
+      "p99": 376.0,
+      "p995": 436.7000000000007,
+      "iqr": 198.0,
+      "p25": -115.0,
+      "p75": 83.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 66,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.134432352319918750120045487474128781555",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 75,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 75,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:10.305655+00:00",
+    "findings": [
+      {
+        "bbox": [
+          214,
+          257,
+          35,
+          26
+        ],
+        "centroid": [
+          270.4,
+          234.7
+        ],
+        "area": 361,
+        "mean_hu": -857.87,
+        "hu_mean": -857.87,
+        "hu_max": -505.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          286,
+          260,
+          29,
+          14
+        ],
+        "centroid": [
+          266.3,
+          300.2
+        ],
+        "area": 272,
+        "mean_hu": -847.9,
+        "hu_mean": -847.9,
+        "hu_max": -512.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          165,
+          339,
+          18,
+          12
+        ],
+        "centroid": [
+          345.1,
+          171.0
+        ],
+        "area": 57,
+        "mean_hu": -615.37,
+        "hu_mean": -615.37,
+        "hu_max": -511.0,
+        "hu_min": -904.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 93.75,
+    "triage_time_ms": 93.68650000033085,
+    "slice_hu_mean": -16.190370559692383,
+    "slice_hu_std": 117.91478729248047,
+    "stats": {
+      "mean": -16.190370559692383,
+      "std": 117.91478729248047,
+      "median": -18.0,
+      "mad": 97.0,
+      "p005": -839.0,
+      "p01": -558.86,
+      "p99": 365.0,
+      "p995": 419.4300000000003,
+      "iqr": 194.0,
+      "p25": -112.0,
+      "p75": 82.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 67,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.325663886021524768810279134332804037664",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 86,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 86,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:10.488492+00:00",
+    "findings": [
+      {
+        "bbox": [
+          322,
+          244,
+          9,
+          11
+        ],
+        "centroid": [
+          249.5,
+          326.2
+        ],
+        "area": 58,
+        "mean_hu": -795.34,
+        "hu_mean": -795.34,
+        "hu_max": 479.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          212,
+          256,
+          12,
+          8
+        ],
+        "centroid": [
+          259.5,
+          217.4
+        ],
+        "area": 57,
+        "mean_hu": -836.58,
+        "hu_mean": -836.58,
+        "hu_max": -501.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          291,
+          259,
+          33,
+          25
+        ],
+        "centroid": [
+          267.9,
+          307.2
+        ],
+        "area": 358,
+        "mean_hu": -833.66,
+        "hu_mean": -833.66,
+        "hu_max": -496.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          230,
+          267,
+          17,
+          19
+        ],
+        "centroid": [
+          276.5,
+          238.1
+        ],
+        "area": 219,
+        "mean_hu": -851.4,
+        "hu_mean": -851.4,
+        "hu_max": 453.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          160,
+          339,
+          10,
+          12
+        ],
+        "centroid": [
+          344.5,
+          165.5
+        ],
+        "area": 47,
+        "mean_hu": -593.19,
+        "hu_mean": -593.19,
+        "hu_max": -496.0,
+        "hu_min": -809.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 115.63,
+    "triage_time_ms": 115.51130000043486,
+    "slice_hu_mean": -17.08928871154785,
+    "slice_hu_std": 115.4012222290039,
+    "stats": {
+      "mean": -17.08928871154785,
+      "std": 115.4012222290039,
+      "median": -16.0,
+      "mad": 95.0,
+      "p005": -843.4,
+      "p01": -586.5199999999999,
+      "p99": 343.0,
+      "p995": 407.6800000000003,
+      "iqr": 191.0,
+      "p25": -111.0,
+      "p75": 80.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 68,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.138012115507743805131939523176859795065",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 98,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 98,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:10.663449+00:00",
+    "findings": [
+      {
+        "bbox": [
+          296,
+          246,
+          33,
+          36
+        ],
+        "centroid": [
+          264.0,
+          313.5
+        ],
+        "area": 483,
+        "mean_hu": -867.15,
+        "hu_mean": -867.15,
+        "hu_max": -503.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          211,
+          254,
+          9,
+          8
+        ],
+        "centroid": [
+          257.3,
+          214.9
+        ],
+        "area": 46,
+        "mean_hu": -875.07,
+        "hu_mean": -875.07,
+        "hu_max": -529.0,
+        "hu_min": -1021.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          200,
+          268,
+          19,
+          28
+        ],
+        "centroid": [
+          281.7,
+          209.8
+        ],
+        "area": 214,
+        "mean_hu": -748.29,
+        "hu_mean": -748.29,
+        "hu_max": -503.0,
+        "hu_min": -1006.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          229,
+          270,
+          16,
+          19
+        ],
+        "centroid": [
+          279.4,
+          236.7
+        ],
+        "area": 187,
+        "mean_hu": -839.12,
+        "hu_mean": -839.12,
+        "hu_max": -506.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          153,
+          342,
+          23,
+          10
+        ],
+        "centroid": [
+          346.4,
+          163.0
+        ],
+        "area": 74,
+        "mean_hu": -638.41,
+        "hu_mean": -638.41,
+        "hu_max": -503.0,
+        "hu_min": -935.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 107.17,
+    "triage_time_ms": 107.11909999918134,
+    "slice_hu_mean": -16.253047943115234,
+    "slice_hu_std": 117.86133575439453,
+    "stats": {
+      "mean": -16.253047943115234,
+      "std": 117.86133575439453,
+      "median": -16.0,
+      "mad": 97.0,
+      "p005": -890.525,
+      "p01": -693.1999999999999,
+      "p99": 352.0499999999993,
+      "p995": 408.0,
+      "iqr": 194.0,
+      "p25": -112.0,
+      "p75": 82.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 69,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.242320370843916815473669001313468394652",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 86,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 86,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:10.846906+00:00",
+    "findings": [
+      {
+        "bbox": [
+          300,
+          245,
+          29,
+          37
+        ],
+        "centroid": [
+          263.5,
+          315.6
+        ],
+        "area": 457,
+        "mean_hu": -890.31,
+        "hu_mean": -890.31,
+        "hu_max": -541.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          208,
+          253,
+          10,
+          7
+        ],
+        "centroid": [
+          255.8,
+          213.1
+        ],
+        "area": 43,
+        "mean_hu": -851.91,
+        "hu_mean": -851.91,
+        "hu_max": -541.0,
+        "hu_min": -1015.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          203,
+          270,
+          14,
+          21
+        ],
+        "centroid": [
+          280.6,
+          209.6
+        ],
+        "area": 112,
+        "mean_hu": -723.77,
+        "hu_mean": -723.77,
+        "hu_max": -541.0,
+        "hu_min": -1016.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          227,
+          275,
+          16,
+          17
+        ],
+        "centroid": [
+          283.3,
+          234.8
+        ],
+        "area": 160,
+        "mean_hu": -810.46,
+        "hu_mean": -810.46,
+        "hu_max": -544.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          137,
+          311,
+          9,
+          12
+        ],
+        "centroid": [
+          316.3,
+          140.6
+        ],
+        "area": 42,
+        "mean_hu": -643.6,
+        "hu_mean": -643.6,
+        "hu_max": -551.0,
+        "hu_min": -859.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          152,
+          332,
+          28,
+          19
+        ],
+        "centroid": [
+          341.5,
+          164.8
+        ],
+        "area": 194,
+        "mean_hu": -681.16,
+        "hu_mean": -681.16,
+        "hu_max": -540.0,
+        "hu_min": -959.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 116.53,
+    "triage_time_ms": 116.48119999881601,
+    "slice_hu_mean": -18.651607513427734,
+    "slice_hu_std": 126.90132141113281,
+    "stats": {
+      "mean": -18.651607513427734,
+      "std": 126.90132141113281,
+      "median": -19.0,
+      "mad": 104.0,
+      "p005": -889.0,
+      "p01": -698.0,
+      "p99": 371.7400000000016,
+      "p995": 426.869999999999,
+      "iqr": 208.5,
+      "p25": -121.0,
+      "p75": 87.5
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 70,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.309783330181344534161917487736304656036",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 44,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 44,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:10.999253+00:00",
+    "findings": [
+      {
+        "bbox": [
+          223,
+          279,
+          18,
+          19
+        ],
+        "centroid": [
+          287.4,
+          232.2
+        ],
+        "area": 165,
+        "mean_hu": -836.66,
+        "hu_mean": -836.66,
+        "hu_max": -573.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          153,
+          326,
+          51,
+          25
+        ],
+        "centroid": [
+          337.8,
+          173.4
+        ],
+        "area": 393,
+        "mean_hu": -731.54,
+        "hu_mean": -731.54,
+        "hu_max": -549.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 88.27,
+    "triage_time_ms": 88.21219999845198,
+    "slice_hu_mean": -13.437055587768555,
+    "slice_hu_std": 128.0868377685547,
+    "stats": {
+      "mean": -13.437055587768555,
+      "std": 128.0868377685547,
+      "median": -13.0,
+      "mad": 107.0,
+      "p005": -699.16,
+      "p01": -523.0,
+      "p99": 384.0,
+      "p995": 431.4400000000023,
+      "iqr": 214.0,
+      "p25": -120.0,
+      "p75": 94.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 71,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.111316662838411406409415851334585409498",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 83,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 83,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:11.168543+00:00",
+    "findings": [
+      {
+        "bbox": [
+          309,
+          236,
+          23,
+          33
+        ],
+        "centroid": [
+          254.1,
+          321.2
+        ],
+        "area": 256,
+        "mean_hu": -816.57,
+        "hu_mean": -816.57,
+        "hu_max": -548.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          313,
+          272,
+          16,
+          16
+        ],
+        "centroid": [
+          279.2,
+          322.3
+        ],
+        "area": 111,
+        "mean_hu": -784.43,
+        "hu_mean": -784.43,
+        "hu_max": -541.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          224,
+          281,
+          16,
+          16
+        ],
+        "centroid": [
+          288.5,
+          231.7
+        ],
+        "area": 140,
+        "mean_hu": -852.53,
+        "hu_mean": -852.53,
+        "hu_max": -556.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          151,
+          325,
+          46,
+          26
+        ],
+        "centroid": [
+          337.4,
+          172.0
+        ],
+        "area": 481,
+        "mean_hu": -731.04,
+        "hu_mean": -731.04,
+        "hu_max": -541.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 102.61,
+    "triage_time_ms": 102.53000000011525,
+    "slice_hu_mean": -17.014080047607422,
+    "slice_hu_std": 129.5168914794922,
+    "stats": {
+      "mean": -17.014080047607422,
+      "std": 129.5168914794922,
+      "median": -15.0,
+      "mad": 105.0,
+      "p005": -826.66,
+      "p01": -675.66,
+      "p99": 377.3299999999981,
+      "p995": 417.6650000000009,
+      "iqr": 209.0,
+      "p25": -120.0,
+      "p75": 89.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 72,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.124136824107955301433200699411714722064",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 69,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 69,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:11.330355+00:00",
+    "findings": [
+      {
+        "bbox": [
+          324,
+          234,
+          8,
+          14
+        ],
+        "centroid": [
+          240.5,
+          327.2
+        ],
+        "area": 69,
+        "mean_hu": -839.67,
+        "hu_mean": -839.67,
+        "hu_max": -568.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          318,
+          272,
+          14,
+          23
+        ],
+        "centroid": [
+          282.9,
+          324.8
+        ],
+        "area": 124,
+        "mean_hu": -830.05,
+        "hu_mean": -830.05,
+        "hu_max": -557.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          224,
+          282,
+          15,
+          16
+        ],
+        "centroid": [
+          289.0,
+          231.2
+        ],
+        "area": 103,
+        "mean_hu": -836.88,
+        "hu_mean": -836.88,
+        "hu_max": 531.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          150,
+          324,
+          48,
+          26
+        ],
+        "centroid": [
+          335.9,
+          172.8
+        ],
+        "area": 494,
+        "mean_hu": -739.98,
+        "hu_mean": -739.98,
+        "hu_max": -553.0,
+        "hu_min": -1020.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 95.55,
+    "triage_time_ms": 95.50169999965874,
+    "slice_hu_mean": -16.340473175048828,
+    "slice_hu_std": 129.1107940673828,
+    "stats": {
+      "mean": -16.340473175048828,
+      "std": 129.1107940673828,
+      "median": -16.0,
+      "mad": 107.0,
+      "p005": -758.0,
+      "p01": -604.0,
+      "p99": 385.0,
+      "p995": 432.0,
+      "iqr": 214.0,
+      "p25": -122.0,
+      "p75": 92.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 73,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.126160452996907086887462526380432110375",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 66,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 66,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:11.482817+00:00",
+    "findings": [
+      {
+        "bbox": [
+          213,
+          251,
+          7,
+          8
+        ],
+        "centroid": [
+          254.4,
+          216.2
+        ],
+        "area": 37,
+        "mean_hu": -745.3,
+        "hu_mean": -745.3,
+        "hu_max": -579.0,
+        "hu_min": -944.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          225,
+          284,
+          13,
+          15
+        ],
+        "centroid": [
+          289.7,
+          230.7
+        ],
+        "area": 82,
+        "mean_hu": -797.11,
+        "hu_mean": -797.11,
+        "hu_max": -560.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          149,
+          322,
+          55,
+          27
+        ],
+        "centroid": [
+          334.7,
+          174.1
+        ],
+        "area": 548,
+        "mean_hu": -729.41,
+        "hu_mean": -729.41,
+        "hu_max": -549.0,
+        "hu_min": -1008.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 88.08,
+    "triage_time_ms": 88.01390000007814,
+    "slice_hu_mean": -18.559110641479492,
+    "slice_hu_std": 127.99915313720703,
+    "stats": {
+      "mean": -18.559110641479492,
+      "std": 127.99915313720703,
+      "median": -18.0,
+      "mad": 106.0,
+      "p005": -723.0699999999999,
+      "p01": -585.28,
+      "p99": 364.0,
+      "p995": 413.0699999999997,
+      "iqr": 213.0,
+      "p25": -123.0,
+      "p75": 90.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 74,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.29095041339884054058148485048112935807",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 85,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 85,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:11.638849+00:00",
+    "findings": [
+      {
+        "bbox": [
+          324,
+          254,
+          7,
+          8
+        ],
+        "centroid": [
+          257.9,
+          327.0
+        ],
+        "area": 39,
+        "mean_hu": -885.46,
+        "hu_mean": -885.46,
+        "hu_max": -574.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          323,
+          280,
+          12,
+          19
+        ],
+        "centroid": [
+          287.2,
+          328.2
+        ],
+        "area": 119,
+        "mean_hu": -821.92,
+        "hu_mean": -821.92,
+        "hu_max": -554.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          148,
+          283,
+          7,
+          11
+        ],
+        "centroid": [
+          288.2,
+          151.1
+        ],
+        "area": 32,
+        "mean_hu": -681.34,
+        "hu_mean": -681.34,
+        "hu_max": -549.0,
+        "hu_min": -937.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          229,
+          285,
+          8,
+          6
+        ],
+        "centroid": [
+          287.5,
+          232.3
+        ],
+        "area": 30,
+        "mean_hu": -824.9,
+        "hu_mean": -824.9,
+        "hu_max": -572.0,
+        "hu_min": -991.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          150,
+          321,
+          55,
+          29
+        ],
+        "centroid": [
+          333.4,
+          176.4
+        ],
+        "area": 589,
+        "mean_hu": -722.3,
+        "hu_mean": -722.3,
+        "hu_max": -548.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 93.29,
+    "triage_time_ms": 93.23210000002291,
+    "slice_hu_mean": -18.646060943603516,
+    "slice_hu_std": 128.36012268066406,
+    "stats": {
+      "mean": -18.646060943603516,
+      "std": 128.36012268066406,
+      "median": -17.0,
+      "mad": 106.0,
+      "p005": -767.47,
+      "p01": -616.64,
+      "p99": 358.0,
+      "p995": 403.0,
+      "iqr": 212.0,
+      "p25": -123.0,
+      "p75": 89.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 75,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.327739113164692859224105094658018560935",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 74,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 74,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:11.796814+00:00",
+    "findings": [
+      {
+        "bbox": [
+          325,
+          255,
+          8,
+          7
+        ],
+        "centroid": [
+          258.1,
+          328.5
+        ],
+        "area": 36,
+        "mean_hu": -860.5,
+        "hu_mean": -860.5,
+        "hu_max": -647.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          326,
+          281,
+          16,
+          8
+        ],
+        "centroid": [
+          284.1,
+          332.8
+        ],
+        "area": 58,
+        "mean_hu": -789.4,
+        "hu_mean": -789.4,
+        "hu_max": -546.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          327,
+          292,
+          7,
+          12
+        ],
+        "centroid": [
+          297.0,
+          330.2
+        ],
+        "area": 53,
+        "mean_hu": -805.28,
+        "hu_mean": -805.28,
+        "hu_max": -574.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          151,
+          321,
+          54,
+          26
+        ],
+        "centroid": [
+          332.6,
+          177.3
+        ],
+        "area": 509,
+        "mean_hu": -721.36,
+        "hu_mean": -721.36,
+        "hu_max": -546.0,
+        "hu_min": -995.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 91.67,
+    "triage_time_ms": 91.5750999993179,
+    "slice_hu_mean": -19.46841812133789,
+    "slice_hu_std": 129.57562255859375,
+    "stats": {
+      "mean": -19.46841812133789,
+      "std": 129.57562255859375,
+      "median": -19.0,
+      "mad": 105.0,
+      "p005": -704.96,
+      "p01": -579.96,
+      "p99": 370.9599999999991,
+      "p995": 412.47999999999956,
+      "iqr": 210.0,
+      "p25": -122.0,
+      "p75": 88.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 76,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.322088715743238381916715804809484551348",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 52,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 52,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:11.953393+00:00",
+    "findings": [
+      {
+        "bbox": [
+          144,
+          275,
+          12,
+          9
+        ],
+        "centroid": [
+          278.9,
+          149.3
+        ],
+        "area": 43,
+        "mean_hu": -682.12,
+        "hu_mean": -682.12,
+        "hu_max": -548.0,
+        "hu_min": -853.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          331,
+          282,
+          17,
+          5
+        ],
+        "centroid": [
+          284.5,
+          337.4
+        ],
+        "area": 51,
+        "mean_hu": -767.55,
+        "hu_mean": -767.55,
+        "hu_max": -560.0,
+        "hu_min": -1023.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          328,
+          295,
+          9,
+          13
+        ],
+        "centroid": [
+          300.5,
+          331.5
+        ],
+        "area": 56,
+        "mean_hu": -782.3,
+        "hu_mean": -782.3,
+        "hu_max": -558.0,
+        "hu_min": -1008.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          152,
+          321,
+          52,
+          19
+        ],
+        "centroid": [
+          330.8,
+          173.9
+        ],
+        "area": 363,
+        "mean_hu": -727.42,
+        "hu_mean": -727.42,
+        "hu_max": -544.0,
+        "hu_min": -983.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 91.79,
+    "triage_time_ms": 91.71240000068792,
+    "slice_hu_mean": -18.566848754882812,
+    "slice_hu_std": 126.27532196044922,
+    "stats": {
+      "mean": -18.566848754882812,
+      "std": 126.27532196044922,
+      "median": -18.0,
+      "mad": 105.0,
+      "p005": -666.3,
+      "p01": -521.95,
+      "p99": 359.0,
+      "p995": 396.3250000000007,
+      "iqr": 211.0,
+      "p25": -122.0,
+      "p75": 89.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 77,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.133132938518459890447492586022614493968",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 112,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 112,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:12.124731+00:00",
+    "findings": [
+      {
+        "bbox": [
+          142,
+          271,
+          17,
+          12
+        ],
+        "centroid": [
+          276.0,
+          149.9
+        ],
+        "area": 68,
+        "mean_hu": -681.34,
+        "hu_mean": -681.34,
+        "hu_max": -534.0,
+        "hu_min": -889.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          232,
+          295,
+          31,
+          53
+        ],
+        "centroid": [
+          313.1,
+          245.0
+        ],
+        "area": 596,
+        "mean_hu": -738.25,
+        "hu_mean": -738.25,
+        "hu_max": -532.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          225,
+          314,
+          7,
+          26
+        ],
+        "centroid": [
+          327.0,
+          227.8
+        ],
+        "area": 112,
+        "mean_hu": -717.12,
+        "hu_mean": -717.12,
+        "hu_max": -532.0,
+        "hu_min": -994.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          151,
+          320,
+          33,
+          19
+        ],
+        "centroid": [
+          329.2,
+          168.2
+        ],
+        "area": 254,
+        "mean_hu": -720.76,
+        "hu_mean": -720.76,
+        "hu_max": -533.0,
+        "hu_min": -995.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          175,
+          330,
+          20,
+          10
+        ],
+        "centroid": [
+          335.1,
+          184.2
+        ],
+        "area": 95,
+        "mean_hu": -707.33,
+        "hu_mean": -707.33,
+        "hu_max": -532.0,
+        "hu_min": -943.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          230,
+          336,
+          7,
+          10
+        ],
+        "centroid": [
+          340.1,
+          233.0
+        ],
+        "area": 34,
+        "mean_hu": -659.91,
+        "hu_mean": -659.91,
+        "hu_max": -532.0,
+        "hu_min": -874.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 105.32,
+    "triage_time_ms": 105.24890000124287,
+    "slice_hu_mean": -18.678544998168945,
+    "slice_hu_std": 125.23086547851562,
+    "stats": {
+      "mean": -18.678544998168945,
+      "std": 125.23086547851562,
+      "median": -16.0,
+      "mad": 103.0,
+      "p005": -788.47,
+      "p01": -679.0,
+      "p99": 342.0,
+      "p995": 375.9400000000023,
+      "iqr": 205.5,
+      "p25": -119.0,
+      "p75": 86.5
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 78,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.109794533288598375360843962351428041281",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 124,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 124,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:12.296847+00:00",
+    "findings": [
+      {
+        "bbox": [
+          149,
+          269,
+          8,
+          10
+        ],
+        "centroid": [
+          272.8,
+          152.6
+        ],
+        "area": 36,
+        "mean_hu": -715.31,
+        "hu_mean": -715.31,
+        "hu_max": -533.0,
+        "hu_min": -997.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          183,
+          269,
+          26,
+          17
+        ],
+        "centroid": [
+          276.7,
+          195.6
+        ],
+        "area": 266,
+        "mean_hu": -741.54,
+        "hu_mean": -741.54,
+        "hu_max": -535.0,
+        "hu_min": -1018.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          159,
+          273,
+          7,
+          7
+        ],
+        "centroid": [
+          275.9,
+          162.1
+        ],
+        "area": 30,
+        "mean_hu": -699.13,
+        "hu_mean": -699.13,
+        "hu_max": -538.0,
+        "hu_min": -918.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          231,
+          298,
+          32,
+          37
+        ],
+        "centroid": [
+          311.7,
+          245.4
+        ],
+        "area": 465,
+        "mean_hu": -741.32,
+        "hu_mean": -741.32,
+        "hu_max": -534.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          154,
+          320,
+          31,
+          17
+        ],
+        "centroid": [
+          328.2,
+          169.4
+        ],
+        "area": 253,
+        "mean_hu": -724.21,
+        "hu_mean": -724.21,
+        "hu_max": -533.0,
+        "hu_min": -1020.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          179,
+          332,
+          15,
+          10
+        ],
+        "centroid": [
+          335.6,
+          185.5
+        ],
+        "area": 68,
+        "mean_hu": -693.04,
+        "hu_mean": -693.04,
+        "hu_max": -541.0,
+        "hu_min": -923.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          191,
+          337,
+          9,
+          10
+        ],
+        "centroid": [
+          341.1,
+          195.0
+        ],
+        "area": 32,
+        "mean_hu": -701.69,
+        "hu_mean": -701.69,
+        "hu_max": -553.0,
+        "hu_min": -1001.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 106.25,
+    "triage_time_ms": 106.139899999107,
+    "slice_hu_mean": -20.037418365478516,
+    "slice_hu_std": 125.2312240600586,
+    "stats": {
+      "mean": -20.037418365478516,
+      "std": 125.2312240600586,
+      "median": -17.0,
+      "mad": 103.0,
+      "p005": -781.745,
+      "p01": -673.3199999999999,
+      "p99": 335.0,
+      "p995": 370.0,
+      "iqr": 205.0,
+      "p25": -119.0,
+      "p75": 86.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 79,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.41043057515589617460470831837915113081",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 105,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 105,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:12.488818+00:00",
+    "findings": [
+      {
+        "bbox": [
+          145,
+          267,
+          12,
+          9
+        ],
+        "centroid": [
+          271.4,
+          150.2
+        ],
+        "area": 55,
+        "mean_hu": -700.31,
+        "hu_mean": -700.31,
+        "hu_max": -541.0,
+        "hu_min": -905.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          176,
+          269,
+          32,
+          17
+        ],
+        "centroid": [
+          276.7,
+          193.9
+        ],
+        "area": 270,
+        "mean_hu": -751.76,
+        "hu_mean": -751.76,
+        "hu_max": -543.0,
+        "hu_min": -998.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          231,
+          298,
+          28,
+          39
+        ],
+        "centroid": [
+          312.5,
+          244.1
+        ],
+        "area": 446,
+        "mean_hu": -753.85,
+        "hu_mean": -753.85,
+        "hu_max": -542.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          324,
+          308,
+          6,
+          14
+        ],
+        "centroid": [
+          315.1,
+          326.3
+        ],
+        "area": 43,
+        "mean_hu": -681.93,
+        "hu_mean": -681.93,
+        "hu_max": -543.0,
+        "hu_min": -845.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          157,
+          319,
+          30,
+          18
+        ],
+        "centroid": [
+          327.0,
+          171.2
+        ],
+        "area": 234,
+        "mean_hu": -717.09,
+        "hu_mean": -717.09,
+        "hu_max": -542.0,
+        "hu_min": -966.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          191,
+          335,
+          12,
+          13
+        ],
+        "centroid": [
+          341.4,
+          195.7
+        ],
+        "area": 57,
+        "mean_hu": -764.4,
+        "hu_mean": -764.4,
+        "hu_max": -541.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 125.19,
+    "triage_time_ms": 125.07199999890872,
+    "slice_hu_mean": -19.010543823242188,
+    "slice_hu_std": 128.1531524658203,
+    "stats": {
+      "mean": -19.010543823242188,
+      "std": 128.1531524658203,
+      "median": -15.0,
+      "mad": 105.0,
+      "p005": -784.0,
+      "p01": -687.52,
+      "p99": 351.7599999999984,
+      "p995": 390.0,
+      "iqr": 211.0,
+      "p25": -123.0,
+      "p75": 88.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 80,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.46235928064818292549607325473329798914",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 115,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 115,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:12.682216+00:00",
+    "findings": [
+      {
+        "bbox": [
+          181,
+          269,
+          26,
+          19
+        ],
+        "centroid": [
+          277.6,
+          194.0
+        ],
+        "area": 272,
+        "mean_hu": -764.72,
+        "hu_mean": -764.72,
+        "hu_max": -569.0,
+        "hu_min": -1016.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          207,
+          294,
+          13,
+          11
+        ],
+        "centroid": [
+          299.0,
+          212.2
+        ],
+        "area": 50,
+        "mean_hu": -751.64,
+        "hu_mean": -751.64,
+        "hu_max": -568.0,
+        "hu_min": -989.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          228,
+          299,
+          33,
+          31
+        ],
+        "centroid": [
+          312.4,
+          244.1
+        ],
+        "area": 401,
+        "mean_hu": -739.53,
+        "hu_mean": -739.53,
+        "hu_max": -563.0,
+        "hu_min": -981.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          159,
+          320,
+          27,
+          14
+        ],
+        "centroid": [
+          325.2,
+          173.3
+        ],
+        "area": 134,
+        "mean_hu": -721.57,
+        "hu_mean": -721.57,
+        "hu_max": -563.0,
+        "hu_min": -992.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          191,
+          331,
+          18,
+          18
+        ],
+        "centroid": [
+          338.5,
+          199.5
+        ],
+        "area": 62,
+        "mean_hu": -715.92,
+        "hu_mean": -715.92,
+        "hu_max": -563.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          229,
+          332,
+          6,
+          9
+        ],
+        "centroid": [
+          336.3,
+          231.3
+        ],
+        "area": 36,
+        "mean_hu": -720.78,
+        "hu_mean": -720.78,
+        "hu_max": -569.0,
+        "hu_min": -881.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          339,
+          350,
+          9,
+          16
+        ],
+        "centroid": [
+          358.0,
+          343.3
+        ],
+        "area": 69,
+        "mean_hu": -713.61,
+        "hu_mean": -713.61,
+        "hu_max": -563.0,
+        "hu_min": -950.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          327,
+          361,
+          27,
+          17
+        ],
+        "centroid": [
+          370.5,
+          338.9
+        ],
+        "area": 167,
+        "mean_hu": -724.8,
+        "hu_mean": -724.8,
+        "hu_max": -563.0,
+        "hu_min": -959.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 122.73,
+    "triage_time_ms": 122.66420000014477,
+    "slice_hu_mean": -19.988388061523438,
+    "slice_hu_std": 132.5825958251953,
+    "stats": {
+      "mean": -19.988388061523438,
+      "std": 132.5825958251953,
+      "median": -17.0,
+      "mad": 109.0,
+      "p005": -783.35,
+      "p01": -686.0,
+      "p99": 360.0,
+      "p995": 394.0,
+      "iqr": 217.0,
+      "p25": -126.0,
+      "p75": 91.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 81,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.12970113726780342467294216259781906246",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 71,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 71,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:12.873788+00:00",
+    "findings": [
+      {
+        "bbox": [
+          186,
+          270,
+          20,
+          17
+        ],
+        "centroid": [
+          278.5,
+          195.4
+        ],
+        "area": 173,
+        "mean_hu": -771.65,
+        "hu_mean": -771.65,
+        "hu_max": -584.0,
+        "hu_min": -1021.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          203,
+          296,
+          11,
+          9
+        ],
+        "centroid": [
+          300.0,
+          207.9
+        ],
+        "area": 42,
+        "mean_hu": -730.76,
+        "hu_mean": -730.76,
+        "hu_max": -585.0,
+        "hu_min": -956.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          227,
+          301,
+          34,
+          21
+        ],
+        "centroid": [
+          310.5,
+          244.1
+        ],
+        "area": 250,
+        "mean_hu": -763.77,
+        "hu_mean": -763.77,
+        "hu_max": -585.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          221,
+          325,
+          17,
+          16
+        ],
+        "centroid": [
+          332.9,
+          229.7
+        ],
+        "area": 138,
+        "mean_hu": -740.8,
+        "hu_mean": -740.8,
+        "hu_max": -587.0,
+        "hu_min": -994.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          196,
+          336,
+          13,
+          11
+        ],
+        "centroid": [
+          342.5,
+          202.8
+        ],
+        "area": 49,
+        "mean_hu": -739.0,
+        "hu_mean": -739.0,
+        "hu_max": -607.0,
+        "hu_min": -937.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          197,
+          347,
+          11,
+          10
+        ],
+        "centroid": [
+          351.3,
+          202.5
+        ],
+        "area": 49,
+        "mean_hu": -725.8,
+        "hu_mean": -725.8,
+        "hu_max": -587.0,
+        "hu_min": -936.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 107.23,
+    "triage_time_ms": 107.12680000142427,
+    "slice_hu_mean": -20.074800491333008,
+    "slice_hu_std": 138.7950439453125,
+    "stats": {
+      "mean": -20.074800491333008,
+      "std": 138.7950439453125,
+      "median": -18.0,
+      "mad": 113.0,
+      "p005": -754.0,
+      "p01": -649.28,
+      "p99": 382.0,
+      "p995": 426.0,
+      "iqr": 226.0,
+      "p25": -131.0,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 82,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.217750789574157495553610487459982155322",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 99,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 99,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:13.054118+00:00",
+    "findings": [
+      {
+        "bbox": [
+          193,
+          273,
+          12,
+          13
+        ],
+        "centroid": [
+          278.6,
+          198.1
+        ],
+        "area": 83,
+        "mean_hu": -780.1,
+        "hu_mean": -780.1,
+        "hu_max": -594.0,
+        "hu_min": -981.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          204,
+          294,
+          14,
+          14
+        ],
+        "centroid": [
+          299.3,
+          210.4
+        ],
+        "area": 49,
+        "mean_hu": -720.45,
+        "hu_mean": -720.45,
+        "hu_max": -590.0,
+        "hu_min": -942.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          216,
+          301,
+          8,
+          8
+        ],
+        "centroid": [
+          303.5,
+          218.9
+        ],
+        "area": 33,
+        "mean_hu": -772.36,
+        "hu_mean": -772.36,
+        "hu_max": -611.0,
+        "hu_min": -941.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          228,
+          301,
+          30,
+          20
+        ],
+        "centroid": [
+          309.8,
+          243.7
+        ],
+        "area": 197,
+        "mean_hu": -759.53,
+        "hu_mean": -759.53,
+        "hu_max": -591.0,
+        "hu_min": -1005.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          220,
+          324,
+          20,
+          21
+        ],
+        "centroid": [
+          333.1,
+          229.6
+        ],
+        "area": 194,
+        "mean_hu": -730.92,
+        "hu_mean": -730.92,
+        "hu_max": -590.0,
+        "hu_min": -1001.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          194,
+          328,
+          28,
+          27
+        ],
+        "centroid": [
+          342.6,
+          206.6
+        ],
+        "area": 370,
+        "mean_hu": -759.03,
+        "hu_mean": -759.03,
+        "hu_max": -591.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          358,
+          348,
+          10,
+          12
+        ],
+        "centroid": [
+          353.2,
+          363.8
+        ],
+        "area": 42,
+        "mean_hu": -676.52,
+        "hu_mean": -676.52,
+        "hu_max": -592.0,
+        "hu_min": -796.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          364,
+          356,
+          22,
+          20
+        ],
+        "centroid": [
+          365.0,
+          375.4
+        ],
+        "area": 175,
+        "mean_hu": -727.85,
+        "hu_mean": -727.85,
+        "hu_max": -591.0,
+        "hu_min": -995.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 112.41,
+    "triage_time_ms": 112.30939999950351,
+    "slice_hu_mean": -24.802688598632812,
+    "slice_hu_std": 141.13278198242188,
+    "stats": {
+      "mean": -24.802688598632812,
+      "std": 141.13278198242188,
+      "median": -21.0,
+      "mad": 112.0,
+      "p005": -782.89,
+      "p01": -707.6800000000001,
+      "p99": 378.0,
+      "p995": 409.8899999999994,
+      "iqr": 225.0,
+      "p25": -135.0,
+      "p75": 90.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 83,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.325042764573354697853076241463840393619",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 37,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 37,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:13.219774+00:00",
+    "findings": [
+      {
+        "bbox": [
+          205,
+          296,
+          18,
+          13
+        ],
+        "centroid": [
+          301.3,
+          213.9
+        ],
+        "area": 77,
+        "mean_hu": -782.01,
+        "hu_mean": -782.01,
+        "hu_max": -559.0,
+        "hu_min": -1016.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          230,
+          302,
+          25,
+          14
+        ],
+        "centroid": [
+          308.3,
+          240.7
+        ],
+        "area": 144,
+        "mean_hu": -735.81,
+        "hu_mean": -735.81,
+        "hu_max": -565.0,
+        "hu_min": -1023.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          366,
+          317,
+          21,
+          12
+        ],
+        "centroid": [
+          323.0,
+          375.9
+        ],
+        "area": 81,
+        "mean_hu": -668.49,
+        "hu_mean": -668.49,
+        "hu_max": -559.0,
+        "hu_min": -904.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          391,
+          354,
+          9,
+          10
+        ],
+        "centroid": [
+          357.6,
+          394.1
+        ],
+        "area": 44,
+        "mean_hu": -688.3,
+        "hu_mean": -688.3,
+        "hu_max": -567.0,
+        "hu_min": -905.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 96.84,
+    "triage_time_ms": 96.73809999912919,
+    "slice_hu_mean": -19.498878479003906,
+    "slice_hu_std": 131.29385375976562,
+    "stats": {
+      "mean": -19.498878479003906,
+      "std": 131.29385375976562,
+      "median": -17.0,
+      "mad": 108.0,
+      "p005": -662.53,
+      "p01": -552.0,
+      "p99": 365.0,
+      "p995": 398.0,
+      "iqr": 216.0,
+      "p25": -126.0,
+      "p75": 90.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 84,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.122664218191429037121549740471869048368",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 18,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 18,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:13.381731+00:00",
+    "findings": [
+      {
+        "bbox": [
+          207,
+          294,
+          9,
+          13
+        ],
+        "centroid": [
+          299.9,
+          211.5
+        ],
+        "area": 53,
+        "mean_hu": -751.64,
+        "hu_mean": -751.64,
+        "hu_max": -551.0,
+        "hu_min": -998.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          231,
+          302,
+          23,
+          13
+        ],
+        "centroid": [
+          308.2,
+          244.6
+        ],
+        "area": 120,
+        "mean_hu": -712.05,
+        "hu_mean": -712.05,
+        "hu_max": -548.0,
+        "hu_min": -962.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 90.01,
+    "triage_time_ms": 89.92650000072899,
+    "slice_hu_mean": -15.421605110168457,
+    "slice_hu_std": 128.25582885742188,
+    "stats": {
+      "mean": -15.421605110168457,
+      "std": 128.25582885742188,
+      "median": -15.0,
+      "mad": 106.0,
+      "p005": -550.235,
+      "p01": -439.94,
+      "p99": 356.0,
+      "p995": 387.2350000000006,
+      "iqr": 212.0,
+      "p25": -120.0,
+      "p75": 92.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 85,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.88945766975481868321826458762196876512",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 18,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 18,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:13.532855+00:00",
+    "findings": [
+      {
+        "bbox": [
+          207,
+          291,
+          13,
+          18
+        ],
+        "centroid": [
+          300.5,
+          212.0
+        ],
+        "area": 84,
+        "mean_hu": -756.71,
+        "hu_mean": -756.71,
+        "hu_max": -525.0,
+        "hu_min": -1004.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          242,
+          302,
+          12,
+          13
+        ],
+        "centroid": [
+          307.4,
+          248.0
+        ],
+        "area": 82,
+        "mean_hu": -703.99,
+        "hu_mean": -703.99,
+        "hu_max": -523.0,
+        "hu_min": -921.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 82.84,
+    "triage_time_ms": 82.80079999894951,
+    "slice_hu_mean": -10.65650749206543,
+    "slice_hu_std": 127.80348205566406,
+    "stats": {
+      "mean": -10.65650749206543,
+      "std": 127.80348205566406,
+      "median": -9.0,
+      "mad": 106.0,
+      "p005": -522.4,
+      "p01": -425.4,
+      "p99": 363.0,
+      "p995": 394.0,
+      "iqr": 211.0,
+      "p25": -115.0,
+      "p75": 96.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 86,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.100615636897557345566379847434549648154",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 20,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 20,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:13.698272+00:00",
+    "findings": [
+      {
+        "bbox": [
+          187,
+          285,
+          11,
+          9
+        ],
+        "centroid": [
+          288.7,
+          191.1
+        ],
+        "area": 42,
+        "mean_hu": -641.81,
+        "hu_mean": -641.81,
+        "hu_max": -538.0,
+        "hu_min": -879.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          208,
+          291,
+          12,
+          11
+        ],
+        "centroid": [
+          297.1,
+          214.0
+        ],
+        "area": 45,
+        "mean_hu": -706.71,
+        "hu_mean": -706.71,
+        "hu_max": -535.0,
+        "hu_min": -960.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          244,
+          302,
+          9,
+          10
+        ],
+        "centroid": [
+          306.2,
+          248.3
+        ],
+        "area": 49,
+        "mean_hu": -706.37,
+        "hu_mean": -706.37,
+        "hu_max": -533.0,
+        "hu_min": -908.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 94.89,
+    "triage_time_ms": 94.7928999994474,
+    "slice_hu_mean": -10.03065299987793,
+    "slice_hu_std": 128.77169799804688,
+    "stats": {
+      "mean": -10.03065299987793,
+      "std": 128.77169799804688,
+      "median": -10.0,
+      "mad": 107.0,
+      "p005": -531.1,
+      "p01": -431.1,
+      "p99": 361.09999999999854,
+      "p995": 393.0,
+      "iqr": 214.0,
+      "p25": -116.0,
+      "p75": 98.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 87,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.88190755101450269177678446853755205457",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 57,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 57,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:13.842654+00:00",
+    "findings": [
+      {
+        "bbox": [
+          207,
+          311,
+          38,
+          44
+        ],
+        "centroid": [
+          330.6,
+          225.8
+        ],
+        "area": 766,
+        "mean_hu": -747.36,
+        "hu_mean": -747.36,
+        "hu_max": -551.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 75.47,
+    "triage_time_ms": 75.40650000009919,
+    "slice_hu_mean": -10.222110748291016,
+    "slice_hu_std": 131.34329223632812,
+    "stats": {
+      "mean": -10.222110748291016,
+      "std": 131.34329223632812,
+      "median": -10.0,
+      "mad": 108.0,
+      "p005": -737.0,
+      "p01": -592.0,
+      "p99": 372.0,
+      "p995": 407.0,
+      "iqr": 216.0,
+      "p25": -116.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 88,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.3169066458106757468512649906527325158",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 56,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 56,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:13.985104+00:00",
+    "findings": [
+      {
+        "bbox": [
+          212,
+          309,
+          34,
+          44
+        ],
+        "centroid": [
+          328.5,
+          228.4
+        ],
+        "area": 758,
+        "mean_hu": -721.8,
+        "hu_mean": -721.8,
+        "hu_max": -533.0,
+        "hu_min": -1003.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 74.53,
+    "triage_time_ms": 74.4832000000315,
+    "slice_hu_mean": -9.262896537780762,
+    "slice_hu_std": 127.11107635498047,
+    "stats": {
+      "mean": -9.262896537780762,
+      "std": 127.11107635498047,
+      "median": -7.0,
+      "mad": 105.0,
+      "p005": -700.0,
+      "p01": -559.28,
+      "p99": 364.0,
+      "p995": 395.8199999999997,
+      "iqr": 210.0,
+      "p25": -113.0,
+      "p75": 97.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 89,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.222314583094512823240436489221746025585",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 59,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 59,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:14.133109+00:00",
+    "findings": [
+      {
+        "bbox": [
+          153,
+          232,
+          12,
+          6
+        ],
+        "centroid": [
+          234.1,
+          158.7
+        ],
+        "area": 31,
+        "mean_hu": -704.74,
+        "hu_mean": -704.74,
+        "hu_max": -515.0,
+        "hu_min": -892.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          214,
+          309,
+          33,
+          43
+        ],
+        "centroid": [
+          326.5,
+          230.4
+        ],
+        "area": 698,
+        "mean_hu": -707.13,
+        "hu_mean": -707.13,
+        "hu_max": -506.0,
+        "hu_min": -1012.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 81.26,
+    "triage_time_ms": 81.18049999939103,
+    "slice_hu_mean": -6.671067237854004,
+    "slice_hu_std": 120.97081756591797,
+    "stats": {
+      "mean": -6.671067237854004,
+      "std": 120.97081756591797,
+      "median": -5.0,
+      "mad": 100.0,
+      "p005": -663.53,
+      "p01": -499.0,
+      "p99": 339.0,
+      "p995": 369.0,
+      "iqr": 201.0,
+      "p25": -106.0,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 90,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.297934835750457774852849327297006956121",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 78,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 78,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:14.288761+00:00",
+    "findings": [
+      {
+        "bbox": [
+          317,
+          290,
+          34,
+          30
+        ],
+        "centroid": [
+          305.6,
+          330.4
+        ],
+        "area": 338,
+        "mean_hu": -702.03,
+        "hu_mean": -702.03,
+        "hu_max": -525.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          214,
+          307,
+          33,
+          40
+        ],
+        "centroid": [
+          324.0,
+          231.3
+        ],
+        "area": 585,
+        "mean_hu": -710.51,
+        "hu_mean": -710.51,
+        "hu_max": -525.0,
+        "hu_min": -1010.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 84.37,
+    "triage_time_ms": 84.3323999997665,
+    "slice_hu_mean": -6.026791572570801,
+    "slice_hu_std": 123.06170654296875,
+    "stats": {
+      "mean": -6.026791572570801,
+      "std": 123.06170654296875,
+      "median": -4.0,
+      "mad": 104.0,
+      "p005": -706.145,
+      "p01": -569.29,
+      "p99": 348.0,
+      "p995": 376.0,
+      "iqr": 209.0,
+      "p25": -110.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 91,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.195457952428670876255194386259751360653",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 76,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 76,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:14.449179+00:00",
+    "findings": [
+      {
+        "bbox": [
+          316,
+          296,
+          36,
+          21
+        ],
+        "centroid": [
+          304.9,
+          329.0
+        ],
+        "area": 280,
+        "mean_hu": -718.81,
+        "hu_mean": -718.81,
+        "hu_max": -544.0,
+        "hu_min": -976.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          218,
+          304,
+          29,
+          41
+        ],
+        "centroid": [
+          322.6,
+          233.0
+        ],
+        "area": 591,
+        "mean_hu": -728.43,
+        "hu_mean": -728.43,
+        "hu_max": -543.0,
+        "hu_min": -1015.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 90.09,
+    "triage_time_ms": 90.00569999989239,
+    "slice_hu_mean": -9.032364845275879,
+    "slice_hu_std": 128.9967803955078,
+    "stats": {
+      "mean": -9.032364845275879,
+      "std": 128.9967803955078,
+      "median": -7.0,
+      "mad": 107.0,
+      "p005": -729.0,
+      "p01": -577.0,
+      "p99": 352.0,
+      "p995": 377.0,
+      "iqr": 213.0,
+      "p25": -114.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 92,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.33171579760236271608871463558695037073",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 80,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 80,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:14.604592+00:00",
+    "findings": [
+      {
+        "bbox": [
+          332,
+          286,
+          17,
+          11
+        ],
+        "centroid": [
+          291.7,
+          341.2
+        ],
+        "area": 76,
+        "mean_hu": -749.05,
+        "hu_mean": -749.05,
+        "hu_max": -569.0,
+        "hu_min": -990.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          316,
+          297,
+          26,
+          17
+        ],
+        "centroid": [
+          304.2,
+          327.6
+        ],
+        "area": 213,
+        "mean_hu": -758.6,
+        "hu_mean": -758.6,
+        "hu_max": -560.0,
+        "hu_min": -1014.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          220,
+          302,
+          28,
+          45
+        ],
+        "centroid": [
+          322.0,
+          234.9
+        ],
+        "area": 559,
+        "mean_hu": -739.21,
+        "hu_mean": -739.21,
+        "hu_max": -556.0,
+        "hu_min": -1010.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 85.02,
+    "triage_time_ms": 84.90209999945364,
+    "slice_hu_mean": -5.966128349304199,
+    "slice_hu_std": 133.1132354736328,
+    "stats": {
+      "mean": -5.966128349304199,
+      "std": 133.1132354736328,
+      "median": -5.0,
+      "mad": 110.0,
+      "p005": -726.555,
+      "p01": -569.0,
+      "p99": 377.1100000000006,
+      "p995": 406.0,
+      "iqr": 220.75,
+      "p25": -115.75,
+      "p75": 105.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 93,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.79019049382218154575959756260852996662",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 47,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 47,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:14.755205+00:00",
+    "findings": [
+      {
+        "bbox": [
+          219,
+          301,
+          29,
+          43
+        ],
+        "centroid": [
+          319.2,
+          235.5
+        ],
+        "area": 532,
+        "mean_hu": -744.57,
+        "hu_mean": -744.57,
+        "hu_max": -564.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 83.08,
+    "triage_time_ms": 83.04739999948652,
+    "slice_hu_mean": -4.563483715057373,
+    "slice_hu_std": 134.49465942382812,
+    "stats": {
+      "mean": -4.563483715057373,
+      "std": 134.49465942382812,
+      "median": -3.0,
+      "mad": 112.0,
+      "p005": -653.02,
+      "p01": -494.0,
+      "p99": 379.0,
+      "p995": 405.0,
+      "iqr": 224.0,
+      "p25": -115.0,
+      "p75": 109.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 94,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.312322290665496592763134084331202803322",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 71,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 71,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:14.906858+00:00",
+    "findings": [
+      {
+        "bbox": [
+          169,
+          217,
+          15,
+          8
+        ],
+        "centroid": [
+          220.7,
+          176.4
+        ],
+        "area": 57,
+        "mean_hu": -759.39,
+        "hu_mean": -759.39,
+        "hu_max": -608.0,
+        "hu_min": -1010.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          319,
+          284,
+          32,
+          23
+        ],
+        "centroid": [
+          295.1,
+          336.8
+        ],
+        "area": 175,
+        "mean_hu": -749.5,
+        "hu_mean": -749.5,
+        "hu_max": -568.0,
+        "hu_min": -1010.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          220,
+          298,
+          29,
+          47
+        ],
+        "centroid": [
+          317.4,
+          235.8
+        ],
+        "area": 586,
+        "mean_hu": -743.32,
+        "hu_mean": -743.32,
+        "hu_max": -564.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 82.55,
+    "triage_time_ms": 82.4663999992481,
+    "slice_hu_mean": -3.8691422939300537,
+    "slice_hu_std": 136.27642822265625,
+    "stats": {
+      "mean": -3.8691422939300537,
+      "std": 136.27642822265625,
+      "median": -3.0,
+      "mad": 112.0,
+      "p005": -713.735,
+      "p01": -567.0,
+      "p99": 376.47000000000116,
+      "p995": 402.0,
+      "iqr": 225.0,
+      "p25": -114.0,
+      "p75": 111.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 95,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.42733656722764316182491743963837021820",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 60,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 60,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:15.062391+00:00",
+    "findings": [
+      {
+        "bbox": [
+          330,
+          283,
+          20,
+          17
+        ],
+        "centroid": [
+          291.6,
+          340.1
+        ],
+        "area": 91,
+        "mean_hu": -737.19,
+        "hu_mean": -737.19,
+        "hu_max": -561.0,
+        "hu_min": -988.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          222,
+          296,
+          27,
+          47
+        ],
+        "centroid": [
+          314.7,
+          236.5
+        ],
+        "area": 594,
+        "mean_hu": -746.16,
+        "hu_mean": -746.16,
+        "hu_max": -557.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 86.0,
+    "triage_time_ms": 85.91999999953259,
+    "slice_hu_mean": -2.8185157775878906,
+    "slice_hu_std": 133.60360717773438,
+    "stats": {
+      "mean": -2.8185157775878906,
+      "std": 133.60360717773438,
+      "median": 0.0,
+      "mad": 111.0,
+      "p005": -683.27,
+      "p01": -513.27,
+      "p99": 373.27000000000044,
+      "p995": 403.0,
+      "iqr": 223.0,
+      "p25": -112.0,
+      "p75": 111.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 96,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.317577323280601329693662937519018453290",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 103,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 103,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:15.221892+00:00",
+    "findings": [
+      {
+        "bbox": [
+          190,
+          236,
+          27,
+          39
+        ],
+        "centroid": [
+          255.4,
+          203.5
+        ],
+        "area": 335,
+        "mean_hu": -769.66,
+        "hu_mean": -769.66,
+        "hu_max": -579.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          351,
+          248,
+          34,
+          33
+        ],
+        "centroid": [
+          265.4,
+          370.1
+        ],
+        "area": 320,
+        "mean_hu": -755.66,
+        "hu_mean": -755.66,
+        "hu_max": -581.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          225,
+          296,
+          24,
+          45
+        ],
+        "centroid": [
+          312.7,
+          237.7
+        ],
+        "area": 509,
+        "mean_hu": -755.77,
+        "hu_mean": -755.77,
+        "hu_max": -578.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 89.95,
+    "triage_time_ms": 89.84820000114269,
+    "slice_hu_mean": -4.098668098449707,
+    "slice_hu_std": 138.09149169921875,
+    "stats": {
+      "mean": -4.098668098449707,
+      "std": 138.09149169921875,
+      "median": -2.0,
+      "mad": 115.0,
+      "p005": -787.0,
+      "p01": -666.0,
+      "p99": 386.0,
+      "p995": 412.0,
+      "iqr": 229.0,
+      "p25": -117.0,
+      "p75": 112.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 97,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.26065797360146429012517463564704469319",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 82,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 82,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:15.383495+00:00",
+    "findings": [
+      {
+        "bbox": [
+          182,
+          235,
+          34,
+          38
+        ],
+        "centroid": [
+          252.2,
+          200.4
+        ],
+        "area": 342,
+        "mean_hu": -774.44,
+        "hu_mean": -774.44,
+        "hu_max": -591.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          353,
+          247,
+          32,
+          33
+        ],
+        "centroid": [
+          263.2,
+          371.0
+        ],
+        "area": 221,
+        "mean_hu": -749.52,
+        "hu_mean": -749.52,
+        "hu_max": -591.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          227,
+          296,
+          23,
+          43
+        ],
+        "centroid": [
+          311.7,
+          238.5
+        ],
+        "area": 362,
+        "mean_hu": -761.06,
+        "hu_mean": -761.06,
+        "hu_max": -590.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 91.97,
+    "triage_time_ms": 91.84669999922335,
+    "slice_hu_mean": -2.1700994968414307,
+    "slice_hu_std": 141.75497436523438,
+    "stats": {
+      "mean": -2.1700994968414307,
+      "std": 141.75497436523438,
+      "median": 1.0,
+      "mad": 118.0,
+      "p005": -783.0,
+      "p01": -645.0,
+      "p99": 398.0699999999997,
+      "p995": 429.03499999999985,
+      "iqr": 235.0,
+      "p25": -117.0,
+      "p75": 118.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 98,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.246066535152206222311916262436635842405",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 76,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 76,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:15.550127+00:00",
+    "findings": [
+      {
+        "bbox": [
+          181,
+          233,
+          33,
+          38
+        ],
+        "centroid": [
+          248.2,
+          197.9
+        ],
+        "area": 351,
+        "mean_hu": -796.56,
+        "hu_mean": -796.56,
+        "hu_max": -586.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          366,
+          251,
+          23,
+          15
+        ],
+        "centroid": [
+          257.0,
+          378.8
+        ],
+        "area": 83,
+        "mean_hu": -740.2,
+        "hu_mean": -740.2,
+        "hu_max": -586.0,
+        "hu_min": -1000.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          367,
+          260,
+          12,
+          8
+        ],
+        "centroid": [
+          263.7,
+          372.9
+        ],
+        "area": 45,
+        "mean_hu": -751.8,
+        "hu_mean": -751.8,
+        "hu_max": -586.0,
+        "hu_min": -999.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          231,
+          297,
+          19,
+          24
+        ],
+        "centroid": [
+          306.1,
+          241.1
+        ],
+        "area": 215,
+        "mean_hu": -759.05,
+        "hu_mean": -759.05,
+        "hu_max": -589.0,
+        "hu_min": -1000.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          236,
+          321,
+          10,
+          15
+        ],
+        "centroid": [
+          327.9,
+          240.7
+        ],
+        "area": 48,
+        "mean_hu": -747.27,
+        "hu_mean": -747.27,
+        "hu_max": -587.0,
+        "hu_min": -974.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 95.45,
+    "triage_time_ms": 95.36339999976917,
+    "slice_hu_mean": -0.49676501750946045,
+    "slice_hu_std": 141.8254852294922,
+    "stats": {
+      "mean": -0.49676501750946045,
+      "std": 141.8254852294922,
+      "median": 1.0,
+      "mad": 117.0,
+      "p005": -743.0,
+      "p01": -571.0,
+      "p99": 402.0,
+      "p995": 439.0,
+      "iqr": 234.25,
+      "p25": -115.0,
+      "p75": 119.25
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 99,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.76540418423974941365775232412919538145",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 20,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 20,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:15.702638+00:00",
+    "findings": [
+      {
+        "bbox": [
+          370,
+          246,
+          10,
+          11
+        ],
+        "centroid": [
+          251.4,
+          374.2
+        ],
+        "area": 38,
+        "mean_hu": -734.18,
+        "hu_mean": -734.18,
+        "hu_max": -574.0,
+        "hu_min": -896.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          234,
+          299,
+          16,
+          26
+        ],
+        "centroid": [
+          308.4,
+          242.7
+        ],
+        "area": 174,
+        "mean_hu": -742.31,
+        "hu_mean": -742.31,
+        "hu_max": -571.0,
+        "hu_min": -1018.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 85.81,
+    "triage_time_ms": 85.76730000095267,
+    "slice_hu_mean": -0.25073447823524475,
+    "slice_hu_std": 142.24156188964844,
+    "stats": {
+      "mean": -0.25073447823524475,
+      "std": 142.24156188964844,
+      "median": 1.0,
+      "mad": 119.0,
+      "p005": -564.03,
+      "p01": -484.0,
+      "p99": 409.0,
+      "p995": 445.005000000001,
+      "iqr": 238.0,
+      "p25": -118.0,
+      "p75": 120.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 100,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.317856143299347450363081166603473807034",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 19,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 19,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:15.854357+00:00",
+    "findings": [
+      {
+        "bbox": [
+          364,
+          245,
+          13,
+          16
+        ],
+        "centroid": [
+          252.6,
+          370.7
+        ],
+        "area": 45,
+        "mean_hu": -705.38,
+        "hu_mean": -705.38,
+        "hu_max": -553.0,
+        "hu_min": -915.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          238,
+          300,
+          12,
+          26
+        ],
+        "centroid": [
+          311.4,
+          243.6
+        ],
+        "area": 132,
+        "mean_hu": -706.54,
+        "hu_mean": -706.54,
+        "hu_max": -547.0,
+        "hu_min": -1000.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 81.5,
+    "triage_time_ms": 81.3865000000078,
+    "slice_hu_mean": 2.2001919746398926,
+    "slice_hu_std": 136.8781280517578,
+    "stats": {
+      "mean": 2.2001919746398926,
+      "std": 136.8781280517578,
+      "median": 3.0,
+      "mad": 114.0,
+      "p005": -497.0,
+      "p01": -458.0,
+      "p99": 393.9500000000007,
+      "p995": 429.47499999999854,
+      "iqr": 228.0,
+      "p25": -111.0,
+      "p75": 117.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 101,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.182526095656898354266806896762233385859",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 15,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 15,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:16.015531+00:00",
+    "findings": [
+      {
+        "bbox": [
+          191,
+          245,
+          14,
+          15
+        ],
+        "centroid": [
+          251.2,
+          197.0
+        ],
+        "area": 56,
+        "mean_hu": -763.12,
+        "hu_mean": -763.12,
+        "hu_max": -536.0,
+        "hu_min": -989.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          241,
+          303,
+          9,
+          15
+        ],
+        "centroid": [
+          310.8,
+          245.0
+        ],
+        "area": 46,
+        "mean_hu": -676.96,
+        "hu_mean": -676.96,
+        "hu_max": -542.0,
+        "hu_min": -876.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 91.57,
+    "triage_time_ms": 91.46539999892411,
+    "slice_hu_mean": 0.9275204539299011,
+    "slice_hu_std": 132.8658905029297,
+    "stats": {
+      "mean": 0.9275204539299011,
+      "std": 132.8658905029297,
+      "median": 2.0,
+      "mad": 113.0,
+      "p005": -482.745,
+      "p01": -436.0,
+      "p99": 384.0,
+      "p995": 414.0,
+      "iqr": 227.0,
+      "p25": -112.0,
+      "p75": 115.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 102,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.15758493646222724337883699598881015203",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 183,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 183,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:16.186686+00:00",
+    "findings": [
+      {
+        "bbox": [
+          289,
+          148,
+          71,
+          22
+        ],
+        "centroid": [
+          158.4,
+          326.9
+        ],
+        "area": 968,
+        "mean_hu": -833.03,
+        "hu_mean": -833.03,
+        "hu_max": -588.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.81,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          171,
+          170,
+          70,
+          55
+        ],
+        "centroid": [
+          192.3,
+          202.6
+        ],
+        "area": 1533,
+        "mean_hu": -807.06,
+        "hu_mean": -807.06,
+        "hu_max": -588.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          184,
+          226,
+          14,
+          15
+        ],
+        "centroid": [
+          232.1,
+          190.6
+        ],
+        "area": 142,
+        "mean_hu": -836.51,
+        "hu_mean": -836.51,
+        "hu_max": -596.0,
+        "hu_min": -1020.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 98.23,
+    "triage_time_ms": 98.1528000011167,
+    "slice_hu_mean": -6.535638809204102,
+    "slice_hu_std": 142.12091064453125,
+    "stats": {
+      "mean": -6.535638809204102,
+      "std": 142.12091064453125,
+      "median": -2.0,
+      "mad": 117.0,
+      "p005": -936.0,
+      "p01": -852.0,
+      "p99": 390.0,
+      "p995": 421.0,
+      "iqr": 234.0,
+      "p25": -121.0,
+      "p75": 113.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 103,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.183700064830276540324340798133153637253",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 223,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 223,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:16.349641+00:00",
+    "findings": [
+      {
+        "bbox": [
+          291,
+          149,
+          67,
+          22
+        ],
+        "centroid": [
+          158.6,
+          327.0
+        ],
+        "area": 827,
+        "mean_hu": -837.49,
+        "hu_mean": -837.49,
+        "hu_max": -632.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          169,
+          170,
+          71,
+          53
+        ],
+        "centroid": [
+          190.9,
+          203.4
+        ],
+        "area": 1319,
+        "mean_hu": -822.82,
+        "hu_mean": -822.82,
+        "hu_max": -629.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          363,
+          170,
+          61,
+          84
+        ],
+        "centroid": [
+          213.1,
+          394.3
+        ],
+        "area": 1724,
+        "mean_hu": -810.07,
+        "hu_mean": -810.07,
+        "hu_max": -629.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          186,
+          226,
+          9,
+          12
+        ],
+        "centroid": [
+          230.6,
+          189.8
+        ],
+        "area": 59,
+        "mean_hu": -787.88,
+        "hu_mean": -787.88,
+        "hu_max": -630.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 92.05,
+    "triage_time_ms": 91.95589999944787,
+    "slice_hu_mean": -15.60054874420166,
+    "slice_hu_std": 153.1925811767578,
+    "stats": {
+      "mean": -15.60054874420166,
+      "std": 153.1925811767578,
+      "median": -9.0,
+      "mad": 123.0,
+      "p005": -948.48,
+      "p01": -901.96,
+      "p99": 402.0,
+      "p995": 438.47999999999956,
+      "iqr": 246.0,
+      "p25": -135.0,
+      "p75": 111.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 104,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.215145890030068534732356328388565808590",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 208,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 208,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:16.517672+00:00",
+    "findings": [
+      {
+        "bbox": [
+          293,
+          150,
+          64,
+          20
+        ],
+        "centroid": [
+          159.2,
+          328.1
+        ],
+        "area": 766,
+        "mean_hu": -838.29,
+        "hu_mean": -838.29,
+        "hu_max": -638.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          178,
+          171,
+          61,
+          43
+        ],
+        "centroid": [
+          188.1,
+          208.0
+        ],
+        "area": 998,
+        "mean_hu": -823.47,
+        "hu_mean": -823.47,
+        "hu_max": -638.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          369,
+          176,
+          52,
+          75
+        ],
+        "centroid": [
+          214.2,
+          394.4
+        ],
+        "area": 1501,
+        "mean_hu": -806.44,
+        "hu_mean": -806.44,
+        "hu_max": -638.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          173,
+          197,
+          15,
+          19
+        ],
+        "centroid": [
+          206.8,
+          180.8
+        ],
+        "area": 113,
+        "mean_hu": -776.38,
+        "hu_mean": -776.38,
+        "hu_max": -639.0,
+        "hu_min": -1012.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 96.08,
+    "triage_time_ms": 95.996500000183,
+    "slice_hu_mean": -12.766054153442383,
+    "slice_hu_std": 156.23587036132812,
+    "stats": {
+      "mean": -12.766054153442383,
+      "std": 156.23587036132812,
+      "median": -8.0,
+      "mad": 125.0,
+      "p005": -930.0,
+      "p01": -881.0,
+      "p99": 422.2999999999993,
+      "p995": 463.0,
+      "iqr": 250.0,
+      "p25": -134.0,
+      "p75": 116.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 105,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.267179525190456968327532425363443220011",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 192,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 192,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:16.685969+00:00",
+    "findings": [
+      {
+        "bbox": [
+          294,
+          151,
+          62,
+          20
+        ],
+        "centroid": [
+          159.7,
+          327.8
+        ],
+        "area": 689,
+        "mean_hu": -830.49,
+        "hu_mean": -830.49,
+        "hu_max": -647.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          179,
+          173,
+          59,
+          36
+        ],
+        "centroid": [
+          188.1,
+          208.9
+        ],
+        "area": 857,
+        "mean_hu": -818.84,
+        "hu_mean": -818.84,
+        "hu_max": -647.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          371,
+          180,
+          45,
+          68
+        ],
+        "centroid": [
+          215.0,
+          394.1
+        ],
+        "area": 1225,
+        "mean_hu": -806.91,
+        "hu_mean": -806.91,
+        "hu_max": -647.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          172,
+          199,
+          14,
+          15
+        ],
+        "centroid": [
+          207.4,
+          179.2
+        ],
+        "area": 92,
+        "mean_hu": -784.45,
+        "hu_mean": -784.45,
+        "hu_max": -649.0,
+        "hu_min": -1017.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 97.13,
+    "triage_time_ms": 97.06100000039442,
+    "slice_hu_mean": -10.034001350402832,
+    "slice_hu_std": 158.14547729492188,
+    "stats": {
+      "mean": -10.034001350402832,
+      "std": 158.14547729492188,
+      "median": -6.0,
+      "mad": 128.0,
+      "p005": -908.145,
+      "p01": -844.29,
+      "p99": 439.0,
+      "p995": 469.14500000000044,
+      "iqr": 257.0,
+      "p25": -135.0,
+      "p75": 122.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 106,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.28369728961006424334187409233170634384",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 171,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 171,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:16.849792+00:00",
+    "findings": [
+      {
+        "bbox": [
+          294,
+          153,
+          60,
+          17
+        ],
+        "centroid": [
+          160.3,
+          327.2
+        ],
+        "area": 576,
+        "mean_hu": -815.51,
+        "hu_mean": -815.51,
+        "hu_max": -641.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          181,
+          173,
+          57,
+          36
+        ],
+        "centroid": [
+          188.3,
+          209.1
+        ],
+        "area": 736,
+        "mean_hu": -810.67,
+        "hu_mean": -810.67,
+        "hu_max": -638.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          376,
+          187,
+          37,
+          57
+        ],
+        "centroid": [
+          216.0,
+          393.5
+        ],
+        "area": 940,
+        "mean_hu": -796.25,
+        "hu_mean": -796.25,
+        "hu_max": -638.0,
+        "hu_min": -1021.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          173,
+          205,
+          14,
+          10
+        ],
+        "centroid": [
+          209.0,
+          180.2
+        ],
+        "area": 53,
+        "mean_hu": -740.02,
+        "hu_mean": -740.02,
+        "hu_max": -638.0,
+        "hu_min": -953.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 92.78,
+    "triage_time_ms": 92.73439999924449,
+    "slice_hu_mean": -9.371675491333008,
+    "slice_hu_std": 153.53562927246094,
+    "stats": {
+      "mean": -9.371675491333008,
+      "std": 153.53562927246094,
+      "median": -7.0,
+      "mad": 126.0,
+      "p005": -870.0,
+      "p01": -807.45,
+      "p99": 428.4500000000007,
+      "p995": 463.0,
+      "iqr": 251.0,
+      "p25": -132.0,
+      "p75": 119.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 107,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.73306831283929508326608064455636873542",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 164,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 164,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:17.011629+00:00",
+    "findings": [
+      {
+        "bbox": [
+          296,
+          154,
+          27,
+          12
+        ],
+        "centroid": [
+          159.4,
+          310.7
+        ],
+        "area": 195,
+        "mean_hu": -819.24,
+        "hu_mean": -819.24,
+        "hu_max": -620.0,
+        "hu_min": -1020.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          325,
+          156,
+          26,
+          13
+        ],
+        "centroid": [
+          161.6,
+          338.3
+        ],
+        "area": 214,
+        "mean_hu": -773.6,
+        "hu_mean": -773.6,
+        "hu_max": -618.0,
+        "hu_min": -1001.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          183,
+          175,
+          53,
+          34
+        ],
+        "centroid": [
+          189.8,
+          207.0
+        ],
+        "area": 689,
+        "mean_hu": -782.31,
+        "hu_mean": -782.31,
+        "hu_max": -616.0,
+        "hu_min": -1021.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          377,
+          197,
+          31,
+          44
+        ],
+        "centroid": [
+          217.2,
+          392.5
+        ],
+        "area": 726,
+        "mean_hu": -795.93,
+        "hu_mean": -795.93,
+        "hu_max": -616.0,
+        "hu_min": -1022.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 92.66,
+    "triage_time_ms": 92.6171000010072,
+    "slice_hu_mean": -7.814394474029541,
+    "slice_hu_std": 149.08580017089844,
+    "stats": {
+      "mean": -7.814394474029541,
+      "std": 149.08580017089844,
+      "median": -5.0,
+      "mad": 122.0,
+      "p005": -870.0,
+      "p01": -786.85,
+      "p99": 425.0,
+      "p995": 460.0,
+      "iqr": 245.0,
+      "p25": -128.0,
+      "p75": 117.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 108,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.119519323657919612255062509609244551453",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 103,
+    "emergency_action": "IMMEDIATE ALERT",
+    "score_details": [
+      {
+        "points": 103,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:17.170306+00:00",
+    "findings": [
+      {
+        "bbox": [
+          298,
+          156,
+          25,
+          9
+        ],
+        "centroid": [
+          159.6,
+          311.4
+        ],
+        "area": 151,
+        "mean_hu": -812.7,
+        "hu_mean": -812.7,
+        "hu_max": -636.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          184,
+          176,
+          49,
+          32
+        ],
+        "centroid": [
+          190.2,
+          206.5
+        ],
+        "area": 569,
+        "mean_hu": -772.76,
+        "hu_mean": -772.76,
+        "hu_max": -622.0,
+        "hu_min": -1001.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          379,
+          200,
+          27,
+          35
+        ],
+        "centroid": [
+          216.3,
+          390.9
+        ],
+        "area": 479,
+        "mean_hu": -804.36,
+        "hu_mean": -804.36,
+        "hu_max": -624.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 88.54,
+    "triage_time_ms": 88.46620000076655,
+    "slice_hu_mean": -2.220782518386841,
+    "slice_hu_std": 148.4334716796875,
+    "stats": {
+      "mean": -2.220782518386841,
+      "std": 148.4334716796875,
+      "median": -1.0,
+      "mad": 124.0,
+      "p005": -799.54,
+      "p01": -682.0,
+      "p99": 430.0799999999981,
+      "p995": 466.0,
+      "iqr": 249.0,
+      "p25": -125.0,
+      "p75": 124.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 109,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.263830566196585001508435937163824238169",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 88,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 88,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:17.327409+00:00",
+    "findings": [
+      {
+        "bbox": [
+          301,
+          157,
+          21,
+          7
+        ],
+        "centroid": [
+          159.7,
+          312.0
+        ],
+        "area": 89,
+        "mean_hu": -815.17,
+        "hu_mean": -815.17,
+        "hu_max": -627.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          182,
+          177,
+          50,
+          29
+        ],
+        "centroid": [
+          190.3,
+          205.9
+        ],
+        "area": 503,
+        "mean_hu": -762.42,
+        "hu_mean": -762.42,
+        "hu_max": -624.0,
+        "hu_min": -1015.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          380,
+          203,
+          22,
+          29
+        ],
+        "centroid": [
+          217.1,
+          390.0
+        ],
+        "area": 301,
+        "mean_hu": -788.37,
+        "hu_mean": -788.37,
+        "hu_max": -623.0,
+        "hu_min": -1023.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 85.41,
+    "triage_time_ms": 85.35519999895769,
+    "slice_hu_mean": -3.7678678035736084,
+    "slice_hu_std": 148.1947784423828,
+    "stats": {
+      "mean": -3.7678678035736084,
+      "std": 148.1947784423828,
+      "median": -2.0,
+      "mad": 124.0,
+      "p005": -740.87,
+      "p01": -603.0,
+      "p99": 431.0,
+      "p995": 469.869999999999,
+      "iqr": 248.0,
+      "p25": -127.0,
+      "p75": 121.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 110,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.339213020998282070926356003881399250050",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 59,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 59,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:17.494855+00:00",
+    "findings": [
+      {
+        "bbox": [
+          182,
+          178,
+          48,
+          26
+        ],
+        "centroid": [
+          190.1,
+          205.7
+        ],
+        "area": 400,
+        "mean_hu": -749.73,
+        "hu_mean": -749.73,
+        "hu_max": -609.0,
+        "hu_min": -994.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          382,
+          210,
+          13,
+          16
+        ],
+        "centroid": [
+          217.8,
+          388.1
+        ],
+        "area": 79,
+        "mean_hu": -749.13,
+        "hu_mean": -749.13,
+        "hu_max": -613.0,
+        "hu_min": -997.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          383,
+          251,
+          16,
+          13
+        ],
+        "centroid": [
+          257.3,
+          389.7
+        ],
+        "area": 133,
+        "mean_hu": -803.69,
+        "hu_mean": -803.69,
+        "hu_max": -612.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 94.89,
+    "triage_time_ms": 94.79900000042107,
+    "slice_hu_mean": -3.297238826751709,
+    "slice_hu_std": 144.779296875,
+    "stats": {
+      "mean": -3.297238826751709,
+      "std": 144.779296875,
+      "median": -3.0,
+      "mad": 121.0,
+      "p005": -677.0799999999999,
+      "p01": -537.0799999999999,
+      "p99": 423.0,
+      "p995": 456.5400000000009,
+      "iqr": 242.0,
+      "p25": -123.0,
+      "p75": 119.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 111,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.202276255767928055568792680676605009518",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 60,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 60,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:17.646374+00:00",
+    "findings": [
+      {
+        "bbox": [
+          190,
+          179,
+          36,
+          24
+        ],
+        "centroid": [
+          189.8,
+          207.6
+        ],
+        "area": 289,
+        "mean_hu": -749.53,
+        "hu_mean": -749.53,
+        "hu_max": -599.0,
+        "hu_min": -1018.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          382,
+          250,
+          18,
+          18
+        ],
+        "centroid": [
+          258.3,
+          390.4
+        ],
+        "area": 217,
+        "mean_hu": -843.49,
+        "hu_mean": -843.49,
+        "hu_max": -599.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 82.07,
+    "triage_time_ms": 82.03549999961979,
+    "slice_hu_mean": -3.875767230987549,
+    "slice_hu_std": 141.14707946777344,
+    "stats": {
+      "mean": -3.875767230987549,
+      "std": 141.14707946777344,
+      "median": -3.0,
+      "mad": 119.0,
+      "p005": -634.06,
+      "p01": -480.06,
+      "p99": 406.0,
+      "p995": 443.0,
+      "iqr": 237.0,
+      "p25": -122.0,
+      "p75": 115.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 112,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.20416897485138648785362212344960290486",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 60,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 60,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:17.808545+00:00",
+    "findings": [
+      {
+        "bbox": [
+          194,
+          180,
+          32,
+          20
+        ],
+        "centroid": [
+          189.8,
+          208.5
+        ],
+        "area": 224,
+        "mean_hu": -742.1,
+        "hu_mean": -742.1,
+        "hu_max": -568.0,
+        "hu_min": -989.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          383,
+          249,
+          17,
+          22
+        ],
+        "centroid": [
+          259.3,
+          390.7
+        ],
+        "area": 275,
+        "mean_hu": -858.33,
+        "hu_mean": -858.33,
+        "hu_max": -567.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 91.09,
+    "triage_time_ms": 91.02210000128252,
+    "slice_hu_mean": -5.553771495819092,
+    "slice_hu_std": 132.3085479736328,
+    "stats": {
+      "mean": -5.553771495819092,
+      "std": 132.3085479736328,
+      "median": -6.0,
+      "mad": 112.0,
+      "p005": -631.23,
+      "p01": -468.0,
+      "p99": 381.0,
+      "p995": 413.0,
+      "iqr": 223.0,
+      "p25": -117.0,
+      "p75": 106.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 113,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.316287949973990918496439912746929735400",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 52,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 52,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:17.962381+00:00",
+    "findings": [
+      {
+        "bbox": [
+          195,
+          181,
+          29,
+          18
+        ],
+        "centroid": [
+          190.1,
+          208.8
+        ],
+        "area": 171,
+        "mean_hu": -719.11,
+        "hu_mean": -719.11,
+        "hu_max": -557.0,
+        "hu_min": -1012.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          383,
+          250,
+          17,
+          23
+        ],
+        "centroid": [
+          260.2,
+          390.6
+        ],
+        "area": 282,
+        "mean_hu": -857.29,
+        "hu_mean": -857.29,
+        "hu_max": -568.0,
+        "hu_min": -1024.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 78.18,
+    "triage_time_ms": 78.13929999974789,
+    "slice_hu_mean": -5.8323469161987305,
+    "slice_hu_std": 130.7500762939453,
+    "stats": {
+      "mean": -5.8323469161987305,
+      "std": 130.7500762939453,
+      "median": -5.0,
+      "mad": 110.0,
+      "p005": -556.97,
+      "p01": -459.0,
+      "p99": 375.0,
+      "p995": 407.0,
+      "iqr": 221.0,
+      "p25": -115.0,
+      "p75": 106.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 114,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.36916591382701254368356054549510696481",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 35,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 35,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:18.106833+00:00",
+    "findings": [
+      {
+        "bbox": [
+          384,
+          251,
+          16,
+          22
+        ],
+        "centroid": [
+          260.5,
+          391.1
+        ],
+        "area": 242,
+        "mean_hu": -843.06,
+        "hu_mean": -843.06,
+        "hu_max": -560.0,
+        "hu_min": -1023.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 74.21,
+    "triage_time_ms": 74.17899999927613,
+    "slice_hu_mean": -4.795379638671875,
+    "slice_hu_std": 131.34181213378906,
+    "stats": {
+      "mean": -4.795379638671875,
+      "std": 131.34181213378906,
+      "median": -5.0,
+      "mad": 111.0,
+      "p005": -481.59000000000003,
+      "p01": -431.18,
+      "p99": 381.1800000000003,
+      "p995": 413.0,
+      "iqr": 223.0,
+      "p25": -116.0,
+      "p75": 107.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 115,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.76820112054796243920401071338163634251",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 20,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 20,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:18.258208+00:00",
+    "findings": [
+      {
+        "bbox": [
+          385,
+          252,
+          14,
+          18
+        ],
+        "centroid": [
+          260.5,
+          391.5
+        ],
+        "area": 161,
+        "mean_hu": -808.63,
+        "hu_mean": -808.63,
+        "hu_max": -550.0,
+        "hu_min": -1021.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 80.64,
+    "triage_time_ms": 80.60069999919506,
+    "slice_hu_mean": -4.344537258148193,
+    "slice_hu_std": 133.8292999267578,
+    "stats": {
+      "mean": -4.344537258148193,
+      "std": 133.8292999267578,
+      "median": -5.0,
+      "mad": 113.0,
+      "p005": -481.0,
+      "p01": -435.0,
+      "p99": 388.0,
+      "p995": 418.8299999999981,
+      "iqr": 226.0,
+      "p25": -117.0,
+      "p75": 109.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 116,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.269061859781787084599839018981801234201",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 7,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 7,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:18.409344+00:00",
+    "findings": [
+      {
+        "bbox": [
+          388,
+          255,
+          8,
+          14
+        ],
+        "centroid": [
+          260.9,
+          391.3
+        ],
+        "area": 53,
+        "mean_hu": -697.17,
+        "hu_mean": -697.17,
+        "hu_max": -551.0,
+        "hu_min": -965.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 78.4,
+    "triage_time_ms": 78.36830000087502,
+    "slice_hu_mean": -3.3365261554718018,
+    "slice_hu_std": 135.2904815673828,
+    "stats": {
+      "mean": -3.3365261554718018,
+      "std": 135.2904815673828,
+      "median": -5.0,
+      "mad": 113.0,
+      "p005": -474.13,
+      "p01": -427.26,
+      "p99": 392.0,
+      "p995": 418.0,
+      "iqr": 228.0,
+      "p25": -117.0,
+      "p75": 111.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 117,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.182545723871232876208839689358585829958",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:18.546598+00:00",
+    "findings": [],
+    "processing_time_ms": 68.05,
+    "triage_time_ms": 68.02600000082748,
+    "slice_hu_mean": -1.2288213968276978,
+    "slice_hu_std": 136.7535400390625,
+    "stats": {
+      "mean": -1.2288213968276978,
+      "std": 136.7535400390625,
+      "median": -3.0,
+      "mad": 115.0,
+      "p005": -476.0,
+      "p01": -432.0,
+      "p99": 398.0,
+      "p995": 427.0,
+      "iqr": 230.0,
+      "p25": -116.0,
+      "p75": 114.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 118,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.19205869128024229828262249575063452268",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:18.689151+00:00",
+    "findings": [],
+    "processing_time_ms": 72.24,
+    "triage_time_ms": 72.20050000069023,
+    "slice_hu_mean": 0.11049117147922516,
+    "slice_hu_std": 135.05380249023438,
+    "stats": {
+      "mean": 0.11049117147922516,
+      "std": 135.05380249023438,
+      "median": -1.0,
+      "mad": 114.0,
+      "p005": -474.0,
+      "p01": -432.32,
+      "p99": 383.0,
+      "p995": 408.65999999999985,
+      "iqr": 228.0,
+      "p25": -114.0,
+      "p75": 114.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 119,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.235644219200753437483417471232809004710",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:18.832886+00:00",
+    "findings": [],
+    "processing_time_ms": 71.92,
+    "triage_time_ms": 71.90619999892078,
+    "slice_hu_mean": 1.633151650428772,
+    "slice_hu_std": 134.45787048339844,
+    "stats": {
+      "mean": 1.633151650428772,
+      "std": 134.45787048339844,
+      "median": 2.0,
+      "mad": 113.0,
+      "p005": -475.0,
+      "p01": -424.0,
+      "p99": 394.0,
+      "p995": 420.0,
+      "iqr": 227.0,
+      "p25": -112.0,
+      "p75": 115.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 120,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.217876747402472938582813872467997017854",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:18.974032+00:00",
+    "findings": [],
+    "processing_time_ms": 70.93,
+    "triage_time_ms": 70.91099999888684,
+    "slice_hu_mean": 4.982156276702881,
+    "slice_hu_std": 137.7410125732422,
+    "stats": {
+      "mean": 4.982156276702881,
+      "std": 137.7410125732422,
+      "median": 7.0,
+      "mad": 116.0,
+      "p005": -474.91499999999996,
+      "p01": -431.0,
+      "p99": 399.0,
+      "p995": 428.0,
+      "iqr": 233.0,
+      "p25": -111.0,
+      "p75": 122.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 121,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.191660479472483273637983685927700676586",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:19.113119+00:00",
+    "findings": [],
+    "processing_time_ms": 68.32,
+    "triage_time_ms": 68.3033000004798,
+    "slice_hu_mean": 6.735333442687988,
+    "slice_hu_std": 137.86581420898438,
+    "stats": {
+      "mean": 6.735333442687988,
+      "std": 137.86581420898438,
+      "median": 8.0,
+      "mad": 117.0,
+      "p005": -472.69,
+      "p01": -432.0,
+      "p99": 399.380000000001,
+      "p995": 426.6899999999987,
+      "iqr": 233.0,
+      "p25": -109.0,
+      "p75": 124.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 122,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.333328517183422000816046031526940019310",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:19.256851+00:00",
+    "findings": [],
+    "processing_time_ms": 73.85,
+    "triage_time_ms": 73.82400000096823,
+    "slice_hu_mean": 6.717500686645508,
+    "slice_hu_std": 131.09756469726562,
+    "stats": {
+      "mean": 6.717500686645508,
+      "std": 131.09756469726562,
+      "median": 8.0,
+      "mad": 110.0,
+      "p005": -459.0,
+      "p01": -419.0,
+      "p99": 383.0,
+      "p995": 409.0,
+      "iqr": 220.0,
+      "p25": -103.0,
+      "p75": 117.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 123,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.87716227441324048755126636091947099425",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:19.405851+00:00",
+    "findings": [],
+    "processing_time_ms": 79.03,
+    "triage_time_ms": 79.01050000145915,
+    "slice_hu_mean": 5.94879150390625,
+    "slice_hu_std": 127.22521209716797,
+    "stats": {
+      "mean": 5.94879150390625,
+      "std": 127.22521209716797,
+      "median": 7.0,
+      "mad": 107.0,
+      "p005": -450.0,
+      "p01": -405.0,
+      "p99": 373.0,
+      "p995": 399.0,
+      "iqr": 214.0,
+      "p25": -101.0,
+      "p75": 113.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 124,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.38225439713210373715884802808234947862",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:19.554689+00:00",
+    "findings": [],
+    "processing_time_ms": 73.02,
+    "triage_time_ms": 73.0015999997704,
+    "slice_hu_mean": 3.720815658569336,
+    "slice_hu_std": 121.57999420166016,
+    "stats": {
+      "mean": 3.720815658569336,
+      "std": 121.57999420166016,
+      "median": 5.0,
+      "mad": 103.0,
+      "p005": -440.0,
+      "p01": -388.24,
+      "p99": 344.0,
+      "p995": 371.0,
+      "iqr": 205.0,
+      "p25": -98.0,
+      "p75": 107.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 125,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.147135489165668490251440537175772065189",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:19.704682+00:00",
+    "findings": [],
+    "processing_time_ms": 75.45,
+    "triage_time_ms": 75.43649999934132,
+    "slice_hu_mean": 1.2204780578613281,
+    "slice_hu_std": 118.59049224853516,
+    "stats": {
+      "mean": 1.2204780578613281,
+      "std": 118.59049224853516,
+      "median": 2.0,
+      "mad": 101.0,
+      "p005": -432.15,
+      "p01": -373.0,
+      "p99": 335.0,
+      "p995": 354.0,
+      "iqr": 203.0,
+      "p25": -100.0,
+      "p75": 103.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 126,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.280668911643973993975576408917722222061",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 10,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 10,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:19.857762+00:00",
+    "findings": [
+      {
+        "bbox": [
+          431,
+          297,
+          7,
+          7
+        ],
+        "centroid": [
+          300.1,
+          433.9
+        ],
+        "area": 40,
+        "mean_hu": -820.83,
+        "hu_mean": -820.83,
+        "hu_max": -505.0,
+        "hu_min": -973.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 81.89,
+    "triage_time_ms": 81.83269999972254,
+    "slice_hu_mean": 2.2759640216827393,
+    "slice_hu_std": 121.61312866210938,
+    "stats": {
+      "mean": 2.2759640216827393,
+      "std": 121.61312866210938,
+      "median": 3.0,
+      "mad": 104.0,
+      "p005": -444.0,
+      "p01": -388.0,
+      "p99": 344.0,
+      "p995": 367.0,
+      "iqr": 208.0,
+      "p25": -102.0,
+      "p75": 106.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 127,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.144076812943864382694806631700204677564",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 9,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 9,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:20.003994+00:00",
+    "findings": [
+      {
+        "bbox": [
+          431,
+          298,
+          7,
+          7
+        ],
+        "centroid": [
+          300.6,
+          434.3
+        ],
+        "area": 34,
+        "mean_hu": -774.56,
+        "hu_mean": -774.56,
+        "hu_max": -543.0,
+        "hu_min": -999.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 75.63,
+    "triage_time_ms": 75.59669999864127,
+    "slice_hu_mean": 0.9670063257217407,
+    "slice_hu_std": 123.8060073852539,
+    "stats": {
+      "mean": 0.9670063257217407,
+      "std": 123.8060073852539,
+      "median": 0.0,
+      "mad": 105.0,
+      "p005": -459.0,
+      "p01": -412.0,
+      "p99": 348.0,
+      "p995": 374.0,
+      "iqr": 211.0,
+      "p25": -104.0,
+      "p75": 107.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 128,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.162147625740841387141243497544102903450",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:20.144508+00:00",
+    "findings": [],
+    "processing_time_ms": 71.11,
+    "triage_time_ms": 71.09159999890835,
+    "slice_hu_mean": 2.2489147186279297,
+    "slice_hu_std": 125.24283599853516,
+    "stats": {
+      "mean": 2.2489147186279297,
+      "std": 125.24283599853516,
+      "median": 3.0,
+      "mad": 106.0,
+      "p005": -458.0,
+      "p01": -408.0,
+      "p99": 354.0,
+      "p995": 378.0,
+      "iqr": 213.0,
+      "p25": -104.0,
+      "p75": 109.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 129,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.312058571939410723066234521521904000222",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:20.284577+00:00",
+    "findings": [],
+    "processing_time_ms": 71.34,
+    "triage_time_ms": 71.3194999989355,
+    "slice_hu_mean": 2.260314702987671,
+    "slice_hu_std": 125.06575012207031,
+    "stats": {
+      "mean": 2.260314702987671,
+      "std": 125.06575012207031,
+      "median": 4.0,
+      "mad": 106.0,
+      "p005": -468.435,
+      "p01": -423.0,
+      "p99": 346.0,
+      "p995": 367.0,
+      "iqr": 212.0,
+      "p25": -103.0,
+      "p75": 109.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 130,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.254180584975538038846533751251196152633",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 9,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 9,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:20.426589+00:00",
+    "findings": [
+      {
+        "bbox": [
+          317,
+          217,
+          11,
+          13
+        ],
+        "centroid": [
+          223.1,
+          322.9
+        ],
+        "area": 77,
+        "mean_hu": -687.87,
+        "hu_mean": -687.87,
+        "hu_max": -504.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 74.08,
+    "triage_time_ms": 74.01279999976396,
+    "slice_hu_mean": 3.599937915802002,
+    "slice_hu_std": 125.9342041015625,
+    "stats": {
+      "mean": 3.599937915802002,
+      "std": 125.9342041015625,
+      "median": 6.0,
+      "mad": 106.0,
+      "p005": -482.655,
+      "p01": -429.0,
+      "p99": 355.0,
+      "p995": 376.0,
+      "iqr": 212.0,
+      "p25": -102.0,
+      "p75": 110.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 131,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.137482301842017843516617787165250011102",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 35,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 35,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:20.569648+00:00",
+    "findings": [
+      {
+        "bbox": [
+          313,
+          196,
+          33,
+          35
+        ],
+        "centroid": [
+          215.3,
+          327.4
+        ],
+        "area": 486,
+        "mean_hu": -734.25,
+        "hu_mean": -734.25,
+        "hu_max": -536.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 71.57,
+    "triage_time_ms": 71.501200000057,
+    "slice_hu_mean": 2.122797727584839,
+    "slice_hu_std": 128.03250122070312,
+    "stats": {
+      "mean": 2.122797727584839,
+      "std": 128.03250122070312,
+      "median": 5.0,
+      "mad": 108.0,
+      "p005": -571.0,
+      "p01": -470.0,
+      "p99": 353.0,
+      "p995": 375.0,
+      "iqr": 216.0,
+      "p25": -105.0,
+      "p75": 111.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 132,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.312074726342129973920394747569100721378",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 79,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 79,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:20.723042+00:00",
+    "findings": [
+      {
+        "bbox": [
+          305,
+          180,
+          45,
+          51
+        ],
+        "centroid": [
+          207.5,
+          326.6
+        ],
+        "area": 1174,
+        "mean_hu": -796.94,
+        "hu_mean": -796.94,
+        "hu_max": -543.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.72,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          341,
+          194,
+          11,
+          14
+        ],
+        "centroid": [
+          201.3,
+          346.3
+        ],
+        "area": 81,
+        "mean_hu": -845.58,
+        "hu_mean": -845.58,
+        "hu_max": -559.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 84.38,
+    "triage_time_ms": 84.33789999980945,
+    "slice_hu_mean": -1.327863097190857,
+    "slice_hu_std": 132.59779357910156,
+    "stats": {
+      "mean": -1.327863097190857,
+      "std": 132.59779357910156,
+      "median": 3.0,
+      "mad": 109.0,
+      "p005": -858.515,
+      "p01": -684.03,
+      "p99": 357.0,
+      "p995": 379.0,
+      "iqr": 219.0,
+      "p25": -109.0,
+      "p75": 110.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 133,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.33625844171066835577101156983177925891",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:20.870100+00:00",
+    "findings": [],
+    "processing_time_ms": 75.75,
+    "triage_time_ms": 75.73759999831964,
+    "slice_hu_mean": 3.993182420730591,
+    "slice_hu_std": 127.92786407470703,
+    "stats": {
+      "mean": 3.993182420730591,
+      "std": 127.92786407470703,
+      "median": 7.0,
+      "mad": 108.0,
+      "p005": -475.0,
+      "p01": -430.0,
+      "p99": 351.0,
+      "p995": 373.0,
+      "iqr": 216.0,
+      "p25": -103.0,
+      "p75": 113.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 134,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.70162758324484505478432617151638484643",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:21.015565+00:00",
+    "findings": [],
+    "processing_time_ms": 76.23,
+    "triage_time_ms": 76.1995000011666,
+    "slice_hu_mean": 3.3805830478668213,
+    "slice_hu_std": 123.84068298339844,
+    "stats": {
+      "mean": 3.3805830478668213,
+      "std": 123.84068298339844,
+      "median": 5.0,
+      "mad": 105.0,
+      "p005": -460.0,
+      "p01": -411.0,
+      "p99": 346.0,
+      "p995": 368.1650000000009,
+      "iqr": 209.0,
+      "p25": -100.0,
+      "p75": 109.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 135,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.256395405143108411779513697394927032514",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:21.157023+00:00",
+    "findings": [],
+    "processing_time_ms": 70.68,
+    "triage_time_ms": 70.66170000143757,
+    "slice_hu_mean": 2.227640390396118,
+    "slice_hu_std": 119.73207092285156,
+    "stats": {
+      "mean": 2.227640390396118,
+      "std": 119.73207092285156,
+      "median": 5.0,
+      "mad": 101.0,
+      "p005": -438.0,
+      "p01": -390.02,
+      "p99": 330.0,
+      "p995": 351.0,
+      "iqr": 202.0,
+      "p25": -98.0,
+      "p75": 104.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 136,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.325023602797937743111301154763474621612",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:21.295625+00:00",
+    "findings": [],
+    "processing_time_ms": 67.03,
+    "triage_time_ms": 66.99370000023919,
+    "slice_hu_mean": -0.3757583796977997,
+    "slice_hu_std": 117.2862777709961,
+    "stats": {
+      "mean": -0.3757583796977997,
+      "std": 117.2862777709961,
+      "median": 1.0,
+      "mad": 99.0,
+      "p005": -428.0,
+      "p01": -382.0,
+      "p99": 321.0,
+      "p995": 341.52500000000146,
+      "iqr": 199.0,
+      "p25": -99.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 137,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.264092167569199635271507304944973463626",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:21.434847+00:00",
+    "findings": [],
+    "processing_time_ms": 69.04,
+    "triage_time_ms": 69.01900000048045,
+    "slice_hu_mean": -2.0234830379486084,
+    "slice_hu_std": 117.63910675048828,
+    "stats": {
+      "mean": -2.0234830379486084,
+      "std": 117.63910675048828,
+      "median": -2.0,
+      "mad": 100.0,
+      "p005": -447.16499999999996,
+      "p01": -393.0,
+      "p99": 321.0,
+      "p995": 342.0,
+      "iqr": 199.0,
+      "p25": -101.0,
+      "p75": 98.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 138,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.218406425290094274491993081529062439603",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:21.572147+00:00",
+    "findings": [],
+    "processing_time_ms": 68.23,
+    "triage_time_ms": 68.20750000042608,
+    "slice_hu_mean": -3.2815256118774414,
+    "slice_hu_std": 122.92173767089844,
+    "stats": {
+      "mean": -3.2815256118774414,
+      "std": 122.92173767089844,
+      "median": -3.0,
+      "mad": 103.0,
+      "p005": -458.0,
+      "p01": -417.0,
+      "p99": 339.0,
+      "p995": 361.0849999999991,
+      "iqr": 206.0,
+      "p25": -106.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 139,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.63933540412206752923309268896417538643",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 5,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 5,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:21.719228+00:00",
+    "findings": [
+      {
+        "bbox": [
+          272,
+          182,
+          7,
+          8
+        ],
+        "centroid": [
+          185.1,
+          275.4
+        ],
+        "area": 30,
+        "mean_hu": -711.63,
+        "hu_mean": -711.63,
+        "hu_max": -525.0,
+        "hu_min": -915.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 78.97,
+    "triage_time_ms": 78.9413999991666,
+    "slice_hu_mean": -3.8334226608276367,
+    "slice_hu_std": 124.76219940185547,
+    "stats": {
+      "mean": -3.8334226608276367,
+      "std": 124.76219940185547,
+      "median": -1.0,
+      "mad": 105.0,
+      "p005": -468.0,
+      "p01": -425.0,
+      "p99": 348.0,
+      "p995": 370.0,
+      "iqr": 210.0,
+      "p25": -108.0,
+      "p75": 102.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 140,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.158954499233521437278839150650004216342",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:21.864229+00:00",
+    "findings": [],
+    "processing_time_ms": 74.59,
+    "triage_time_ms": 74.56220000130998,
+    "slice_hu_mean": -3.089247703552246,
+    "slice_hu_std": 122.15755462646484,
+    "stats": {
+      "mean": -3.089247703552246,
+      "std": 122.15755462646484,
+      "median": -2.0,
+      "mad": 102.0,
+      "p005": -463.0,
+      "p01": -424.54999999999995,
+      "p99": 343.5499999999993,
+      "p995": 369.0,
+      "iqr": 203.0,
+      "p25": -104.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 141,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.103393452948850171228838420491679584100",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:22.019030+00:00",
+    "findings": [],
+    "processing_time_ms": 83.33,
+    "triage_time_ms": 83.31590000125288,
+    "slice_hu_mean": -2.9743714332580566,
+    "slice_hu_std": 125.37088012695312,
+    "stats": {
+      "mean": -2.9743714332580566,
+      "std": 125.37088012695312,
+      "median": -1.0,
+      "mad": 106.0,
+      "p005": -472.0,
+      "p01": -425.0,
+      "p99": 353.0,
+      "p995": 378.0,
+      "iqr": 211.0,
+      "p25": -108.0,
+      "p75": 103.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 142,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.1443251846732302249238670270294759999",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:22.178075+00:00",
+    "findings": [],
+    "processing_time_ms": 82.64,
+    "triage_time_ms": 82.61999999922409,
+    "slice_hu_mean": -3.363276958465576,
+    "slice_hu_std": 122.38383483886719,
+    "stats": {
+      "mean": -3.363276958465576,
+      "std": 122.38383483886719,
+      "median": -1.0,
+      "mad": 103.0,
+      "p005": -467.03999999999996,
+      "p01": -424.08,
+      "p99": 339.0,
+      "p995": 363.0,
+      "iqr": 206.0,
+      "p25": -105.0,
+      "p75": 101.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 143,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.39201299032495310084940542156584992131",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:22.317511+00:00",
+    "findings": [],
+    "processing_time_ms": 69.7,
+    "triage_time_ms": 69.68650000089838,
+    "slice_hu_mean": -4.299711227416992,
+    "slice_hu_std": 123.26327514648438,
+    "stats": {
+      "mean": -4.299711227416992,
+      "std": 123.26327514648438,
+      "median": -3.0,
+      "mad": 104.0,
+      "p005": -465.0,
+      "p01": -419.0,
+      "p99": 345.0,
+      "p995": 368.0,
+      "iqr": 208.5,
+      "p25": -107.5,
+      "p75": 101.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 144,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.292818409671771531719189519279620288285",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:22.467679+00:00",
+    "findings": [],
+    "processing_time_ms": 78.63,
+    "triage_time_ms": 78.61310000043886,
+    "slice_hu_mean": -4.076706886291504,
+    "slice_hu_std": 124.37632751464844,
+    "stats": {
+      "mean": -4.076706886291504,
+      "std": 124.37632751464844,
+      "median": -2.0,
+      "mad": 104.0,
+      "p005": -471.0,
+      "p01": -428.0,
+      "p99": 341.8100000000013,
+      "p995": 368.0,
+      "iqr": 208.0,
+      "p25": -107.0,
+      "p75": 101.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 145,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.90458357842271845580173129749715414738",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:22.609192+00:00",
+    "findings": [],
+    "processing_time_ms": 70.48,
+    "triage_time_ms": 70.44829999904323,
+    "slice_hu_mean": -5.529112339019775,
+    "slice_hu_std": 120.84649658203125,
+    "stats": {
+      "mean": -5.529112339019775,
+      "std": 120.84649658203125,
+      "median": -3.0,
+      "mad": 102.0,
+      "p005": -454.0,
+      "p01": -409.08,
+      "p99": 332.0799999999981,
+      "p995": 355.5400000000009,
+      "iqr": 204.0,
+      "p25": -107.0,
+      "p75": 97.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 146,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.237847013449573756718174555484075065711",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:22.749990+00:00",
+    "findings": [],
+    "processing_time_ms": 71.8,
+    "triage_time_ms": 71.75980000101845,
+    "slice_hu_mean": -5.958230018615723,
+    "slice_hu_std": 115.2542724609375,
+    "stats": {
+      "mean": -5.958230018615723,
+      "std": 115.2542724609375,
+      "median": -4.0,
+      "mad": 98.0,
+      "p005": -437.0,
+      "p01": -393.0,
+      "p99": 314.0,
+      "p995": 339.72999999999956,
+      "iqr": 197.0,
+      "p25": -104.0,
+      "p75": 93.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 147,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.184057332613004862554328208895003399707",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:22.896741+00:00",
+    "findings": [],
+    "processing_time_ms": 77.42,
+    "triage_time_ms": 77.40820000071835,
+    "slice_hu_mean": -8.985200881958008,
+    "slice_hu_std": 112.01852416992188,
+    "stats": {
+      "mean": -8.985200881958008,
+      "std": 112.01852416992188,
+      "median": -8.0,
+      "mad": 95.0,
+      "p005": -421.925,
+      "p01": -371.0,
+      "p99": 304.84999999999854,
+      "p995": 329.0,
+      "iqr": 190.0,
+      "p25": -104.0,
+      "p75": 86.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 148,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.156860402496532208279754127508951988410",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 16,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 16,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:23.063676+00:00",
+    "findings": [
+      {
+        "bbox": [
+          321,
+          167,
+          11,
+          7
+        ],
+        "centroid": [
+          169.4,
+          325.8
+        ],
+        "area": 42,
+        "mean_hu": -654.29,
+        "hu_mean": -654.29,
+        "hu_max": -476.0,
+        "hu_min": -988.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          237,
+          228,
+          10,
+          7
+        ],
+        "centroid": [
+          231.7,
+          240.8
+        ],
+        "area": 44,
+        "mean_hu": -717.16,
+        "hu_mean": -717.16,
+        "hu_max": -478.0,
+        "hu_min": -970.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 90.38,
+    "triage_time_ms": 90.30940000047849,
+    "slice_hu_mean": -10.620694160461426,
+    "slice_hu_std": 115.29420471191406,
+    "stats": {
+      "mean": -10.620694160461426,
+      "std": 115.29420471191406,
+      "median": -9.0,
+      "mad": 98.0,
+      "p005": -439.0,
+      "p01": -382.0,
+      "p99": 313.0,
+      "p995": 338.0,
+      "iqr": 195.0,
+      "p25": -108.0,
+      "p75": 87.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 149,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.91807189184990993197919272859647467381",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 15,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 15,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:23.242818+00:00",
+    "findings": [
+      {
+        "bbox": [
+          234,
+          226,
+          14,
+          10
+        ],
+        "centroid": [
+          231.1,
+          240.7
+        ],
+        "area": 89,
+        "mean_hu": -829.75,
+        "hu_mean": -829.75,
+        "hu_max": -506.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 90.22,
+    "triage_time_ms": 90.1573000010103,
+    "slice_hu_mean": -10.206793785095215,
+    "slice_hu_std": 116.4505386352539,
+    "stats": {
+      "mean": -10.206793785095215,
+      "std": 116.4505386352539,
+      "median": -9.0,
+      "mad": 99.0,
+      "p005": -448.0,
+      "p01": -399.0,
+      "p99": 313.0,
+      "p995": 339.0,
+      "iqr": 197.75,
+      "p25": -108.0,
+      "p75": 89.75
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 150,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.101399580952707863630208985899630140790",
+    "patient_id": "MSB-00142",
+    "flagged": false,
+    "emergency_score": 15,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 15,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:23.397412+00:00",
+    "findings": [
+      {
+        "bbox": [
+          236,
+          226,
+          12,
+          10
+        ],
+        "centroid": [
+          230.7,
+          241.5
+        ],
+        "area": 89,
+        "mean_hu": -841.98,
+        "hu_mean": -841.98,
+        "hu_max": -503.0,
+        "hu_min": -1024.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 84.9,
+    "triage_time_ms": 84.82720000029076,
+    "slice_hu_mean": -10.97044563293457,
+    "slice_hu_std": 120.1915512084961,
+    "stats": {
+      "mean": -10.97044563293457,
+      "std": 120.1915512084961,
+      "median": -11.0,
+      "mad": 101.5,
+      "p005": -466.0,
+      "p01": -420.04999999999995,
+      "p99": 333.0,
+      "p995": 358.0,
+      "iqr": 203.0,
+      "p25": -113.0,
+      "p75": 90.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  },
+  {
+    "slice_id": 151,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.192933053999244050769402751489044843930",
+    "patient_id": "MSB-00142",
+    "flagged": true,
+    "emergency_score": 20,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 20,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T10:58:23.564726+00:00",
+    "findings": [
+      {
+        "bbox": [
+          336,
+          174,
+          9,
+          24
+        ],
+        "centroid": [
+          183.8,
+          340.0
+        ],
+        "area": 74,
+        "mean_hu": -809.2,
+        "hu_mean": -809.2,
+        "hu_max": -505.0,
+        "hu_min": -1024.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          237,
+          228,
+          11,
+          7
+        ],
+        "centroid": [
+          231.5,
+          242.5
+        ],
+        "area": 54,
+        "mean_hu": -791.61,
+        "hu_mean": -791.61,
+        "hu_max": -502.0,
+        "hu_min": -999.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 89.47,
+    "triage_time_ms": 89.4244000010076,
+    "slice_hu_mean": -9.374771118164062,
+    "slice_hu_std": 122.83522033691406,
+    "stats": {
+      "mean": -9.374771118164062,
+      "std": 122.83522033691406,
+      "median": -8.0,
+      "mad": 103.0,
+      "p005": -490.0,
+      "p01": -444.0,
+      "p99": 339.0,
+      "p995": 369.0,
+      "iqr": 206.0,
+      "p25": -111.0,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -530.0,
+    "window_width_default": 1700.0
+  }
+]

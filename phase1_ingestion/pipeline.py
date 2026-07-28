@@ -36,6 +36,7 @@ from .dicom_listener import DICOMListener
 from .ws_server import app, broadcaster, create_alert_payload
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 
