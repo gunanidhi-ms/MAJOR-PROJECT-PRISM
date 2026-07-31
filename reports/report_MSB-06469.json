@@ -1,0 +1,446 @@
+[
+  {
+    "slice_id": 160,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.275704088427213747188029774576657896427",
+    "patient_id": "MSB-06469",
+    "flagged": true,
+    "emergency_score": 22,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 22,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-31T11:53:12.769558+00:00",
+    "findings": [
+      {
+        "bbox": [
+          280,
+          89,
+          15,
+          16
+        ],
+        "centroid": [
+          95.0,
+          286.8
+        ],
+        "area": 138,
+        "mean_hu": -942.8,
+        "hu_mean": -942.8,
+        "hu_max": -658.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.18,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          243,
+          99,
+          39,
+          42
+        ],
+        "centroid": [
+          118.2,
+          263.2
+        ],
+        "area": 877,
+        "mean_hu": -929.37,
+        "hu_mean": -929.37,
+        "hu_max": -629.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.28,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          324,
+          111,
+          37,
+          39
+        ],
+        "centroid": [
+          131.6,
+          344.5
+        ],
+        "area": 859,
+        "mean_hu": -903.49,
+        "hu_mean": -903.49,
+        "hu_max": -634.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.27,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          232,
+          162,
+          35,
+          36
+        ],
+        "centroid": [
+          180.1,
+          248.6
+        ],
+        "area": 840,
+        "mean_hu": -914.4,
+        "hu_mean": -914.4,
+        "hu_max": -631.0,
+        "hu_min": -1024.0,
+        "confidence": 0.65,
+        "severity_score": 0.27,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 178.6,
+    "triage_time_ms": 172.17,
+    "slice_hu_mean": -92.09,
+    "slice_hu_std": 313.53,
+    "stats": {
+      "mean": -92.09,
+      "std": 313.53,
+      "median": 7.0,
+      "iqr": 207.0,
+      "mad": 101.0,
+      "p005": -1024.0,
+      "p01": -1024.0,
+      "p05": -993.0,
+      "p10": -930.0,
+      "p25": -111.0,
+      "p75": 96.0,
+      "p90": 164.0,
+      "p95": 203.0,
+      "p99": 274.0,
+      "p995": 298.5
+    },
+    "detected_region": "generic",
+    "window_center_default": -600.0,
+    "window_width_default": 1200.0
+  },
+  {
+    "slice_id": 161,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.42926223541716850094664979703221970175",
+    "patient_id": "MSB-06469",
+    "flagged": false,
+    "emergency_score": 15,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 15,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-31T11:53:13.018400+00:00",
+    "findings": [
+      {
+        "bbox": [
+          279,
+          89,
+          17,
+          13
+        ],
+        "centroid": [
+          94.3,
+          286.2
+        ],
+        "area": 144,
+        "mean_hu": -931.58,
+        "hu_mean": -931.58,
+        "hu_max": -639.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.18,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          244,
+          99,
+          36,
+          41
+        ],
+        "centroid": [
+          117.8,
+          263.9
+        ],
+        "area": 853,
+        "mean_hu": -936.44,
+        "hu_mean": -936.44,
+        "hu_max": -634.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.28,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          224,
+          161,
+          42,
+          38
+        ],
+        "centroid": [
+          179.1,
+          243.6
+        ],
+        "area": 825,
+        "mean_hu": -900.47,
+        "hu_mean": -900.47,
+        "hu_max": -632.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.27,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 195.07,
+    "triage_time_ms": 187.89,
+    "slice_hu_mean": -86.02,
+    "slice_hu_std": 307.6,
+    "stats": {
+      "mean": -86.02,
+      "std": 307.6,
+      "median": 8.0,
+      "iqr": 208.0,
+      "mad": 100.0,
+      "p005": -1024.0,
+      "p01": -1024.0,
+      "p05": -994.0,
+      "p10": -928.0,
+      "p25": -111.0,
+      "p75": 97.0,
+      "p90": 165.0,
+      "p95": 205.0,
+      "p99": 272.0,
+      "p995": 293.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -600.0,
+    "window_width_default": 1200.0
+  },
+  {
+    "slice_id": 162,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.38381628862377520601486486229535658610",
+    "patient_id": "MSB-06469",
+    "flagged": false,
+    "emergency_score": 13,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 13,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-31T11:53:13.288963+00:00",
+    "findings": [
+      {
+        "bbox": [
+          279,
+          89,
+          18,
+          11
+        ],
+        "centroid": [
+          93.0,
+          286.4
+        ],
+        "area": 108,
+        "mean_hu": -932.37,
+        "hu_mean": -932.37,
+        "hu_max": -694.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.18,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          244,
+          98,
+          36,
+          41
+        ],
+        "centroid": [
+          116.1,
+          262.6
+        ],
+        "area": 764,
+        "mean_hu": -936.66,
+        "hu_mean": -936.66,
+        "hu_max": -614.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.27,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          218,
+          161,
+          43,
+          39
+        ],
+        "centroid": [
+          179.7,
+          237.9
+        ],
+        "area": 789,
+        "mean_hu": -893.92,
+        "hu_mean": -893.92,
+        "hu_max": -614.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.26,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 215.93,
+    "triage_time_ms": 208.39,
+    "slice_hu_mean": -84.14,
+    "slice_hu_std": 305.61,
+    "stats": {
+      "mean": -84.14,
+      "std": 305.61,
+      "median": 7.0,
+      "iqr": 203.0,
+      "mad": 99.0,
+      "p005": -1024.0,
+      "p01": -1024.0,
+      "p05": -995.0,
+      "p10": -928.6,
+      "p25": -106.0,
+      "p75": 97.0,
+      "p90": 167.0,
+      "p95": 207.0,
+      "p99": 280.0,
+      "p995": 304.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -600.0,
+    "window_width_default": 1200.0
+  },
+  {
+    "slice_id": 163,
+    "uid": "1.3.6.1.4.1.14519.5.2.1.155242477110026791245352064168860844535",
+    "patient_id": "MSB-06469",
+    "flagged": false,
+    "emergency_score": 15,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 15,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-31T11:53:13.542492+00:00",
+    "findings": [
+      {
+        "bbox": [
+          280,
+          89,
+          19,
+          8
+        ],
+        "centroid": [
+          91.6,
+          288.8
+        ],
+        "area": 77,
+        "mean_hu": -933.26,
+        "hu_mean": -933.26,
+        "hu_max": -616.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.18,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          242,
+          98,
+          36,
+          40
+        ],
+        "centroid": [
+          115.0,
+          261.5
+        ],
+        "area": 682,
+        "mean_hu": -938.32,
+        "hu_mean": -938.32,
+        "hu_max": -614.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.26,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          213,
+          161,
+          37,
+          38
+        ],
+        "centroid": [
+          180.2,
+          232.6
+        ],
+        "area": 767,
+        "mean_hu": -904.1,
+        "hu_mean": -904.1,
+        "hu_max": -606.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.26,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          377,
+          417,
+          63,
+          25
+        ],
+        "centroid": [
+          431.9,
+          407.0
+        ],
+        "area": 329,
+        "mean_hu": -953.85,
+        "hu_mean": -953.85,
+        "hu_max": -606.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.21,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 198.8,
+    "triage_time_ms": 191.18,
+    "slice_hu_mean": -87.16,
+    "slice_hu_std": 303.77,
+    "stats": {
+      "mean": -87.16,
+      "std": 303.77,
+      "median": 3.0,
+      "iqr": 198.0,
+      "mad": 97.0,
+      "p005": -1024.0,
+      "p01": -1024.0,
+      "p05": -994.0,
+      "p10": -930.0,
+      "p25": -108.0,
+      "p75": 90.0,
+      "p90": 161.0,
+      "p95": 201.0,
+      "p99": 274.0,
+      "p995": 298.0
+    },
+    "detected_region": "generic",
+    "window_center_default": -600.0,
+    "window_width_default": 1200.0
+  }
+]

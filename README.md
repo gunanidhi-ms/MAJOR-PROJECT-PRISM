@@ -486,49 +486,72 @@ The core logic of PRISM resides within `triage_screen.py`. It evaluates an unkno
   > **Input:** Soft tissue P99 = `165 HU`, Lung Fraction = `31%`.
   > **Output:** Scan Type: `CONTRAST`, Region: `CHEST`.
 
+Here is the updated version reflecting your current implementation.
+
+---
+
 ### Step 3: Expected Normal Anatomy Suppression (The Search Mask)
-* **Why this step exists:** Eradicates the vast majority of false positives. Without it, normal lungs look like deadly pneumothoraces, and normal skulls look like deadly calcifications.
+
+* **Why this step exists:** Eliminates expected anatomical structures that would otherwise dominate the statistical analysis and generate false positives. Normal lungs, bowel gas, cortical bone, and outer body tissues should not be interpreted as abnormalities.
 * **Inputs:** HU Array, Body Mask, Body Region.
-* **Processing:** Adaptively suppresses bone `max(Body_P99, 350.0)`. Erodes outer boundary fat. If the region is `CHEST`, uses Connected Component Analysis to isolate and mask out large contiguous lung volumes (`> 5000px`).
-* **Outputs:** Boolean 2D array (Search Mask).
-* **Complexity:** Heavy $O(N)$ due to CCA and distance transforms.
-* **Failure Cases:** Severe emphysema (bullae) in the lung might be detached from the main lung body, evading suppression and triggering a false air-leak alert.
+* **Processing:** Computes an adaptive bone threshold `max(Body_P99, 350 HU)` and suppresses bone after 3 iterations of morphological dilation to capture partial-volume edge voxels. Region-specific suppression is then applied. For **CHEST**, a 2-tier approach suppresses large bilateral lung fields (`>5000 px` with typical lung density) and small central airways (`<2000 px`), leaving unusual-density air for pneumothorax detection. For **ABDOMEN**, only compact, moderate-density internal gas pockets are suppressed to preserve pathological free air (pneumoperitoneum). **HEAD** applies deeper skull erosion and suppresses CSF ventricles, while **NECK** and **PELVIS** have dedicated airway/gas suppression. A universal cleanup removes residual background air (`< -500 HU`) from regions not actively analyzing air.
+* **Outputs:** Boolean 2D Search Mask.
+* **Complexity:** Heavy $O(N)$ due to Connected Component Analysis, distance transforms, and morphological operations.
+* **Failure Cases:** Pathological air collections connected to normal lung fields via thin gaps may be unintentionally suppressed if the morphological structures merge them.
 * **Example:**
-  > **Input:** Chest scan with normal lungs (`-850 HU`, `60000px` area) and a pneumothorax (`-950 HU`, `800px` area).
-  > **Output:** Normal lungs are masked out. Pneumothorax remains in the Search Mask.
+
+  > **Input:** Chest CT containing normal lungs (`-850 HU`, `55000 px`), trachea (`1500 px`), and a pneumothorax crescent (`3500 px`).
+  >
+  > **Output:** Lungs and trachea are suppressed. The pneumothorax crescent remains in the Search Mask for statistical evaluation.
+
+---
 
 ### Step 4: Adaptive Statistical Baseline
-* **Why this step exists:** To define "normalcy" locally. The Mean HU of a brain is `~35 HU`; an abdomen is `~50 HU`. A fixed threshold will always fail.
+
+* **Why this step exists:** Establishes a robust statistical representation of normal tissue while preventing abnormal regions from influencing their own reference distribution.
 * **Inputs:** HU Array, Search Mask.
-* **Processing:** Subsamples valid pixels `[::4]`. Computes Mean, Std, Median, MAD (Median Absolute Deviation), IQR, and percentiles (P01 to P99).
-* **Outputs:** Dictionary of float statistics.
-* **Complexity:** $O(K \log K)$ where $K$ is the subsampled pixels.
-* **Failure Cases:** If the search mask is extremely small (e.g., top of the head), statistics may be highly volatile.
+* **Processing:** Subsamples search-mask pixels (`[::4]`) for efficiency. Computes percentiles (`P0.5`–`P99.5`), then calculates the Mean and Standard Deviation only from the **trimmed P5–P95 distribution**. Also computes Median, MAD (Median Absolute Deviation), IQR, and percentile statistics.
+* **Outputs:** Dictionary containing robust slice statistics.
+* **Complexity:** $O(K \log K)$ where $K$ is the number of sampled pixels.
+* **Failure Cases:** Extremely small search masks may produce unstable statistical estimates due to insufficient reference pixels.
 * **Example:**
-  > **Input:** Search mask of a non-contrast brain.
-  > **Output:** Mean: `32.5`, Std: `10.2`, Median: `33.0`.
 
-### Step 5 & 6: Outlier Detection & Connected Component Analysis (CCA)
-* **Why this step exists:** To mathematically identify abnormal voxels and group them into distinct structural findings.
+  > **Input:** Brain CT containing a large hyperdense hemorrhage.
+  >
+  > **Output:** Mean and Standard Deviation are computed from the trimmed normal tissue distribution, preventing the hemorrhage from shifting the baseline.
+
+---
+
+### Step 5 & 6: Statistical Outlier Detection, Connected Component Analysis, and Local Context Validation
+
+* **Why this step exists:** Detects statistically abnormal tissue while minimizing false positives through multiple independent statistical tests and local neighborhood validation.
 * **Inputs:** HU Array, Search Mask, Baseline Statistics.
-* **Processing:** Computes Z-scores and MAD-scores. Flags voxels where $Z > 4.0$ OR $MAD > 5.0$ OR voxel exceeds P0.5/P99.5. Applies `ndimage.label` to group them into clusters.
-* **Outputs:** List of raw candidate components (bbox, centroid, area, mean_hu).
-* **Complexity:** $O(N)$ matrix operations.
-* **Failure Cases:** A diffuse, slow-changing gradient of fluid might not trigger a sharp outlier threshold, missing subtle edema.
+* **Processing:** Computes Z-score, MAD-score, percentile, and IQR-based outlier measures for every pixel. A voxel is accepted only if it satisfies **at least two of four independent statistical criteria** (majority voting). Connected Component Analysis groups abnormal voxels into candidate regions. Each component is then validated using both global statistics and a **local neighborhood that excludes the component itself**, preventing the abnormality from contaminating its own reference statistics.
+* **Outputs:** List of validated candidate components containing bounding boxes, centroids, area, and HU measurements.
+* **Complexity:** $O(N)$ for statistical calculations and Connected Component Analysis.
+* **Failure Cases:** Very diffuse abnormalities with low local contrast may not accumulate sufficient statistical evidence to satisfy the majority-voting criteria.
 * **Example:**
-  > **Input:** Baseline Mean = `45`, Std = `18`. Voxel = `160 HU`.
-  > **Output:** Z = `6.38` $\rightarrow$ Flagged as Outlier $\rightarrow$ CCA grouping $\rightarrow$ Raw Candidate Component.
 
-### Step 7: Geometric Filtering
-* **Why this step exists:** To distinguish between a true anatomical mass and a digital scanner artifact.
-* **Inputs:** Raw candidate components.
-* **Processing:** Discards components if: Area $< 30px$, Aspect Ratio $> 8.0$ (beam hardening), Solidity $< 0.15$ (scatter noise), or if they bleed outside the search mask boundary.
-* **Outputs:** Filtered list of candidate components.
-* **Complexity:** $O(C)$ where $C$ is the number of components.
-* **Failure Cases:** A perfectly linear, thin subdural hematoma might accidentally trigger the Aspect Ratio $> 8.0$ filter and be suppressed.
+  > **Input:** Baseline Mean = `40 HU`, Trimmed Std = `10 HU`, Candidate Region = `95 HU`.
+  >
+  > **Output:** The region satisfies multiple statistical tests (Z-score, MAD-score, percentile), survives Connected Component Analysis, passes local context validation, and proceeds to geometric filtering.
+
+---
+
+### Step 7: Geometric Filtering and Confidence Estimation
+
+* **Why this step exists:** Removes geometrically implausible detections and assigns confidence based on multiple independent sources of evidence instead of assuming every statistical outlier is clinically meaningful.
+* **Inputs:** Validated candidate components, Search Mask, Global Statistics.
+* **Processing:** Rejects components that are highly elongated (Aspect Ratio `>6`), have low solidity (`<0.15`), or significantly overlap the Search Mask boundary. Confidence begins conservatively at **0.4** and increases only through strong statistical evidence, larger component area, high solidity, and strong local contrast. A severity score is then computed from statistical extremity and physical size.
+* **Outputs:** Final list of `Finding` objects with confidence, severity score, bounding box, and anomaly type.
+* **Complexity:** $O(C)$ where $C$ is the number of validated candidate components.
+* **Failure Cases:** Small but clinically significant abnormalities may receive lower confidence because of their limited size, while unusually shaped true abnormalities may fail geometric filtering.
 * **Example:**
-  > **Input:** A component with Width = `100`, Height = `5` (Aspect Ratio = `20.0`).
-  > **Output:** Discarded (Assumed beam-hardening streak artifact).
+
+  > **Input:** Compact hyperdense lesion (`Area = 1200 px`, `Global Z = 7.2`, `Evidence = 5`, `High Local Contrast`).
+  >
+  > **Output:** Component passes all geometric filters, receives high confidence (`≈0.9`), and is reported as a statistical finding.
+
 
 ### Step 8: Confidence Estimation
 * **Why this step exists:** To provide transparency to the radiologist; determining if the engine thinks a finding is a "maybe" or a "definitely".
@@ -544,17 +567,17 @@ The core logic of PRISM resides within `triage_screen.py`. It evaluates an unkno
 ### Step 9 & 10: Emergency Scoring & Action Recommendation
 * **Why this step exists:** To collapse complex mathematical findings into a single, clinically actionable directive.
 * **Inputs:** List of `Finding` objects.
-* **Processing:** Points = `Severity * Confidence * (Area / 100) * 10`. Total slice points mapped to: `CONTINUE` (0-19), `WATCH` (20-49), `URGENT REVIEW` (50-79), or `IMMEDIATE ALERT` (80-100).
+* **Processing:** Points = `Severity * Confidence^1.5 * sqrt(Area / 500) * 40` (capped at 50 per finding). Total slice points mapped to: `CONTINUE` (0-19), `WATCH` (20-44), `URGENT REVIEW` (45-79), or `IMMEDIATE ALERT` (80-100).
 * **Outputs:** Total integer score and Action string.
 * **Complexity:** $O(C)$.
 * **Example:**
-  > **Scenario A (Small Anomaly):** 3 tiny pockets of bowel gas. Total area = `150px`.
-  > **Calculation:** Severity (~0.3) * Conf (0.5) * (1.5) * 10 = `2.25 points` per finding.
-  > **Output:** `~7 points` $\rightarrow$ **CONTINUE**.
+  > **Scenario A (Small Anomaly):** Small pocket of bowel gas. Total area = `150px`.
+  > **Calculation:** Severity (0.3) * Conf (0.4)^1.5 * sqrt(150/500) * 40 = `2.1 points`.
+  > **Output:** `2 points` $\rightarrow$ **CONTINUE**.
   > 
-  > **Scenario B (Large Anomaly):** Massive cranial bleed. Total area = `2500px`.
-  > **Calculation:** Severity (1.0) * Conf (0.9) * (25.0) * 10 = `225 points` (Capped at 60 points per finding).
-  > **Output:** `60 points` $\rightarrow$ **URGENT REVIEW**. (Or combined with other findings to hit 80 $\rightarrow$ **IMMEDIATE ALERT**).
+  > **Scenario B (Large Anomaly):** Massive cranial bleed. Total area = `6000px`.
+  > **Calculation:** Severity (0.67) * Conf (0.65)^1.5 * sqrt(6000/500) * 40 = `48.8 points` (Capped at 50).
+  > **Output:** `49 points` $\rightarrow$ **URGENT REVIEW**.
 
 ---
 

@@ -174,6 +174,7 @@ def _step_2B_body_region(hu_array: np.ndarray, body_mask: np.ndarray, dicom_hint
     hint = dicom_hint.upper().strip()
     if hint:
         if any(k in hint for k in ["HEAD", "BRAIN", "SKULL"]): return "head"
+        if any(k in hint for k in ["NECK", "CERVICAL", "C-SPINE"]): return "neck"
         if any(k in hint for k in ["LUNG", "CHEST", "THORAX"]): return "chest"
         if any(k in hint for k in ["ABDOMEN", "ABD", "PANCREAS", "LIVER"]): return "abdomen"
         if any(k in hint for k in ["PELVIS"]): return "pelvis"
@@ -191,11 +192,20 @@ def _step_2B_body_region(hu_array: np.ndarray, body_mask: np.ndarray, dicom_hint
     lung_fraction = float(np.sum((sample > -1000) & (sample < -300))) / sample.size
     soft_tissue_fraction = float(np.sum((sample > -100) & (sample < 100))) / sample.size
     bone_fraction = float(np.sum(sample > 300)) / sample.size
+    air_fraction = float(np.sum(sample < -500)) / sample.size
+    
+    # Body area relative to image — neck is small, chest/abdomen are large
+    body_area = float(np.sum(body_mask))
+    image_area = float(body_mask.shape[0] * body_mask.shape[1])
+    body_fill = body_area / image_area
 
     if lung_fraction > 0.25:
         return "chest"
     if std_hu < 150 and mean_hu > -50 and mean_hu < 60 and bone_fraction < 0.05:
         return "head"
+    # Neck: small body area, central airway, some bone, no lungs
+    if body_fill < 0.35 and air_fraction > 0.01 and air_fraction < 0.15 and bone_fraction < 0.10:
+        return "neck"
     if bone_fraction > 0.15 and soft_tissue_fraction < 0.4:
         return "extremity"
     if soft_tissue_fraction > 0.25:
@@ -225,6 +235,9 @@ def _step_3_anatomy_suppression(hu_array: np.ndarray, body_mask: np.ndarray, reg
     dist = ndimage.distance_transform_edt(body_mask)
     
     # Adaptive bone threshold
+    # Use P99 to capture the dense cortical bone at the top of the distribution.
+    # The floor of 350 HU ensures that contrast-enhanced vessels (~200 HU) are NOT
+    # suppressed as bone, while all types of bone (>350) are caught.
     body_sample = hu_array[body_mask][::8]
     if body_sample.size > 0:
         p99 = float(np.percentile(body_sample, 99))
@@ -233,8 +246,11 @@ def _step_3_anatomy_suppression(hu_array: np.ndarray, body_mask: np.ndarray, reg
     bone_threshold = max(p99, 350.0)
     
     # Bone suppression: threshold + morphological dilation to catch partial-volume edges
-    bone_candidates = (hu_array > bone_threshold) & body_mask
-    bone_dilated = ndimage.binary_dilation(bone_candidates, iterations=1)
+    # Use >= so that pixels at EXACTLY the threshold (e.g., skull at 800 when p99=800) are caught
+    bone_candidates = (hu_array >= bone_threshold) & body_mask
+    # 3 iterations of dilation: catches the bone itself + 3px of partial-volume edge
+    # around it (important for thick cortical bone in pelvis, skull, femur)
+    bone_dilated = ndimage.binary_dilation(bone_candidates, iterations=3)
     
     struct_full = ndimage.generate_binary_structure(2, 2)
     
@@ -242,26 +258,40 @@ def _step_3_anatomy_suppression(hu_array: np.ndarray, body_mask: np.ndarray, reg
         # Deep skull erosion (skull is thick, ~8-12mm)
         search_mask = search_mask & (dist > 8)
         search_mask = search_mask & ~bone_dilated
+        # Suppress CSF ventricles (expected anatomy, HU 0-15)
+        # CSF is low-density fluid that would otherwise appear as a hypodense outlier
+        csf_mask = (hu_array < 15) & (hu_array > -10) & search_mask
+        search_mask = search_mask & ~csf_mask
         
     elif region == "chest":
         # Erode outer boundary
         search_mask = search_mask & (dist > 4)
         search_mask = search_mask & ~bone_dilated
         
-        # Suppress large air structures (lungs, trachea, bronchi)
-        # Use a generous threshold to catch all normal air
+        # Suppress normal chest air structures (lungs, trachea, bronchi)
         air_mask = (hu_array < -500) & body_mask
         air_labels, air_n = ndimage.label(air_mask, structure=struct_full)
         if air_n > 0:
             air_sizes = np.bincount(air_labels.ravel())
             air_sizes[0] = 0
-            # Suppress any connected air region > 2000px
-            # This catches: lungs (~30k-60k px), trachea (~2k-5k px), major bronchi
-            # Small pneumothorax trapped in pleural space is typically NOT
-            # connected to the lung cavity, so it survives this filter
             for label_id in range(1, air_n + 1):
-                if air_sizes[label_id] > 2000:
+                sz = air_sizes[label_id]
+                comp_air = (air_labels == label_id)
+                comp_mean = float(np.mean(hu_array[comp_air]))
+                
+                if sz > 5000 and comp_mean > -980:
+                    # Large air field with typical lung density (-850 +/- 100 HU)
+                    # Always suppress -- these are expected bilateral lungs
+                    search_mask = search_mask & ~comp_air
+                elif sz < 2000:
+                    # Small airway: trachea (~500-1000px), bronchi (~200-600px)
                     search_mask = search_mask & ~(air_labels == label_id)
+                elif sz > 5000 and comp_mean <= -980:
+                    # Large air at near-vacuum density: leaked background air
+                    # from body mask dilation, NOT pneumothorax.
+                    # Real PTX density is -900 to -960; background is -1024.
+                    search_mask = search_mask & ~comp_air
+                # Medium air (2000-5000px): potential pneumothorax -- KEEP
         
     elif region == "abdomen":
         # Subcutaneous fat: within 15px of boundary AND fat-density
@@ -290,12 +320,36 @@ def _step_3_anatomy_suppression(hu_array: np.ndarray, body_mask: np.ndarray, reg
                 h = y_sl.stop - y_sl.start
                 bbox_area = w * h
                 solidity = sz / float(bbox_area) if bbox_area > 0 else 0
-                # Normal bowel gas: compact, moderate size, moderate density
-                # Pathological free air: large, irregular, extends to non-dependent areas
-                if sz < 3000 and solidity > 0.3:
-                    # Compact and small -> likely normal bowel gas
+                
+                # Compute mean HU of this air pocket
+                comp_mask_air = (air_labels == label_id)
+                air_mean_hu = float(np.mean(hu_array[comp_mask_air]))
+                
+                # Normal bowel gas: compact, moderate size, moderate density (-200 to -500 HU)
+                # Pathological free air: very low density (< -700 HU), often large, 
+                #   irregular, and in non-dependent (anterior/superior) locations
+                is_normal_gas = (
+                    sz < 5000 
+                    and solidity > 0.25 
+                    and air_mean_hu > -700  # bowel gas is typically -200 to -500 HU
+                )
+                if is_normal_gas:
                     search_mask = search_mask & ~(air_labels == label_id)
                     
+    elif region == "neck":
+        # Neck: suppress airway (trachea, pharynx), spine, and boundary
+        search_mask = search_mask & (dist > 5)
+        search_mask = search_mask & ~bone_dilated
+        # Suppress ALL internal air structures (trachea, pharynx, larynx are all expected)
+        air_mask = (hu_array < -200) & body_mask
+        air_labels, air_n = ndimage.label(air_mask, structure=struct_full)
+        if air_n > 0:
+            air_sizes = np.bincount(air_labels.ravel())
+            air_sizes[0] = 0
+            for label_id in range(1, air_n + 1):
+                # In neck, suppress any air structure — airways are expected everywhere
+                search_mask = search_mask & ~(air_labels == label_id)
+                
     elif region == "pelvis":
         search_mask = search_mask & (dist > 5)
         search_mask = search_mask & ~bone_dilated
@@ -309,9 +363,21 @@ def _step_3_anatomy_suppression(hu_array: np.ndarray, body_mask: np.ndarray, reg
                 if air_sizes[label_id] < 2000:
                     search_mask = search_mask & ~(air_labels == label_id)
     else:
-        # Spine, Extremity, Unknown
+        # Spine, Extremity, Unknown — suppress bone + boundary
         search_mask = search_mask & (dist > 5)
         search_mask = search_mask & ~bone_dilated
+        # Suppress internal air in generic/unknown regions
+        air_mask = (hu_array < -500) & body_mask & (dist > 10)
+        search_mask = search_mask & ~air_mask
+
+    # ── Universal post-suppression cleanup ──
+    # After bone removal, gaps where bone was may contain background air (-1024 HU)
+    # that would contaminate the statistical baseline. Remove these residual air
+    # pixels, but ONLY in regions where air is NOT the detection target.
+    # In chest and abdomen, we intentionally keep air so pneumothorax and
+    # pneumoperitoneum can be detected.
+    if region not in ("chest", "abdomen"):
+        search_mask = search_mask & (hu_array > -500)
 
     return search_mask
 
@@ -687,17 +753,17 @@ def _step_9_10_score_and_action(findings: List[Finding]) -> Tuple[int, str]:
     """
     Calculate emergency score from findings.
     
-    Key improvement: The formula now requires BOTH high severity AND high confidence
-    AND significant area to generate meaningful points. This prevents small, uncertain
-    findings from accumulating into false WATCH/URGENT states.
-    
     Formula per finding:
-        points = severity * confidence^2 * sqrt(area / 500) * 30
+        points = severity * confidence^1.5 * sqrt(area / 500) * 40
         (capped at 50 per finding)
     
-    The confidence^2 term ensures that uncertain findings (conf=0.4) contribute
-    very little (0.16 multiplier) while confident findings (conf=0.9) contribute
-    strongly (0.81 multiplier).
+    The confidence^1.5 exponent provides a non-linear penalty for uncertain findings
+    while being less punitive than ^2.0 for moderate-confidence true anomalies.
+    
+    Examples:
+        conf=0.4 -> 0.25x (very low, noise-like)
+        conf=0.65 -> 0.52x (moderate, e.g. brain hemorrhage)
+        conf=0.9 -> 0.85x (high, clear anomaly)
     
     The sqrt(area/500) term means a 500px finding contributes 1.0x, but a 50px
     finding only contributes 0.32x. This prevents tiny gas pockets from scoring.
@@ -705,7 +771,7 @@ def _step_9_10_score_and_action(findings: List[Finding]) -> Tuple[int, str]:
     score = 0.0
     for f in findings:
         area_factor = math.sqrt(max(f.area, 1) / 500.0)
-        pts = f.severity_score * (f.confidence ** 2) * area_factor * 30.0
+        pts = f.severity_score * (f.confidence ** 1.5) * area_factor * 40.0
         pts = min(pts, 50.0)
         score += pts
         
@@ -713,7 +779,7 @@ def _step_9_10_score_and_action(findings: List[Finding]) -> Tuple[int, str]:
     
     if score >= 80:
         action = "IMMEDIATE ALERT"
-    elif score >= 50:
+    elif score >= 45:
         action = "URGENT REVIEW"
     elif score >= 20:
         action = "WATCH"
