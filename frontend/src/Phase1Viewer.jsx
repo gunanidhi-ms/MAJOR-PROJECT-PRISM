@@ -46,7 +46,7 @@ export default function Phase1Viewer() {
   const [showFindings, setShowFindings] = useState(true)
   const [showPhase2, setShowPhase2] = useState(false)
   const [isAutoPlay, setIsAutoPlay] = useState(false)
-  const [notifications, setNotifications] = useState([])
+
 
   // Image display state
   const [viewerImageUrl, setViewerImageUrl] = useState(null)
@@ -104,38 +104,7 @@ export default function Phase1Viewer() {
             }
           })
           
-          if (alert.flagged) {
-            const id = Date.now() + Math.random();
-              const notification = {
-                id,
-                uid: alert.uid,
-                slice_id: alert.slice_id,
-                findings: alert.findings || [],
-                closing: false,
-              };
-            
-            let isDuplicate = false;
-            setNotifications(prev => {
-              if (prev.some(n => n.uid === alert.uid)) {
-                isDuplicate = true;
-                return prev;
-              }
-              return [...prev, notification];
-            });
-            
-            // Only schedule the timeout if it wasn't a duplicate
-            // We use a small setTimeout 0 to ensure the state update above is processed and we know if it was duplicate
-            setTimeout(() => {
-              if (!isDuplicate) {
-                setTimeout(() => {
-                  setNotifications(current => current.map(n => n.id === id ? { ...n, closing: true } : n));
-                  setTimeout(() => {
-                    setNotifications(current => current.filter(n => n.id !== id));
-                  }, 300);
-                }, 5000);
-              }
-            }, 0);
-          }
+
         } catch (e) {
           console.error('[PRISM] Parse error:', e)
         }
@@ -893,35 +862,7 @@ export default function Phase1Viewer() {
         </main>
       </div>
 
-      {/* ── Toast Notifications ── */}
-      <div className="toast-container">
-        {notifications.map(n => (
-          <div key={n.id} className={`toast ${n.closing ? 'toast--closing' : ''}`}>
-            <div className="toast__header">
-              <div className="toast__title">
-                <div className="toast__title-icon">!</div>
-                Anomaly Detected
-              </div>
-              <button className="toast__close" onClick={() => {
-                setNotifications(prev => prev.map(notif => notif.id === n.id ? { ...notif, closing: true } : notif));
-                setTimeout(() => setNotifications(prev => prev.filter(notif => notif.id !== n.id)), 300);
-              }}>×</button>
-            </div>
-            <div className="toast__body">
-              Critical finding(s) discovered in <strong>Slice #{n.slice_id}</strong>. Immediate review recommended.
-              {n.findings.length > 0 && (
-                <div>
-                  <span className="toast__finding">
-                    {n.findings[0].finding_type.replace(/_/g, ' ').toUpperCase()} ({n.findings[0].hu_mean?.toFixed(0)} HU)
-                  </span>
-                  {n.findings.length > 1 && <span style={{ marginLeft: 6, fontSize: 10, color: 'var(--text-tertiary)' }}>+{n.findings.length - 1} more</span>}
-                </div>
-              )}
-            </div>
-            <div className="toast__progress"></div>
-          </div>
-        ))}
-      </div>
+
     </div>
   )
 }

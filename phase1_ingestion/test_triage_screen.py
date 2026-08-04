@@ -495,10 +495,10 @@ def run_all_tests():
         
         if result.findings:
             for f in result.findings:
-                sev = f.evidence.get('severity', 0.0)
-                conf = f.evidence.get('persistence', 0.0) # approx
+                sev = f.severity_score
+                conf = f.confidence
                 print(f"         -> {f.anomaly_type}: area={f.area}, HU={f.mean_hu}, "
-                      f"pers={conf}, sev={sev}")
+                      f"conf={conf:.2f}, sev={sev:.2f}")
         
         if not ok:
             reasons = []
