@@ -24,6 +24,7 @@ import signal
 import logging
 import threading
 import asyncio
+import multiprocessing
 from datetime import datetime, timezone
 
 import numpy as np
@@ -34,6 +35,7 @@ from .hu_transform import apply_hu_transform, auto_crop
 from .triage_screen import screen_slice
 from .dicom_listener import DICOMListener
 from .ws_server import app, broadcaster, create_alert_payload
+from .volume_accumulator import VolumeAccumulator
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -62,8 +64,8 @@ class Phase1Pipeline:
         self.dicom_port = dicom_port
         self.ws_port = ws_port
         self.buffer = SliceBuffer()
+        self.accumulator = VolumeAccumulator(min_slices=20, timeout_sec=5.0)
         self.listener: DICOMListener | None = None
-        # self.phase2 = Phase2Orchestrator() # Detached as per user request
         self._running = False
         self._stats = {
             "slices_received": 0,
@@ -134,9 +136,30 @@ class Phase1Pipeline:
         body_part_hint = slice_data.get("body_part", "") or slice_data.get("study_description", "")
         triage_result = screen_slice(hu_array, body_part_hint=body_part_hint)
 
-        # ── Step 5: (Phase 2 Detached) ──
-        # Phase 2 analyzes the volumetric data. Commented out as per user request.
-        # phase2_result = self.phase2.run_pipeline()
+        # ── Step 5: Feed VolumeAccumulator (non-blocking, Package 1) ──
+        # Accumulator receives the HU-transformed array and findings
+        # for Phase 2 volume assembly. This MUST NOT block the real-time path.
+        spacing_meta = {
+            "z_coordinate": slice_data.get("z_coordinate", 0.0),
+            "pixel_spacing": slice_data.get("pixel_spacing", [1.0, 1.0]),
+            "slice_thickness": slice_data.get("slice_thickness", 0.0),
+            "image_position_patient": slice_data.get(
+                "image_position_patient", [0.0, 0.0, 0.0]
+            ),
+            "image_orientation_patient": slice_data.get(
+                "image_orientation_patient",
+                [1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+            ),
+            "series_instance_uid": slice_data.get("series_instance_uid", ""),
+            "study_instance_uid": slice_data.get("study_instance_uid", ""),
+            "modality": slice_data.get("modality", "CT"),
+        }
+        self.accumulator.add(
+            instance_number,
+            hu_array,  # HU-transformed, not raw pixel array
+            triage_result.findings,
+            spacing_meta,
+        )
 
         # ── Step 6: Create and push alert ──
         total_time_ms = (time.perf_counter() - t_pipeline_start) * 1000
@@ -162,7 +185,7 @@ class Phase1Pipeline:
         findings_str = ""
         if triage_result.flagged:
             for f in triage_result.findings:
-                findings_str += f"\n     -> {f.finding_type}: bbox={f.bbox}, HU={f.hu_mean:.0f}"
+                findings_str += f"\n     -> {f.anomaly_type}: bbox={f.bbox}, HU={f.mean_hu:.0f}"
 
         print(
             f"  [{instance_number:3d}] {status}  "
@@ -224,13 +247,67 @@ class Phase1Pipeline:
             self.shutdown()
 
     def _flush_loop(self) -> None:
-        """Periodically check for stale buffer entries."""
+        """Periodically check for stale buffer entries and Phase 2 readiness."""
         while self._running:
             time.sleep(1.0)
+
+            # Flush stale buffer entries (existing behavior)
             stale = self.buffer.flush_if_stale(BUFFER_FLUSH_TIMEOUT)
             t_start = time.perf_counter()
             for inst_num, data in stale:
                 self._process_single_slice(inst_num, data, t_start)
+
+            # ── Phase 2 dual-path trigger (Package 1) ──
+            # Check if the volume accumulator is ready via any trigger path.
+            # The timeout fallback fires here; association-release is signaled
+            # externally by the DICOM listener.
+            self._check_phase2_trigger()
+
+    def _check_phase2_trigger(self) -> None:
+        """
+        Check if the volume accumulator is ready and spawn Phase 2.
+
+        Uses multiprocessing.Process (not threading.Thread) for clean
+        memory teardown — this matters for TotalSegmentator's C++-backed
+        tensor memory in Package 2.
+        """
+        if self.accumulator.is_ready():
+            try:
+                volume, findings_per_slice, instance_numbers, spacing = (
+                    self.accumulator.export_volume()
+                )
+                series_meta = self.accumulator.get_series_metadata()
+
+                logger.info(
+                    "Phase 2 trigger fired: volume shape=%s, "
+                    "%d slices, spacing=%s, series=%s",
+                    volume.shape,
+                    len(instance_numbers),
+                    spacing,
+                    series_meta.get("series_instance_uid", "unknown")[:20],
+                )
+
+                # Spawn Phase 2 as a separate process.
+                # phase2_orchestrator.run is not yet implemented (Package 2+),
+                # so we log the trigger and reset for now.
+                # When Package 2 is ready, uncomment:
+                # multiprocessing.Process(
+                #     target=phase2_orchestrator.run,
+                #     args=(volume, findings_per_slice, instance_numbers, spacing),
+                # ).start()
+
+                print(
+                    f"\n  [PHASE2] Trigger fired — "
+                    f"volume {volume.shape}, {len(instance_numbers)} slices, "
+                    f"spacing {spacing}"
+                )
+
+                self.accumulator.reset()
+
+            except Exception as e:
+                logger.error(
+                    "Phase 2 trigger error: %s", e, exc_info=True
+                )
 
     def shutdown(self) -> None:
         """Graceful shutdown of all components."""

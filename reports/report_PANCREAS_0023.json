@@ -1,0 +1,3532 @@
+[
+  {
+    "slice_id": 1,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.52498195260246283407005879258992861",
+    "patient_id": "PANCREAS_0048",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.493866+00:00",
+    "findings": [],
+    "processing_time_ms": 69.13,
+    "triage_time_ms": 64.71,
+    "slice_hu_mean": -455.76,
+    "slice_hu_std": 443.84,
+    "stats": {
+      "mean": -455.76,
+      "std": 443.84,
+      "median": -719.5,
+      "iqr": 914.0,
+      "mad": 285.5,
+      "p005": -1020.0,
+      "p01": -1016.0,
+      "p05": -1000.0,
+      "p10": -976.0,
+      "p25": -875.0,
+      "p75": 39.0,
+      "p90": 121.0,
+      "p95": 201.0,
+      "p99": 259.0,
+      "p995": 288.37
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 2,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.39121318740020211413647084763122851",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.499999+00:00",
+    "findings": [],
+    "processing_time_ms": 75.4,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 3,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.48297244969271567240274878010150310",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.504504+00:00",
+    "findings": [],
+    "processing_time_ms": 79.9,
+    "triage_time_ms": 0.32,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 4,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.52458476176493132106227770914772227",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.509365+00:00",
+    "findings": [],
+    "processing_time_ms": 84.77,
+    "triage_time_ms": 0.26,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 5,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.68370635937368463470448220530946157",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.513728+00:00",
+    "findings": [],
+    "processing_time_ms": 89.13,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 6,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.79733316609890960373133265044773420",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.518046+00:00",
+    "findings": [],
+    "processing_time_ms": 93.44,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 7,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.55343791905345541315986551172521588",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.522587+00:00",
+    "findings": [],
+    "processing_time_ms": 97.99,
+    "triage_time_ms": 0.32,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 8,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.16394104959041016577167014683740471",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.526948+00:00",
+    "findings": [],
+    "processing_time_ms": 102.35,
+    "triage_time_ms": 0.3,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 9,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.43928394477389281079788272364436391",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.531413+00:00",
+    "findings": [],
+    "processing_time_ms": 106.82,
+    "triage_time_ms": 0.26,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 10,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.16742245832517165243062471623802127",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.535870+00:00",
+    "findings": [],
+    "processing_time_ms": 111.27,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 11,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.73228284070059283672968616971742599",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.540489+00:00",
+    "findings": [],
+    "processing_time_ms": 115.89,
+    "triage_time_ms": 0.31,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 12,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.81481374263924629455446822600045645",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.545173+00:00",
+    "findings": [],
+    "processing_time_ms": 120.58,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 13,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.24702094199528070500029696249696826",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.549691+00:00",
+    "findings": [],
+    "processing_time_ms": 125.09,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 14,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.77174357824073864082779319114669083",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.554788+00:00",
+    "findings": [],
+    "processing_time_ms": 130.19,
+    "triage_time_ms": 0.33,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 15,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.18989332132455430322769447533513668",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.560081+00:00",
+    "findings": [],
+    "processing_time_ms": 135.48,
+    "triage_time_ms": 0.31,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 16,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.25598206968284425030466905715749505",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.565109+00:00",
+    "findings": [],
+    "processing_time_ms": 140.51,
+    "triage_time_ms": 0.29,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 17,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.86649707017481249999023037672037036",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.570376+00:00",
+    "findings": [],
+    "processing_time_ms": 145.78,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 18,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.32582517130186136877086334576579118",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.575962+00:00",
+    "findings": [],
+    "processing_time_ms": 151.36,
+    "triage_time_ms": 0.33,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 19,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.3853701839625612503859604760393908",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.581181+00:00",
+    "findings": [],
+    "processing_time_ms": 156.58,
+    "triage_time_ms": 0.33,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 20,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.28646683729844401451093718314335096",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.586234+00:00",
+    "findings": [],
+    "processing_time_ms": 161.64,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 21,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.68895311145400353766154587108085909",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.591799+00:00",
+    "findings": [],
+    "processing_time_ms": 167.2,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 22,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.67044234819704694709230053501383478",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.598520+00:00",
+    "findings": [],
+    "processing_time_ms": 173.92,
+    "triage_time_ms": 0.38,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 23,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.48790742251247796062421552652213362",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.605735+00:00",
+    "findings": [],
+    "processing_time_ms": 181.14,
+    "triage_time_ms": 0.29,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 24,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.10465135041746791202622881225090082",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.611369+00:00",
+    "findings": [],
+    "processing_time_ms": 186.77,
+    "triage_time_ms": 0.34,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 25,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.55222007830066422605823431272238398",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.617241+00:00",
+    "findings": [],
+    "processing_time_ms": 192.64,
+    "triage_time_ms": 0.33,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 26,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.48682153515441020194671339542235701",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.622803+00:00",
+    "findings": [],
+    "processing_time_ms": 198.21,
+    "triage_time_ms": 0.34,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 27,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.38797890456114014383358026610685074",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.628912+00:00",
+    "findings": [],
+    "processing_time_ms": 204.31,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 28,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.20291950054835583483356633317658595",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.635755+00:00",
+    "findings": [],
+    "processing_time_ms": 211.16,
+    "triage_time_ms": 0.29,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 29,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.7535445490037147428089788610278298",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.641542+00:00",
+    "findings": [],
+    "processing_time_ms": 216.95,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 30,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.43022371303497298114737595029044330",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.647215+00:00",
+    "findings": [],
+    "processing_time_ms": 222.62,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 31,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.9598277472681033039652831364776495",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.653347+00:00",
+    "findings": [],
+    "processing_time_ms": 228.75,
+    "triage_time_ms": 0.29,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 32,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.68863378704537107213616363956838063",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.659182+00:00",
+    "findings": [],
+    "processing_time_ms": 234.58,
+    "triage_time_ms": 0.3,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 33,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.77830609145416602479204649801300615",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.664733+00:00",
+    "findings": [],
+    "processing_time_ms": 240.13,
+    "triage_time_ms": 0.31,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 34,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.93349581571974916002810561553983228",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.670133+00:00",
+    "findings": [],
+    "processing_time_ms": 245.54,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 35,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.11914102761486739002341098038490420",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.675810+00:00",
+    "findings": [],
+    "processing_time_ms": 251.21,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 36,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.11814546534271986514088884892008049",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.681390+00:00",
+    "findings": [],
+    "processing_time_ms": 256.79,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 37,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.3965860109021004187528935470847378",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.687073+00:00",
+    "findings": [],
+    "processing_time_ms": 262.48,
+    "triage_time_ms": 0.29,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 38,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.33396677050965305891156171892210202",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.693071+00:00",
+    "findings": [],
+    "processing_time_ms": 268.47,
+    "triage_time_ms": 0.34,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 39,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.76803574214834867772436603844166115",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.698844+00:00",
+    "findings": [],
+    "processing_time_ms": 274.24,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 40,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.63136165435622394178215890634789320",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.704450+00:00",
+    "findings": [],
+    "processing_time_ms": 279.86,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 41,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.46986982102171906189049449742342504",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.710287+00:00",
+    "findings": [],
+    "processing_time_ms": 285.69,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 42,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.20561849116311810359781120155583902",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.716364+00:00",
+    "findings": [],
+    "processing_time_ms": 291.77,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 43,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.96867183650505180375769744610066461",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.722635+00:00",
+    "findings": [],
+    "processing_time_ms": 298.04,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 44,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.9247500402231263392542491603189946",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.728899+00:00",
+    "findings": [],
+    "processing_time_ms": 304.3,
+    "triage_time_ms": 0.3,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 45,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.32561384359787406301322902802222804",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.735247+00:00",
+    "findings": [],
+    "processing_time_ms": 310.65,
+    "triage_time_ms": 0.3,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 46,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.7359934895550506755089281466610993",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.741865+00:00",
+    "findings": [],
+    "processing_time_ms": 317.24,
+    "triage_time_ms": 0.31,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 47,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.43533690973659967889578058922792150",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.748258+00:00",
+    "findings": [],
+    "processing_time_ms": 323.66,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 48,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.55167708861563269200899924465074091",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.754238+00:00",
+    "findings": [],
+    "processing_time_ms": 329.64,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 49,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.36738898210468400108849199043680413",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.760516+00:00",
+    "findings": [],
+    "processing_time_ms": 335.92,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 50,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.88913738024258834021526144965134469",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.766857+00:00",
+    "findings": [],
+    "processing_time_ms": 342.26,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 51,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.58660826760083526748269690470236046",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.772958+00:00",
+    "findings": [],
+    "processing_time_ms": 348.36,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 52,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.44205768427536075150766021179959253",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.779189+00:00",
+    "findings": [],
+    "processing_time_ms": 354.59,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 53,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.64395939676228464260182142039321293",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.785560+00:00",
+    "findings": [],
+    "processing_time_ms": 360.96,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 54,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.59946711052934837718642005530639248",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.792145+00:00",
+    "findings": [],
+    "processing_time_ms": 367.55,
+    "triage_time_ms": 0.27,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 55,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.39504030374214517201275361516543425",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.798808+00:00",
+    "findings": [],
+    "processing_time_ms": 374.21,
+    "triage_time_ms": 0.28,
+    "slice_hu_mean": 0.0,
+    "slice_hu_std": 0.0,
+    "stats": {},
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 56,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.29509185988971338466583162940255542",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.861466+00:00",
+    "findings": [],
+    "processing_time_ms": 436.62,
+    "triage_time_ms": 53.58,
+    "slice_hu_mean": -311.53,
+    "slice_hu_std": 397.9,
+    "stats": {
+      "mean": -311.53,
+      "std": 397.9,
+      "median": -98.0,
+      "iqr": 805.0,
+      "mad": 239.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p05": -981.0,
+      "p10": -951.0,
+      "p25": -755.0,
+      "p75": 50.0,
+      "p90": 133.0,
+      "p95": 155.0,
+      "p99": 234.0,
+      "p995": 301.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 57,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.33733070631564419100557405894954079",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.922756+00:00",
+    "findings": [],
+    "processing_time_ms": 497.9,
+    "triage_time_ms": 51.61,
+    "slice_hu_mean": -307.19,
+    "slice_hu_std": 398.39,
+    "stats": {
+      "mean": -307.19,
+      "std": 398.39,
+      "median": -96.0,
+      "iqr": 805.0,
+      "mad": 235.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p05": -981.0,
+      "p10": -950.0,
+      "p25": -752.0,
+      "p75": 53.0,
+      "p90": 134.0,
+      "p95": 154.0,
+      "p99": 223.8,
+      "p995": 288.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 58,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.6046436913992882854010477569680239",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:23.983626+00:00",
+    "findings": [],
+    "processing_time_ms": 558.75,
+    "triage_time_ms": 51.51,
+    "slice_hu_mean": -300.89,
+    "slice_hu_std": 398.38,
+    "stats": {
+      "mean": -300.89,
+      "std": 398.38,
+      "median": -95.0,
+      "iqr": 806.0,
+      "mad": 233.0,
+      "p005": -1006.0,
+      "p01": -1000.0,
+      "p05": -980.0,
+      "p10": -949.0,
+      "p25": -752.0,
+      "p75": 54.0,
+      "p90": 134.0,
+      "p95": 155.0,
+      "p99": 211.0,
+      "p995": 276.61
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 59,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.77809380846844729786786184897170427",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.043272+00:00",
+    "findings": [],
+    "processing_time_ms": 618.45,
+    "triage_time_ms": 50.81,
+    "slice_hu_mean": -298.08,
+    "slice_hu_std": 398.61,
+    "stats": {
+      "mean": -298.08,
+      "std": 398.61,
+      "median": -95.0,
+      "iqr": 808.0,
+      "mad": 231.0,
+      "p005": -1007.06,
+      "p01": -1002.0,
+      "p05": -981.0,
+      "p10": -949.0,
+      "p25": -751.0,
+      "p75": 57.0,
+      "p90": 134.0,
+      "p95": 153.0,
+      "p99": 206.0,
+      "p995": 269.06
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 60,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.46447190909996235017892798254090119",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.106814+00:00",
+    "findings": [],
+    "processing_time_ms": 681.98,
+    "triage_time_ms": 54.55,
+    "slice_hu_mean": -294.55,
+    "slice_hu_std": 398.53,
+    "stats": {
+      "mean": -294.55,
+      "std": 398.53,
+      "median": -94.0,
+      "iqr": 810.0,
+      "mad": 228.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p05": -981.0,
+      "p10": -950.0,
+      "p25": -750.0,
+      "p75": 60.0,
+      "p90": 134.0,
+      "p95": 152.0,
+      "p99": 223.0,
+      "p995": 276.73
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 61,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.18893433638478734507203782431792182",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.168394+00:00",
+    "findings": [],
+    "processing_time_ms": 743.55,
+    "triage_time_ms": 52.83,
+    "slice_hu_mean": -290.62,
+    "slice_hu_std": 399.69,
+    "stats": {
+      "mean": -290.62,
+      "std": 399.69,
+      "median": -93.0,
+      "iqr": 812.0,
+      "mad": 226.0,
+      "p005": -1006.0,
+      "p01": -1000.0,
+      "p05": -981.0,
+      "p10": -950.0,
+      "p25": -750.0,
+      "p75": 62.0,
+      "p90": 134.0,
+      "p95": 150.0,
+      "p99": 266.0,
+      "p995": 319.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 62,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.68492064710516489510377255780040858",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.232007+00:00",
+    "findings": [],
+    "processing_time_ms": 807.11,
+    "triage_time_ms": 54.34,
+    "slice_hu_mean": -286.32,
+    "slice_hu_std": 399.26,
+    "stats": {
+      "mean": -286.32,
+      "std": 399.26,
+      "median": -92.0,
+      "iqr": 809.0,
+      "mad": 224.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p05": -981.0,
+      "p10": -950.0,
+      "p25": -745.0,
+      "p75": 64.0,
+      "p90": 133.0,
+      "p95": 149.0,
+      "p99": 327.0,
+      "p995": 383.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 63,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.31011965210509547032503558238915547",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.294447+00:00",
+    "findings": [],
+    "processing_time_ms": 869.59,
+    "triage_time_ms": 52.95,
+    "slice_hu_mean": -283.64,
+    "slice_hu_std": 399.11,
+    "stats": {
+      "mean": -283.64,
+      "std": 399.11,
+      "median": -91.0,
+      "iqr": 808.0,
+      "mad": 222.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p05": -981.0,
+      "p10": -951.0,
+      "p25": -742.0,
+      "p75": 66.0,
+      "p90": 133.0,
+      "p95": 149.0,
+      "p99": 328.22,
+      "p995": 395.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 64,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.67076267976173531511592804358144838",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.357076+00:00",
+    "findings": [],
+    "processing_time_ms": 932.23,
+    "triage_time_ms": 52.71,
+    "slice_hu_mean": -278.59,
+    "slice_hu_std": 398.54,
+    "stats": {
+      "mean": -278.59,
+      "std": 398.54,
+      "median": -89.0,
+      "iqr": 806.0,
+      "mad": 221.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p05": -979.0,
+      "p10": -950.0,
+      "p25": -736.0,
+      "p75": 70.0,
+      "p90": 134.0,
+      "p95": 150.0,
+      "p99": 307.2,
+      "p995": 396.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 65,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.51771311656028549099663221473802537",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.418279+00:00",
+    "findings": [],
+    "processing_time_ms": 993.44,
+    "triage_time_ms": 51.53,
+    "slice_hu_mean": -275.87,
+    "slice_hu_std": 398.21,
+    "stats": {
+      "mean": -275.87,
+      "std": 398.21,
+      "median": -88.0,
+      "iqr": 805.0,
+      "mad": 219.0,
+      "p005": -1006.0,
+      "p01": -999.0,
+      "p05": -979.0,
+      "p10": -949.0,
+      "p25": -732.0,
+      "p75": 73.0,
+      "p90": 134.0,
+      "p95": 148.0,
+      "p99": 224.23,
+      "p995": 308.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 66,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.68455516808480765272987284688372489",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.480204+00:00",
+    "findings": [],
+    "processing_time_ms": 1055.34,
+    "triage_time_ms": 52.1,
+    "slice_hu_mean": -269.39,
+    "slice_hu_std": 396.22,
+    "stats": {
+      "mean": -269.39,
+      "std": 396.22,
+      "median": -85.0,
+      "iqr": 803.0,
+      "mad": 212.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p05": -978.0,
+      "p10": -948.0,
+      "p25": -728.0,
+      "p75": 75.0,
+      "p90": 132.0,
+      "p95": 145.0,
+      "p99": 184.0,
+      "p995": 257.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 67,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.19877921910608321643509447869960204",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.542272+00:00",
+    "findings": [],
+    "processing_time_ms": 1117.34,
+    "triage_time_ms": 51.79,
+    "slice_hu_mean": -262.92,
+    "slice_hu_std": 396.32,
+    "stats": {
+      "mean": -262.92,
+      "std": 396.32,
+      "median": -78.0,
+      "iqr": 806.75,
+      "mad": 204.0,
+      "p005": -1003.0,
+      "p01": -999.0,
+      "p05": -979.0,
+      "p10": -949.0,
+      "p25": -727.75,
+      "p75": 79.0,
+      "p90": 132.0,
+      "p95": 145.0,
+      "p99": 207.0,
+      "p995": 317.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 68,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.93618377948015025063678030579500330",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.606616+00:00",
+    "findings": [],
+    "processing_time_ms": 1181.7,
+    "triage_time_ms": 53.76,
+    "slice_hu_mean": -255.78,
+    "slice_hu_std": 395.26,
+    "stats": {
+      "mean": -255.78,
+      "std": 395.26,
+      "median": -72.0,
+      "iqr": 804.0,
+      "mad": 198.0,
+      "p005": -1003.99,
+      "p01": -999.0,
+      "p05": -980.0,
+      "p10": -949.0,
+      "p25": -723.0,
+      "p75": 81.0,
+      "p90": 133.0,
+      "p95": 148.0,
+      "p99": 266.0,
+      "p995": 371.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 69,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.50435304373849906137560478819900793",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 1,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 1,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.686307+00:00",
+    "findings": [
+      {
+        "bbox": [
+          439,
+          389,
+          26,
+          17
+        ],
+        "centroid": [
+          397.4,
+          452.1
+        ],
+        "area": 126,
+        "mean_hu": -1012.9,
+        "hu_mean": -1012.9,
+        "hu_max": -1006.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.13,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          57,
+          394,
+          14,
+          8
+        ],
+        "centroid": [
+          397.4,
+          64.0
+        ],
+        "area": 47,
+        "mean_hu": -1012.68,
+        "hu_mean": -1012.68,
+        "hu_max": -1006.0,
+        "hu_min": -1022.0,
+        "confidence": 0.4,
+        "severity_score": 0.12,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1261.43,
+    "triage_time_ms": 68.87,
+    "slice_hu_mean": -247.63,
+    "slice_hu_std": 394.49,
+    "stats": {
+      "mean": -247.63,
+      "std": 394.49,
+      "median": -62.0,
+      "iqr": 802.0,
+      "mad": 188.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p05": -980.0,
+      "p10": -950.0,
+      "p25": -717.0,
+      "p75": 85.0,
+      "p90": 134.0,
+      "p95": 149.0,
+      "p99": 327.85,
+      "p995": 392.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 70,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.53339887764194924065254443297921122",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 1,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 1,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.758259+00:00",
+    "findings": [
+      {
+        "bbox": [
+          433,
+          388,
+          30,
+          18
+        ],
+        "centroid": [
+          397.0,
+          449.3
+        ],
+        "area": 193,
+        "mean_hu": -1017.32,
+        "hu_mean": -1017.32,
+        "hu_max": -1007.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          61,
+          394,
+          15,
+          8
+        ],
+        "centroid": [
+          397.0,
+          66.6
+        ],
+        "area": 41,
+        "mean_hu": -1012.71,
+        "hu_mean": -1012.71,
+        "hu_max": -1007.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.12,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1333.43,
+    "triage_time_ms": 61.55,
+    "slice_hu_mean": -240.07,
+    "slice_hu_std": 396.01,
+    "stats": {
+      "mean": -240.07,
+      "std": 396.01,
+      "median": -50.0,
+      "iqr": 804.0,
+      "mad": 178.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p05": -980.0,
+      "p10": -951.0,
+      "p25": -713.0,
+      "p75": 91.0,
+      "p90": 137.0,
+      "p95": 153.0,
+      "p99": 316.08,
+      "p995": 364.54
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 71,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.55734702630379428495721752523822300",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 2,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 2,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.831456+00:00",
+    "findings": [
+      {
+        "bbox": [
+          433,
+          385,
+          31,
+          23
+        ],
+        "centroid": [
+          395.9,
+          447.1
+        ],
+        "area": 210,
+        "mean_hu": -1016.6,
+        "hu_mean": -1016.6,
+        "hu_max": -1007.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          64,
+          391,
+          19,
+          12
+        ],
+        "centroid": [
+          397.3,
+          73.2
+        ],
+        "area": 86,
+        "mean_hu": -1012.77,
+        "hu_mean": -1012.77,
+        "hu_max": -1007.0,
+        "hu_min": -1022.0,
+        "confidence": 0.5,
+        "severity_score": 0.13,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1406.6,
+    "triage_time_ms": 62.81,
+    "slice_hu_mean": -230.15,
+    "slice_hu_std": 395.69,
+    "stats": {
+      "mean": -230.15,
+      "std": 395.69,
+      "median": -36.0,
+      "iqr": 808.0,
+      "mad": 167.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p05": -978.0,
+      "p10": -949.0,
+      "p25": -709.0,
+      "p75": 99.0,
+      "p90": 141.0,
+      "p95": 158.0,
+      "p99": 293.0,
+      "p995": 359.47
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 72,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.37099235641643163230423602356461813",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 2,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 2,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.906318+00:00",
+    "findings": [
+      {
+        "bbox": [
+          462,
+          324,
+          14,
+          5
+        ],
+        "centroid": [
+          325.8,
+          469.4
+        ],
+        "area": 30,
+        "mean_hu": -1013.17,
+        "hu_mean": -1013.17,
+        "hu_max": -1009.0,
+        "hu_min": -1019.0,
+        "confidence": 0.4,
+        "severity_score": 0.12,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          435,
+          386,
+          23,
+          17
+        ],
+        "centroid": [
+          394.2,
+          445.1
+        ],
+        "area": 160,
+        "mean_hu": -1017.42,
+        "hu_mean": -1017.42,
+        "hu_max": -1008.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          69,
+          393,
+          25,
+          11
+        ],
+        "centroid": [
+          398.0,
+          79.8
+        ],
+        "area": 141,
+        "mean_hu": -1016.15,
+        "hu_mean": -1016.15,
+        "hu_max": -1008.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1481.48,
+    "triage_time_ms": 64.5,
+    "slice_hu_mean": -223.18,
+    "slice_hu_std": 396.46,
+    "stats": {
+      "mean": -223.18,
+      "std": 396.46,
+      "median": -23.0,
+      "iqr": 808.0,
+      "mad": 155.0,
+      "p005": -1007.0,
+      "p01": -1000.48,
+      "p05": -978.0,
+      "p10": -949.0,
+      "p25": -705.0,
+      "p75": 103.0,
+      "p90": 142.0,
+      "p95": 161.0,
+      "p99": 287.0,
+      "p995": 349.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 73,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.71442702588105295471235327411151643",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 2,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 2,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:24.981422+00:00",
+    "findings": [
+      {
+        "bbox": [
+          422,
+          385,
+          33,
+          17
+        ],
+        "centroid": [
+          394.2,
+          439.0
+        ],
+        "area": 165,
+        "mean_hu": -1015.88,
+        "hu_mean": -1015.88,
+        "hu_max": -1010.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          68,
+          391,
+          29,
+          14
+        ],
+        "centroid": [
+          397.0,
+          81.3
+        ],
+        "area": 165,
+        "mean_hu": -1018.43,
+        "hu_mean": -1018.43,
+        "hu_max": -1010.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1556.59,
+    "triage_time_ms": 64.4,
+    "slice_hu_mean": -213.72,
+    "slice_hu_std": 396.13,
+    "stats": {
+      "mean": -213.72,
+      "std": 396.13,
+      "median": -9.0,
+      "iqr": 806.0,
+      "mad": 143.0,
+      "p005": -1009.0,
+      "p01": -1001.24,
+      "p05": -979.0,
+      "p10": -949.0,
+      "p25": -698.0,
+      "p75": 108.0,
+      "p90": 145.0,
+      "p95": 166.0,
+      "p99": 294.0,
+      "p995": 379.12
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 74,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.8360002123281003788724937323395410",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 2,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 2,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.057282+00:00",
+    "findings": [
+      {
+        "bbox": [
+          431,
+          388,
+          16,
+          10
+        ],
+        "centroid": [
+          391.5,
+          438.6
+        ],
+        "area": 56,
+        "mean_hu": -1014.82,
+        "hu_mean": -1014.82,
+        "hu_max": -1009.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.13,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          72,
+          390,
+          29,
+          14
+        ],
+        "centroid": [
+          396.1,
+          84.7
+        ],
+        "area": 162,
+        "mean_hu": -1017.04,
+        "hu_mean": -1017.04,
+        "hu_max": -1009.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          416,
+          397,
+          19,
+          6
+        ],
+        "centroid": [
+          398.9,
+          425.1
+        ],
+        "area": 57,
+        "mean_hu": -1016.12,
+        "hu_mean": -1016.12,
+        "hu_max": -1009.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.13,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1632.45,
+    "triage_time_ms": 64.75,
+    "slice_hu_mean": -205.95,
+    "slice_hu_std": 395.68,
+    "stats": {
+      "mean": -205.95,
+      "std": 395.68,
+      "median": 2.0,
+      "iqr": 804.0,
+      "mad": 133.0,
+      "p005": -1008.0,
+      "p01": -1002.0,
+      "p05": -980.0,
+      "p10": -949.0,
+      "p25": -691.0,
+      "p75": 113.0,
+      "p90": 147.0,
+      "p95": 170.0,
+      "p99": 291.0,
+      "p995": 369.6
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 75,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.31979812790392135518223262362082091",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 1,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 1,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.126860+00:00",
+    "findings": [
+      {
+        "bbox": [
+          72,
+          385,
+          28,
+          17
+        ],
+        "centroid": [
+          393.7,
+          84.9
+        ],
+        "area": 183,
+        "mean_hu": -1014.1,
+        "hu_mean": -1014.1,
+        "hu_max": -1007.0,
+        "hu_min": -1023.0,
+        "confidence": 0.55,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1702.0,
+    "triage_time_ms": 58.28,
+    "slice_hu_mean": -197.6,
+    "slice_hu_std": 394.85,
+    "stats": {
+      "mean": -197.6,
+      "std": 394.85,
+      "median": 9.0,
+      "iqr": 805.0,
+      "mad": 128.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p05": -981.0,
+      "p10": -949.1,
+      "p25": -687.0,
+      "p75": 118.0,
+      "p90": 149.0,
+      "p95": 178.0,
+      "p99": 289.0,
+      "p995": 350.45
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 76,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.99127464763937003373048662747489936",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.191811+00:00",
+    "findings": [],
+    "processing_time_ms": 1766.94,
+    "triage_time_ms": 53.84,
+    "slice_hu_mean": -185.83,
+    "slice_hu_std": 393.28,
+    "stats": {
+      "mean": -185.83,
+      "std": 393.28,
+      "median": 18.0,
+      "iqr": 797.0,
+      "mad": 121.0,
+      "p005": -1008.0,
+      "p01": -1002.0,
+      "p05": -982.0,
+      "p10": -950.0,
+      "p25": -676.0,
+      "p75": 121.0,
+      "p90": 151.0,
+      "p95": 207.5,
+      "p99": 303.0,
+      "p995": 386.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 77,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.18552069612627284541427139451010589",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.260724+00:00",
+    "findings": [
+      {
+        "bbox": [
+          342,
+          394,
+          50,
+          9
+        ],
+        "centroid": [
+          397.7,
+          367.7
+        ],
+        "area": 149,
+        "mean_hu": -1017.99,
+        "hu_mean": -1017.99,
+        "hu_max": -1009.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1835.85,
+    "triage_time_ms": 58.01,
+    "slice_hu_mean": -180.24,
+    "slice_hu_std": 393.12,
+    "stats": {
+      "mean": -180.24,
+      "std": 393.12,
+      "median": 22.0,
+      "iqr": 785.0,
+      "mad": 117.0,
+      "p005": -1008.0,
+      "p01": -1003.0,
+      "p05": -983.0,
+      "p10": -951.0,
+      "p25": -663.0,
+      "p75": 122.0,
+      "p90": 152.0,
+      "p95": 214.0,
+      "p99": 295.0,
+      "p995": 350.96
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 78,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.51493650225678313023183030779442366",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 1,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 1,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.341228+00:00",
+    "findings": [
+      {
+        "bbox": [
+          379,
+          393,
+          12,
+          8
+        ],
+        "centroid": [
+          397.1,
+          383.8
+        ],
+        "area": 31,
+        "mean_hu": -1017.61,
+        "hu_mean": -1017.61,
+        "hu_max": -1010.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.13,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          345,
+          394,
+          24,
+          7
+        ],
+        "centroid": [
+          397.6,
+          358.3
+        ],
+        "area": 62,
+        "mean_hu": -1019.56,
+        "hu_mean": -1019.56,
+        "hu_max": -1010.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          131,
+          395,
+          10,
+          7
+        ],
+        "centroid": [
+          397.4,
+          135.3
+        ],
+        "area": 31,
+        "mean_hu": -1015.26,
+        "hu_mean": -1015.26,
+        "hu_max": -1010.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.13,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          369,
+          395,
+          11,
+          7
+        ],
+        "centroid": [
+          397.8,
+          373.6
+        ],
+        "area": 34,
+        "mean_hu": -1019.71,
+        "hu_mean": -1019.71,
+        "hu_max": -1010.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.13,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1916.39,
+    "triage_time_ms": 69.42,
+    "slice_hu_mean": -171.68,
+    "slice_hu_std": 390.53,
+    "stats": {
+      "mean": -171.68,
+      "std": 390.53,
+      "median": 26.0,
+      "iqr": 772.0,
+      "mad": 113.0,
+      "p005": -1009.0,
+      "p01": -1003.0,
+      "p05": -983.0,
+      "p10": -952.0,
+      "p25": -650.0,
+      "p75": 122.0,
+      "p90": 151.0,
+      "p95": 229.0,
+      "p99": 299.0,
+      "p995": 355.48
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 79,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.91783437870901170608444513643568389",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.414162+00:00",
+    "findings": [
+      {
+        "bbox": [
+          345,
+          395,
+          24,
+          6
+        ],
+        "centroid": [
+          397.7,
+          358.2
+        ],
+        "area": 56,
+        "mean_hu": -1019.25,
+        "hu_mean": -1019.25,
+        "hu_max": -1011.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 1989.31,
+    "triage_time_ms": 61.44,
+    "slice_hu_mean": -164.74,
+    "slice_hu_std": 388.88,
+    "stats": {
+      "mean": -164.74,
+      "std": 388.88,
+      "median": 29.0,
+      "iqr": 748.0,
+      "mad": 110.0,
+      "p005": -1010.0,
+      "p01": -1004.38,
+      "p05": -984.0,
+      "p10": -954.0,
+      "p25": -627.0,
+      "p75": 121.0,
+      "p90": 152.0,
+      "p95": 241.0,
+      "p99": 304.0,
+      "p995": 365.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 80,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.73623926052067812806765817984551042",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.490889+00:00",
+    "findings": [],
+    "processing_time_ms": 2066.04,
+    "triage_time_ms": 64.63,
+    "slice_hu_mean": -158.23,
+    "slice_hu_std": 387.0,
+    "stats": {
+      "mean": -158.23,
+      "std": 387.0,
+      "median": 32.0,
+      "iqr": 715.0,
+      "mad": 108.0,
+      "p005": -1010.0,
+      "p01": -1005.0,
+      "p05": -986.0,
+      "p10": -956.0,
+      "p25": -594.0,
+      "p75": 121.0,
+      "p90": 152.0,
+      "p95": 242.0,
+      "p99": 297.0,
+      "p995": 343.31
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 81,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.52485799688068236226655982773006525",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.560721+00:00",
+    "findings": [
+      {
+        "bbox": [
+          359,
+          395,
+          14,
+          6
+        ],
+        "centroid": [
+          397.5,
+          365.4
+        ],
+        "area": 42,
+        "mean_hu": -1019.6,
+        "hu_mean": -1019.6,
+        "hu_max": -1012.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 2135.89,
+    "triage_time_ms": 58.35,
+    "slice_hu_mean": -150.44,
+    "slice_hu_std": 384.62,
+    "stats": {
+      "mean": -150.44,
+      "std": 384.62,
+      "median": 37.0,
+      "iqr": 650.0,
+      "mad": 104.0,
+      "p005": -1010.0,
+      "p01": -1005.0,
+      "p05": -987.0,
+      "p10": -957.0,
+      "p25": -529.0,
+      "p75": 121.0,
+      "p90": 153.0,
+      "p95": 244.0,
+      "p99": 294.0,
+      "p995": 332.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 82,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.27139556190744468770033864702473903",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.635319+00:00",
+    "findings": [
+      {
+        "bbox": [
+          477,
+          287,
+          13,
+          5
+        ],
+        "centroid": [
+          289.1,
+          483.4
+        ],
+        "area": 30,
+        "mean_hu": -1018.13,
+        "hu_mean": -1018.13,
+        "hu_max": -1012.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.14,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          346,
+          395,
+          27,
+          9
+        ],
+        "centroid": [
+          398.0,
+          361.4
+        ],
+        "area": 66,
+        "mean_hu": -1018.38,
+        "hu_mean": -1018.38,
+        "hu_max": -1011.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 2210.48,
+    "triage_time_ms": 62.49,
+    "slice_hu_mean": -140.18,
+    "slice_hu_std": 379.91,
+    "stats": {
+      "mean": -140.18,
+      "std": 379.91,
+      "median": 42.0,
+      "iqr": 560.25,
+      "mad": 99.0,
+      "p005": -1010.85,
+      "p01": -1005.0,
+      "p05": -986.0,
+      "p10": -955.0,
+      "p25": -438.25,
+      "p75": 122.0,
+      "p90": 153.0,
+      "p95": 243.0,
+      "p99": 290.0,
+      "p995": 319.85
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 83,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.23975305563660665345860584912364489",
+    "patient_id": "PANCREAS_0023",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.707828+00:00",
+    "findings": [
+      {
+        "bbox": [
+          345,
+          396,
+          18,
+          5
+        ],
+        "centroid": [
+          397.8,
+          355.2
+        ],
+        "area": 33,
+        "mean_hu": -1019.7,
+        "hu_mean": -1019.7,
+        "hu_max": -1014.0,
+        "hu_min": -1024.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 2282.96,
+    "triage_time_ms": 60.41,
+    "slice_hu_mean": -132.15,
+    "slice_hu_std": 376.47,
+    "stats": {
+      "mean": -132.15,
+      "std": 376.47,
+      "median": 46.0,
+      "iqr": 425.25,
+      "mad": 95.0,
+      "p005": -1011.0,
+      "p01": -1006.0,
+      "p05": -987.0,
+      "p10": -954.0,
+      "p25": -302.25,
+      "p75": 123.0,
+      "p90": 153.0,
+      "p95": 242.0,
+      "p99": 286.0,
+      "p995": 307.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 84,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.79056327575718761794508798919265878",
+    "patient_id": "PANCREAS_0023",
+    "flagged": true,
+    "emergency_score": 27,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 27,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-08-05T19:39:25.879815+00:00",
+    "findings": [
+      {
+        "bbox": [
+          459,
+          166,
+          19,
+          13
+        ],
+        "centroid": [
+          171.6,
+          466.9
+        ],
+        "area": 91,
+        "mean_hu": -999.96,
+        "hu_mean": -999.96,
+        "hu_max": -990.0,
+        "hu_min": -1020.0,
+        "confidence": 0.5,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          39,
+          167,
+          15,
+          7
+        ],
+        "centroid": [
+          170.5,
+          45.6
+        ],
+        "area": 45,
+        "mean_hu": -999.16,
+        "hu_mean": -999.16,
+        "hu_max": -990.0,
+        "hu_min": -1017.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          35,
+          176,
+          12,
+          8
+        ],
+        "centroid": [
+          179.1,
+          39.4
+        ],
+        "area": 37,
+        "mean_hu": -998.41,
+        "hu_mean": -998.41,
+        "hu_max": -990.0,
+        "hu_min": -1012.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          468,
+          177,
+          12,
+          8
+        ],
+        "centroid": [
+          180.1,
+          473.4
+        ],
+        "area": 37,
+        "mean_hu": -998.19,
+        "hu_mean": -998.19,
+        "hu_max": -990.0,
+        "hu_min": -1017.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          474,
+          186,
+          14,
+          13
+        ],
+        "centroid": [
+          193.5,
+          480.6
+        ],
+        "area": 75,
+        "mean_hu": -998.35,
+        "hu_mean": -998.35,
+        "hu_max": -990.0,
+        "hu_min": -1019.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          479,
+          206,
+          12,
+          6
+        ],
+        "centroid": [
+          209.3,
+          485.8
+        ],
+        "area": 38,
+        "mean_hu": -997.21,
+        "hu_mean": -997.21,
+        "hu_max": -990.0,
+        "hu_min": -1006.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          481,
+          213,
+          11,
+          7
+        ],
+        "centroid": [
+          216.3,
+          486.9
+        ],
+        "area": 33,
+        "mean_hu": -1001.27,
+        "hu_mean": -1001.27,
+        "hu_max": -991.0,
+        "hu_min": -1011.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          481,
+          225,
+          13,
+          10
+        ],
+        "centroid": [
+          229.2,
+          487.9
+        ],
+        "area": 59,
+        "mean_hu": -998.98,
+        "hu_mean": -998.98,
+        "hu_max": -990.0,
+        "hu_min": -1020.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          466,
+          235,
+          30,
+          80
+        ],
+        "centroid": [
+          275.8,
+          484.7
+        ],
+        "area": 846,
+        "mean_hu": -1003.31,
+        "hu_mean": -1003.31,
+        "hu_max": -990.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.25,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          20,
+          248,
+          12,
+          11
+        ],
+        "centroid": [
+          252.6,
+          24.2
+        ],
+        "area": 57,
+        "mean_hu": -998.72,
+        "hu_mean": -998.72,
+        "hu_max": -990.0,
+        "hu_min": -1015.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          21,
+          259,
+          20,
+          34
+        ],
+        "centroid": [
+          276.3,
+          29.4
+        ],
+        "area": 258,
+        "mean_hu": -1000.2,
+        "hu_mean": -1000.2,
+        "hu_max": -990.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.18,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          29,
+          292,
+          19,
+          16
+        ],
+        "centroid": [
+          299.4,
+          37.3
+        ],
+        "area": 134,
+        "mean_hu": -999.08,
+        "hu_mean": -999.08,
+        "hu_max": -990.0,
+        "hu_min": -1017.0,
+        "confidence": 0.55,
+        "severity_score": 0.16,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          37,
+          306,
+          17,
+          14
+        ],
+        "centroid": [
+          312.0,
+          44.4
+        ],
+        "area": 113,
+        "mean_hu": -1000.5,
+        "hu_mean": -1000.5,
+        "hu_max": -990.0,
+        "hu_min": -1023.0,
+        "confidence": 0.55,
+        "severity_score": 0.16,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          462,
+          313,
+          16,
+          11
+        ],
+        "centroid": [
+          317.7,
+          469.9
+        ],
+        "area": 77,
+        "mean_hu": -997.49,
+        "hu_mean": -997.49,
+        "hu_max": -990.0,
+        "hu_min": -1013.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          48,
+          322,
+          19,
+          16
+        ],
+        "centroid": [
+          329.3,
+          54.9
+        ],
+        "area": 94,
+        "mean_hu": -999.2,
+        "hu_mean": -999.2,
+        "hu_max": -990.0,
+        "hu_min": -1020.0,
+        "confidence": 0.5,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          56,
+          337,
+          33,
+          28
+        ],
+        "centroid": [
+          349.8,
+          72.6
+        ],
+        "area": 292,
+        "mean_hu": -999.39,
+        "hu_mean": -999.39,
+        "hu_max": -990.0,
+        "hu_min": -1024.0,
+        "confidence": 0.55,
+        "severity_score": 0.18,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          86,
+          363,
+          13,
+          14
+        ],
+        "centroid": [
+          369.5,
+          93.4
+        ],
+        "area": 67,
+        "mean_hu": -997.45,
+        "hu_mean": -997.45,
+        "hu_max": -990.0,
+        "hu_min": -1013.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          131,
+          386,
+          58,
+          25
+        ],
+        "centroid": [
+          397.8,
+          158.2
+        ],
+        "area": 394,
+        "mean_hu": -1002.42,
+        "hu_mean": -1002.42,
+        "hu_max": -990.0,
+        "hu_min": -1024.0,
+        "confidence": 0.6,
+        "severity_score": 0.19,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          333,
+          399,
+          7,
+          14
+        ],
+        "centroid": [
+          405.2,
+          336.0
+        ],
+        "area": 47,
+        "mean_hu": -1000.62,
+        "hu_mean": -1000.62,
+        "hu_max": -990.0,
+        "hu_min": -1017.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          314,
+          400,
+          12,
+          14
+        ],
+        "centroid": [
+          409.1,
+          318.2
+        ],
+        "area": 51,
+        "mean_hu": -998.02,
+        "hu_mean": -998.02,
+        "hu_max": -990.0,
+        "hu_min": -1019.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          194,
+          404,
+          16,
+          9
+        ],
+        "centroid": [
+          408.1,
+          201.5
+        ],
+        "area": 67,
+        "mean_hu": -997.43,
+        "hu_mean": -997.43,
+        "hu_max": -990.0,
+        "hu_min": -1016.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          219,
+          404,
+          23,
+          10
+        ],
+        "centroid": [
+          409.8,
+          230.9
+        ],
+        "area": 90,
+        "mean_hu": -998.08,
+        "hu_mean": -998.08,
+        "hu_max": -990.0,
+        "hu_min": -1014.0,
+        "confidence": 0.5,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          257,
+          404,
+          7,
+          10
+        ],
+        "centroid": [
+          407.8,
+          260.1
+        ],
+        "area": 37,
+        "mean_hu": -998.54,
+        "hu_mean": -998.54,
+        "hu_max": -990.0,
+        "hu_min": -1013.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          276,
+          405,
+          11,
+          9
+        ],
+        "centroid": [
+          409.9,
+          281.4
+        ],
+        "area": 42,
+        "mean_hu": -998.07,
+        "hu_mean": -998.07,
+        "hu_max": -990.0,
+        "hu_min": -1017.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          292,
+          406,
+          14,
+          8
+        ],
+        "centroid": [
+          409.6,
+          298.4
+        ],
+        "area": 66,
+        "mean_hu": -999.2,
+        "hu_mean": -999.2,
+        "hu_max": -990.0,
+        "hu_min": -1017.0,
+        "confidence": 0.4,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      },
+      {
+        "bbox": [
+          306,
+          408,
+          7,
+          6
+        ],
+        "centroid": [
+          411.0,
+          309.1
+        ],
+        "area": 31,
+        "mean_hu": -1000.29,
+        "hu_mean": -1000.29,
+        "hu_max": -990.0,
+        "hu_min": -1022.0,
+        "confidence": 0.45,
+        "severity_score": 0.15,
+        "finding_type": "Extreme Air"
+      }
+    ],
+    "processing_time_ms": 2454.95,
+    "triage_time_ms": 159.91,
+    "slice_hu_mean": -123.6,
+    "slice_hu_std": 372.97,
+    "stats": {
+      "mean": -123.6,
+      "std": 372.97,
+      "median": 49.0,
+      "iqr": 318.0,
+      "mad": 93.0,
+      "p005": -1012.0,
+      "p01": -1007.0,
+      "p05": -987.0,
+      "p10": -952.0,
+      "p25": -194.0,
+      "p75": 124.0,
+      "p90": 155.0,
+      "p95": 245.0,
+      "p99": 285.0,
+      "p995": 299.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  }
+]

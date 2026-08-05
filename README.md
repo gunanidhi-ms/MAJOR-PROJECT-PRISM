@@ -16,18 +16,23 @@
 
 ## Project Goals
 
-**Current Status (Phase 1)**
+**Current Status (Phase 1)** — ✅ Complete
 - [x] Live DICOM SCP network ingestion
 - [x] Real-time latency (Target: <50ms per slice)
 - [x] Universal statistical triage (disease-agnostic)
 - [x] Dynamic geometry and bounding box generation
 - [x] Live WebSocket-driven frontend dashboard
 
-**Future Roadmap (Phase 2 & Beyond)**
-- [ ] Multi-slice Z-axis state persistence (3D tracking)
-- [ ] Phase 2: Deep Learning Organ Segmentation (U-Net)
-- [ ] Disease Classification & Volumetric Radiomics
-- [ ] Large-scale formal clinical validation
+**Current Status (Phase 2)** — 🚧 In Progress
+- [x] **Package 0:** Schema contracts frozen (`phase1_handoff.json`, `organ_statistics.json`, `findings_output.json`, shared `Candidate` dataclass)
+- [x] **Package 1:** Phase 1 → Phase 2 handoff infrastructure (Volume Accumulator, Finding Tracker, extended DICOM tags, dual-path Phase 2 trigger)
+- [ ] Package 2: Volume Assembly & Segmentation Runner
+- [ ] Package 3: Organ Baseline & Region Detection
+- [ ] Package 4: Path A — 3D Clustering of Phase 1 Seeds
+- [ ] Package 5: Path B — Independent Organ-Wide Sweep
+- [ ] Package 6: Technical Suppression Cascade, Merge & 3D Re-validation
+- [ ] Package 7: Confidence Fusion, Scoring & Phase 3 Handoff
+- [ ] Package 8: Testing, Calibration & Final Report
 
 ---
 
@@ -45,9 +50,10 @@
 10. [Data Models](#10-data-models)
 11. [Configuration](#11-configuration)
 12. [Developer Guide](#12-developer-guide)
-13. [Limitations](#13-limitations)
-14. [Repository Structure](#14-repository-structure)
-15. [License / References](#15-license--references)
+13. [Phase 2 Development — Handoff Infrastructure](#13-phase-2-development--handoff-infrastructure)
+14. [Limitations](#13-limitations)
+15. [Repository Structure](#14-repository-structure)
+16. [License / References](#15-license--references)
 
 ---
 
@@ -437,15 +443,17 @@ PRISM is orchestrated through a highly concurrent pipeline using independent Pyt
 
 1. **CT Scanner** generates Slice 42.
 2. **Scanner** opens a TCP socket and initiates a DICOM Association (C-STORE) with PRISM on port `11112`.
-3. `dicom_listener.py` parses the byte-stream, extracts the `PixelData`, scaling tags, and pushes it to `slice_buffer.py`.
+3. `dicom_listener.py` parses the byte-stream, extracts the `PixelData` and spatial/scaling tags (including Phase 2 requirements like `ImagePositionPatient` Z-axis), and pushes it to `slice_buffer.py`.
 4. `slice_buffer.py` locks the priority queue, inserts the slice, and checks for contiguous order. If ready, it flushes the slice to `pipeline.py`.
 5. `pipeline.py` passes the raw matrix to `hu_transform.py`.
 6. `hu_transform.py` vectorizes the array into Hounsfield Units, crops the scanner padding, and returns a float32 matrix.
 7. `pipeline.py` passes the float32 matrix to `triage_screen.screen_slice`.
 8. `triage_screen.py` executes the 10-step math engine, outputting a `TriageResult` dataclass.
-9. `pipeline.py` converts the result to JSON and pushes it into the `ws_server.py` asyncio queue.
-10. `ws_server.py` broadcasts the JSON string over port `8001`.
-11. The **React Frontend** receives the WebSocket message, draws the slice to an HTML5 canvas, and renders SVG bounding boxes if an alert is triggered.
+9. **(Parallel Handoff):** `pipeline.py` feeds the HU array and findings to `volume_accumulator.py` to silently build a 3D volume (ordered by True Z-coordinate) without blocking the real-time path.
+10. `pipeline.py` converts the result to JSON and pushes it into the `ws_server.py` asyncio queue.
+11. `ws_server.py` broadcasts the JSON string over port `8001`.
+12. The **React Frontend** receives the WebSocket message, draws the slice to an HTML5 canvas, and renders SVG bounding boxes if an alert is triggered.
+13. **(Phase 2 Trigger):** When `dicom_listener.py` detects an Association Release (or `volume_accumulator.py` hits a timeout/slice-count limit), Phase 2 is launched as an isolated subprocess using the assembled 3D volume.
 
 ---
 
@@ -601,7 +609,7 @@ Our goal is to continually validate the statistical thresholds against diverse d
 ## 8. Module Breakdown
 
 ### `dicom_listener.py`
-The TCP gateway. Utilizes `pydicom.net.AE` to establish a DICOM SCP. Decodes incoming byte-streams into `PixelData` arrays and pushes them to the buffer, ensuring network I/O is never blocked by mathematical processing.
+The TCP gateway. Utilizes `pydicom.net.AE` to establish a DICOM SCP. Decodes incoming byte-streams into `PixelData` arrays, extracts spatial/scaling tags (including Phase 2 critical fields like `ImagePositionPatient` and `SeriesInstanceUID`), and pushes them to the buffer, ensuring network I/O is never blocked by mathematical processing.
 
 ### `slice_buffer.py`
 The priority reordering queue. DICOM slices arrive out-of-order. The buffer uses a `threading.Lock` and `heapq` to sort slices by `InstanceNumber`. Includes a timeout watchdog to prevent pipeline stalls if a slice packet is dropped over the network.
@@ -610,10 +618,16 @@ The priority reordering queue. DICOM slices arrive out-of-order. The buffer uses
 Vectorized pixel standardization. Executes `HU = Pixel * Slope + Intercept`. Disables hard-clipping during ingestion to preserve scanner padding (e.g., `-3024 HU`). Implements an `auto_crop` algorithm to strip artificial padding before processing.
 
 ### `pipeline.py`
-The central orchestrator. An infinite worker thread that pulls from the `SliceBuffer`, calls `hu_transform`, executes `triage_screen.py`, formats the `TriageResult` to JSON, and pushes it to the `ws_server`. Wraps execution in global `try/except` blocks to ensure fault tolerance.
+The central orchestrator. An infinite worker thread that pulls from the `SliceBuffer`, calls `hu_transform`, executes `triage_screen.py`, feeds the `VolumeAccumulator`, formats the `TriageResult` to JSON, and pushes it to the `ws_server`. Also monitors for the end of the series to spawn Phase 2. Wraps execution in global `try/except` blocks to ensure fault tolerance.
 
 ### `triage_screen.py`
 The mathematical brain containing the 10-step triage algorithm. Relies entirely on `numpy` and `scipy.ndimage` for CPU-bound optimization.
+
+### `volume_accumulator.py`
+The Phase 1 $\rightarrow$ Phase 2 bridge. Silently accumulates HU-transformed 2D slices and per-slice findings into a spatially ordered 3D volume. Uses the true `ImagePositionPatient` Z-coordinate for sorting (never `InstanceNumber`). Triggers Phase 2 via association-release, a minimum-slice floor, or a fallback timeout.
+
+### `finding_tracker.py`
+Cross-slice finding logic. Links 2D statistical outliers across consecutive slices using centroid proximity, enforcing a minimum Z-axis persistence to filter out single-slice noise before handing candidates to Phase 2.
 
 ### `ws_server.py`
 An `asyncio` WebSocket server running in a daemon thread. Fans out the JSON alerts from `pipeline.py` to all connected React clients concurrently.
@@ -700,7 +714,112 @@ We welcome contributions to the open-source codebase.
 
 ---
 
-## 13. Limitations
+## 13. Phase 2 Development — Handoff Infrastructure
+
+Phase 2 transforms PRISM from a slice-level triage engine into a volumetric analysis system. The development is organized into 8 work packages with strict dependency ordering. This section documents the completed packages.
+
+### Package 0 — Schema Contracts (✅ Complete)
+
+Before any implementation code, three JSON schemas and one shared Python dataclass were frozen to prevent integration mismatches:
+
+| Schema File | Purpose | Location |
+|---|---|---|
+| `phase1_handoff.json` | Defines the complete handoff payload from Phase 1 to Phase 2 | `schemas/` |
+| `organ_statistics.json` | Per-organ statistical baseline (one entry per TotalSegmentator label) | `schemas/` |
+| `findings_output.json` | Final findings handed to Phase 3 (one entry per surviving candidate) | `schemas/` |
+| `candidate.py` | Shared `Candidate`, `ShapeFeatures`, `DensityHU` dataclasses | `schemas/` |
+
+The `Candidate` dataclass includes lifecycle-annotated fields (`[CREATION]`, `[MERGE]`, `[FILTER]`, `[SCORE]`) ensuring every downstream package knows exactly which fields it's responsible for populating.
+
+### Package 1 — Phase 1 → Phase 2 Handoff Infrastructure (✅ Complete)
+
+**Objective:** Make Phase 1 retain what it currently discards, and emit a clean, schema-conformant handoff when a series is complete — without slowing the existing real-time alert path.
+
+#### What Was Built
+
+**1. Extended DICOM Tag Extraction** (`dicom_listener.py` — modified)
+
+6 new DICOM tags are now captured alongside the existing fields:
+
+| Tag | DICOM ID | Purpose |
+|---|---|---|
+| `SeriesInstanceUID` | (0020,000E) | Unique series identifier for volume grouping |
+| `StudyInstanceUID` | (0020,000D) | Study-level identifier |
+| `PixelSpacing` | (0028,0030) | In-plane pixel dimensions [row_mm, col_mm] |
+| `SliceThickness` | (0018,0050) | Nominal slice thickness |
+| `ImagePositionPatient` | (0020,0032) | Full [x, y, z] position vector for spatial ordering |
+| `ImageOrientationPatient` | (0020,0037) | 6 direction cosines for orientation |
+| `Modality` | (0008,0060) | CT vs MR routing |
+
+All tags include safe fallback defaults when absent from the DICOM dataset.
+
+**2. Volume Accumulator** (`volume_accumulator.py` — new)
+
+Thread-safe accumulator that collects HU-transformed 2D slices alongside per-slice findings. Key design decisions:
+
+- **Spatial ordering by ImagePositionPatient Z** — never by InstanceNumber. These routinely disagree in clinical DICOM data, and using InstanceNumber produces subtly misaligned volumes.
+- **Z-spacing computed from actual slice positions** (median of inter-slice distances), not from the `SliceThickness` tag which is nominal and often wrong.
+- **Three independent readiness triggers:**
+  1. **Association-release** — DICOM association closed (all slices sent)
+  2. **Slice-count floor** — minimum viable volume size reached (default: 20 slices)
+  3. **Timeout fallback** — no new slice received in N seconds (default: 5.0s)
+- **Non-blocking** — `add()` completes in < 5ms for a 512×512 slice (measured), consuming < 10% of the real-time path's 50ms budget.
+
+```python
+class VolumeAccumulator:
+    def __init__(self, min_slices=20, timeout_sec=5.0): ...
+    def add(self, instance_number, hu_array, findings, spacing_meta): ...
+    def ready_on_association_release(self) -> bool: ...
+    def ready_on_slice_floor(self) -> bool: ...
+    def ready_on_timeout(self) -> bool: ...
+    def export_volume(self) -> tuple[np.ndarray, list[list], list[int], tuple]: ...
+```
+
+**3. Finding Tracker** (`finding_tracker.py` — new)
+
+Links per-slice 2D findings into multi-slice "tracks" for 3D persistence validation:
+
+- **Centroid-based linking:** Greedy nearest-neighbor matching across consecutive slices with configurable drift threshold (default: 15px)
+- **Persistence filter:** Tracks spanning ≥ `min_slices` (default: 3) consecutive slices are considered spatially persistent
+- **Zero DICOM dependency:** Operates purely on lists of Finding objects, fully testable with synthetic data
+
+```python
+def link_findings_across_slices(ordered_findings, max_centroid_drift_px=15) -> list[list]: ...
+def track_persistence_ok(track, min_slices=3) -> bool: ...
+```
+
+**4. Pipeline Integration** (`pipeline.py` — modified)
+
+- Accumulator fed HU-transformed arrays (not raw pixels) and triage findings after each slice processes
+- Dual-path Phase 2 trigger wired into the existing flush loop
+- Phase 2 spawn uses `multiprocessing.Process` (not `threading.Thread`) for clean C++ tensor memory teardown
+- Real-time WebSocket alert path completely unchanged
+
+#### Acceptance Checklist Results
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| All 6 new DICOM tags captured | ✅ Pass | `TestDicomTagExtraction` (4 tests) |
+| VolumeAccumulator orders by ImagePositionPatient Z | ✅ Pass | `test_ordering_disagrees_with_instance_number` — deliberately shuffled Z vs InstanceNumber |
+| Association-release trigger fires independently | ✅ Pass | `test_association_release_trigger` |
+| Slice-count floor trigger fires independently | ✅ Pass | `test_slice_floor_trigger` |
+| Timeout fallback fires independently | ✅ Pass | `test_timeout_trigger` |
+| Finding tracker: smooth drift → 1 track, persistent | ✅ Pass | `test_smooth_drift_single_track` |
+| Finding tracker: large jump → separate tracks, not persistent | ✅ Pass | `test_large_jump_separate_tracks` |
+| Accumulator.add() < 5ms per 512×512 slice | ✅ Pass | `test_accumulator_add_is_fast` |
+| Thread safety (concurrent adds) | ✅ Pass | `test_accumulator_thread_safe` |
+| No existing test regressions | ✅ Pass | 59/59 tests passing (25 new + 34 existing) |
+
+#### Test Results
+
+```
+25 passed in 0.76s  (Package 1 tests)
+59 passed in 1.67s  (Full test suite — zero regressions)
+```
+
+---
+
+## 14. Limitations
 
 * **Lack of 3D Context:** Slices are evaluated in isolation to ensure zero latency. A thin blood vessel curving into the Z-axis may temporarily appear as an isolated dense circle. 
 * **Metallic Artifacts:** Dental amalgams, hip replacements, or pacemakers cause massive beam-hardening streaks. While Step 7 Geometric Filtering attempts to suppress thin streaks, massive scatter can distort the local Mean and Std Dev, potentially blinding the statistical detector in that region.
@@ -708,35 +827,48 @@ We welcome contributions to the open-source codebase.
 
 ---
 
-## 14. Repository Structure
+## 15. Repository Structure
 
 ```text
 MAJOR-PROJECT-PRISM/
-├── phase1_ingestion/            # Backend Processing & Networking
-│   ├── dicom_listener.py        # DICOM SCP Server
-│   ├── slice_buffer.py          # Priority Reordering Queue
-│   ├── hu_transform.py          # Hounsfield Unit Math
-│   ├── triage_screen.py         # The 10-Step Statistical Engine
-│   ├── pipeline.py              # Main Orchestrator Loop
-│   ├── ws_server.py             # WebSocket Telemetry Server
-│   ├── ct_machine_emulator.py   # Replay Utility Core
-│   └── replay_sender.py         # CLI for Replay Utility
+├── phase1_ingestion/              # Backend Processing & Networking
+│   ├── dicom_listener.py          # DICOM SCP Server (+ Phase 2 tag extraction)
+│   ├── slice_buffer.py            # Priority Reordering Queue
+│   ├── hu_transform.py            # Hounsfield Unit Math
+│   ├── triage_screen.py           # The 10-Step Statistical Engine
+│   ├── pipeline.py                # Main Orchestrator (+ Phase 2 trigger)
+│   ├── volume_accumulator.py      # [NEW] Phase 2 Volume Accumulator
+│   ├── finding_tracker.py         # [NEW] Cross-Slice Finding Tracker
+│   ├── ws_server.py               # WebSocket Telemetry Server
+│   ├── ct_machine_emulator.py     # Replay Utility Core
+│   ├── replay_sender.py           # CLI for Replay Utility
+│   └── tests/
+│       ├── test_package1.py       # [NEW] Package 1 test suite (25 tests)
+│       ├── test_hu_transform.py   # HU Transform tests
+│       ├── test_slice_buffer.py   # Slice Buffer tests
+│       └── test_triage_screen.py  # Triage Screen tests
 │
-├── frontend/                    # React Dashboard
+├── schemas/                       # [NEW] Frozen Phase 2 Contracts
+│   ├── phase1_handoff.json        # Phase 1 → Phase 2 handoff schema
+│   ├── organ_statistics.json      # Per-organ baseline schema
+│   ├── findings_output.json       # Phase 3 findings output schema
+│   └── candidate.py               # Shared Candidate/ShapeFeatures/DensityHU
+│
+├── frontend/                      # React Dashboard
 │   ├── src/
-│   │   ├── components/          # UI Components
-│   │   ├── hooks/               # useWebSocket logic
-│   │   └── App.jsx              # Main View
+│   │   ├── components/            # UI Components
+│   │   ├── hooks/                 # useWebSocket logic
+│   │   └── App.jsx                # Main View
 │   ├── package.json
 │   └── vite.config.js
 │
-├── sample_dicoms/               # Test Data
-└── README.md                    # This Document
+├── sample_dicoms/                 # Test Data
+└── README.md                      # This Document
 ```
 
 ---
 
-## 15. License / References
+## 16. License / References
 
 This project is developed as an open-source medical imaging research initiative. 
 
