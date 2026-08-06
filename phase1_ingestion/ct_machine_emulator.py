@@ -63,7 +63,7 @@ def build_patient_registry(dicom_dir: str) -> dict:
     for path in dcm_files:
         try:
             # Read only headers to index quickly
-            ds = pydicom.dcmread(path, stop_before_pixels=True)
+            ds = pydicom.dcmread(path, force=True, stop_before_pixels=True)
             
             modality = getattr(ds, "Modality", "Unknown")
             if modality != "CT":
@@ -138,7 +138,7 @@ def simulate_ct_scan(
                     
                     try:
                         # Full read including pixels for sending
-                        ds = pydicom.dcmread(dcm_path)
+                        ds = pydicom.dcmread(dcm_path, force=True)
                         status = assoc.send_c_store(ds)
                         
                         if status and status.Status == 0x0000:
