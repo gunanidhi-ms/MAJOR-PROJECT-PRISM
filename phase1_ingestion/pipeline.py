@@ -64,7 +64,7 @@ class Phase1Pipeline:
         self.dicom_port = dicom_port
         self.ws_port = ws_port
         self.buffer = SliceBuffer()
-        self.accumulator = VolumeAccumulator(min_slices=20, timeout_sec=5.0)
+        self.accumulator = VolumeAccumulator(min_slices=20)
         self.listener: DICOMListener | None = None
         self._running = False
         self._stats = {
@@ -260,8 +260,11 @@ class Phase1Pipeline:
 
             # ── Phase 2 dual-path trigger (Package 1) ──
             # Check if the volume accumulator is ready via any trigger path.
-            # The timeout fallback fires here; association-release is signaled
-            # externally by the DICOM listener.
+            # The timeout fallback fires here based on true stream stall;
+            # association-release is signaled externally by the DICOM listener.
+            if self.buffer.is_truly_idle(BUFFER_FLUSH_TIMEOUT):
+                self.accumulator.mark_stream_stalled()
+
             self._check_phase2_trigger()
 
     def _check_phase2_trigger(self) -> None:
@@ -342,6 +345,16 @@ class Phase1Pipeline:
             )
             print(f"    Avg processing:   {avg:.1f}ms per slice")
         print(f"{'=' * 60}\n")
+        
+        # Archive and clear incoming directory on shutdown
+        try:
+            from phase1_ingestion.ws_server import zip_incoming_dir, clear_incoming_dir
+            print("[INFO] Archiving incoming slices...")
+            zip_incoming_dir("pipeline_shutdown")
+            clear_incoming_dir()
+            print("[INFO] Incoming slices archived and cleared successfully.")
+        except Exception as e:
+            print(f"[ERROR] Failed to archive incoming slices: {e}")
 
 
 def main():

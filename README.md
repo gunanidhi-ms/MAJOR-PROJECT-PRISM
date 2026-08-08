@@ -759,10 +759,11 @@ Thread-safe accumulator that collects HU-transformed 2D slices alongside per-sli
 
 - **Spatial ordering by ImagePositionPatient Z** — never by InstanceNumber. These routinely disagree in clinical DICOM data, and using InstanceNumber produces subtly misaligned volumes.
 - **Z-spacing computed from actual slice positions** (median of inter-slice distances), not from the `SliceThickness` tag which is nominal and often wrong.
-- **Three independent readiness triggers:**
+- **Two independent readiness triggers:**
   1. **Association-release** — DICOM association closed (all slices sent)
-  2. **Slice-count floor** — minimum viable volume size reached (default: 20 slices)
-  3. **Timeout fallback** — no new slice received in N seconds (default: 5.0s)
+  2. **Stream stall fallback** — `SliceBuffer` detects no new data on socket for N seconds (default: 5.0s)
+- **Slice-count floor** — Minimum viable volume size (default: 20 slices). This acts purely as a sanity floor to prevent segmenting near-empty sequences and is *never* a trigger by itself.
+- **Lost Packet Drop** — `SliceBuffer` will forcefully drop a delayed slice and unblock the sequence if the slice fails to arrive within a short gap-timeout (e.g., 2s) while later slices actively arrive.
 - **Non-blocking** — `add()` completes in < 5ms for a 512×512 slice (measured), consuming < 10% of the real-time path's 50ms budget.
 
 ```python

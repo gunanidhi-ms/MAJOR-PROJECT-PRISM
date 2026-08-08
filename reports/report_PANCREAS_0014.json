@@ -12,7 +12,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:26.177262+00:00",
+    "timestamp": "2026-08-08T18:56:10.202341+00:00",
     "findings": [
       {
         "bbox": [
@@ -35,8 +35,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 438.98,
-    "triage_time_ms": 410.98,
+    "processing_time_ms": 12286.96,
+    "triage_time_ms": 69.4,
     "slice_hu_mean": -124.1,
     "slice_hu_std": 295.33,
     "stats": {
@@ -73,7 +73,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:26.720760+00:00",
+    "timestamp": "2026-08-08T18:56:10.299421+00:00",
     "findings": [
       {
         "bbox": [
@@ -96,8 +96,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 375.94,
-    "triage_time_ms": 348.39,
+    "processing_time_ms": 12384.11,
+    "triage_time_ms": 73.38,
     "slice_hu_mean": -124.08,
     "slice_hu_std": 296.03,
     "stats": {
@@ -134,7 +134,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:27.300419+00:00",
+    "timestamp": "2026-08-08T18:56:10.432477+00:00",
     "findings": [
       {
         "bbox": [
@@ -177,8 +177,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 412.39,
-    "triage_time_ms": 380.53,
+    "processing_time_ms": 12517.07,
+    "triage_time_ms": 104.09,
     "slice_hu_mean": -126.12,
     "slice_hu_std": 297.24,
     "stats": {
@@ -215,7 +215,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:27.935218+00:00",
+    "timestamp": "2026-08-08T18:56:10.546291+00:00",
     "findings": [
       {
         "bbox": [
@@ -258,8 +258,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 417.8,
-    "triage_time_ms": 391.33,
+    "processing_time_ms": 12630.86,
+    "triage_time_ms": 81.3,
     "slice_hu_mean": -128.33,
     "slice_hu_std": 298.77,
     "stats": {
@@ -296,7 +296,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:28.599764+00:00",
+    "timestamp": "2026-08-08T18:56:10.645295+00:00",
     "findings": [
       {
         "bbox": [
@@ -339,8 +339,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 452.84,
-    "triage_time_ms": 423.12,
+    "processing_time_ms": 12729.96,
+    "triage_time_ms": 76.96,
     "slice_hu_mean": -127.84,
     "slice_hu_std": 298.82,
     "stats": {
@@ -377,7 +377,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:29.250615+00:00",
+    "timestamp": "2026-08-08T18:56:10.741414+00:00",
     "findings": [
       {
         "bbox": [
@@ -420,8 +420,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 462.54,
-    "triage_time_ms": 433.36,
+    "processing_time_ms": 12826.04,
+    "triage_time_ms": 73.98,
     "slice_hu_mean": -127.92,
     "slice_hu_std": 298.52,
     "stats": {
@@ -458,7 +458,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:29.946664+00:00",
+    "timestamp": "2026-08-08T18:56:10.833624+00:00",
     "findings": [
       {
         "bbox": [
@@ -501,8 +501,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 505.5,
-    "triage_time_ms": 471.64,
+    "processing_time_ms": 12918.32,
+    "triage_time_ms": 70.02,
     "slice_hu_mean": -128.89,
     "slice_hu_std": 299.1,
     "stats": {
@@ -539,7 +539,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:30.607589+00:00",
+    "timestamp": "2026-08-08T18:56:10.919211+00:00",
     "findings": [
       {
         "bbox": [
@@ -562,8 +562,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 456.86,
-    "triage_time_ms": 424.72,
+    "processing_time_ms": 13003.9,
+    "triage_time_ms": 64.54,
     "slice_hu_mean": -128.66,
     "slice_hu_std": 297.79,
     "stats": {
@@ -600,7 +600,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:31.158121+00:00",
+    "timestamp": "2026-08-08T18:56:11.007368+00:00",
     "findings": [
       {
         "bbox": [
@@ -623,8 +623,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 376.08,
-    "triage_time_ms": 352.11,
+    "processing_time_ms": 13091.99,
+    "triage_time_ms": 66.45,
     "slice_hu_mean": -128.81,
     "slice_hu_std": 296.29,
     "stats": {
@@ -661,10 +661,10 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:31.730356+00:00",
+    "timestamp": "2026-08-08T18:56:11.088055+00:00",
     "findings": [],
-    "processing_time_ms": 371.43,
-    "triage_time_ms": 341.21,
+    "processing_time_ms": 13172.75,
+    "triage_time_ms": 59.69,
     "slice_hu_mean": -128.38,
     "slice_hu_std": 294.95,
     "stats": {
@@ -701,7 +701,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:32.334247+00:00",
+    "timestamp": "2026-08-08T18:56:11.173455+00:00",
     "findings": [
       {
         "bbox": [
@@ -724,8 +724,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 422.9,
-    "triage_time_ms": 395.51,
+    "processing_time_ms": 13258.1,
+    "triage_time_ms": 64.94,
     "slice_hu_mean": -132.13,
     "slice_hu_std": 297.54,
     "stats": {
@@ -762,7 +762,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:33.018955+00:00",
+    "timestamp": "2026-08-08T18:56:11.259749+00:00",
     "findings": [
       {
         "bbox": [
@@ -785,8 +785,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 470.41,
-    "triage_time_ms": 440.75,
+    "processing_time_ms": 13344.36,
+    "triage_time_ms": 65.41,
     "slice_hu_mean": -132.66,
     "slice_hu_std": 297.63,
     "stats": {
@@ -823,7 +823,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:33.570178+00:00",
+    "timestamp": "2026-08-08T18:56:11.345913+00:00",
     "findings": [
       {
         "bbox": [
@@ -846,8 +846,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 390.58,
-    "triage_time_ms": 364.34,
+    "processing_time_ms": 13430.52,
+    "triage_time_ms": 65.04,
     "slice_hu_mean": -134.04,
     "slice_hu_std": 297.95,
     "stats": {
@@ -884,7 +884,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:34.171396+00:00",
+    "timestamp": "2026-08-08T18:56:11.432937+00:00",
     "findings": [
       {
         "bbox": [
@@ -927,8 +927,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 420.69,
-    "triage_time_ms": 392.62,
+    "processing_time_ms": 13517.55,
+    "triage_time_ms": 67.76,
     "slice_hu_mean": -135.17,
     "slice_hu_std": 297.57,
     "stats": {
@@ -965,7 +965,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:34.754136+00:00",
+    "timestamp": "2026-08-08T18:56:11.523263+00:00",
     "findings": [
       {
         "bbox": [
@@ -1008,8 +1008,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 411.13,
-    "triage_time_ms": 385.47,
+    "processing_time_ms": 13607.94,
+    "triage_time_ms": 70.96,
     "slice_hu_mean": -137.25,
     "slice_hu_std": 298.84,
     "stats": {
@@ -1046,7 +1046,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:35.331651+00:00",
+    "timestamp": "2026-08-08T18:56:11.612405+00:00",
     "findings": [
       {
         "bbox": [
@@ -1089,8 +1089,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 414.54,
-    "triage_time_ms": 388.86,
+    "processing_time_ms": 13697.1,
+    "triage_time_ms": 69.09,
     "slice_hu_mean": -138.19,
     "slice_hu_std": 298.54,
     "stats": {
@@ -1127,7 +1127,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:35.935681+00:00",
+    "timestamp": "2026-08-08T18:56:11.699220+00:00",
     "findings": [
       {
         "bbox": [
@@ -1170,8 +1170,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 406.79,
-    "triage_time_ms": 380.95,
+    "processing_time_ms": 13783.92,
+    "triage_time_ms": 67.98,
     "slice_hu_mean": -138.73,
     "slice_hu_std": 297.94,
     "stats": {
@@ -1208,7 +1208,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:36.554474+00:00",
+    "timestamp": "2026-08-08T18:56:11.785211+00:00",
     "findings": [
       {
         "bbox": [
@@ -1251,8 +1251,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 417.98,
-    "triage_time_ms": 389.97,
+    "processing_time_ms": 13869.86,
+    "triage_time_ms": 66.84,
     "slice_hu_mean": -139.81,
     "slice_hu_std": 298.34,
     "stats": {
@@ -1289,7 +1289,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:37.172293+00:00",
+    "timestamp": "2026-08-08T18:56:11.876471+00:00",
     "findings": [
       {
         "bbox": [
@@ -1352,8 +1352,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 426.59,
-    "triage_time_ms": 398.9,
+    "processing_time_ms": 13961.14,
+    "triage_time_ms": 72.38,
     "slice_hu_mean": -140.93,
     "slice_hu_std": 298.41,
     "stats": {
@@ -1390,7 +1390,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:37.801728+00:00",
+    "timestamp": "2026-08-08T18:56:11.966689+00:00",
     "findings": [
       {
         "bbox": [
@@ -1453,8 +1453,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 462.02,
-    "triage_time_ms": 435.97,
+    "processing_time_ms": 14051.3,
+    "triage_time_ms": 71.42,
     "slice_hu_mean": -142.04,
     "slice_hu_std": 298.82,
     "stats": {
@@ -1491,7 +1491,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:38.477962+00:00",
+    "timestamp": "2026-08-08T18:56:12.056709+00:00",
     "findings": [
       {
         "bbox": [
@@ -1554,8 +1554,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 501.75,
-    "triage_time_ms": 473.9,
+    "processing_time_ms": 14141.41,
+    "triage_time_ms": 71.12,
     "slice_hu_mean": -143.55,
     "slice_hu_std": 299.27,
     "stats": {
@@ -1592,7 +1592,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:39.111296+00:00",
+    "timestamp": "2026-08-08T18:56:12.143791+00:00",
     "findings": [
       {
         "bbox": [
@@ -1635,8 +1635,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 458.76,
-    "triage_time_ms": 428.96,
+    "processing_time_ms": 14228.49,
+    "triage_time_ms": 68.04,
     "slice_hu_mean": -143.84,
     "slice_hu_std": 298.75,
     "stats": {
@@ -1673,7 +1673,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:39.745808+00:00",
+    "timestamp": "2026-08-08T18:56:12.230430+00:00",
     "findings": [
       {
         "bbox": [
@@ -1716,8 +1716,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 455.91,
-    "triage_time_ms": 425.53,
+    "processing_time_ms": 14315.11,
+    "triage_time_ms": 67.38,
     "slice_hu_mean": -144.91,
     "slice_hu_std": 298.12,
     "stats": {
@@ -1754,7 +1754,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:40.370331+00:00",
+    "timestamp": "2026-08-08T18:56:12.315909+00:00",
     "findings": [
       {
         "bbox": [
@@ -1797,8 +1797,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 438.89,
-    "triage_time_ms": 408.14,
+    "processing_time_ms": 14400.6,
+    "triage_time_ms": 66.03,
     "slice_hu_mean": -146.11,
     "slice_hu_std": 298.84,
     "stats": {
@@ -1835,7 +1835,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:40.962062+00:00",
+    "timestamp": "2026-08-08T18:56:12.401208+00:00",
     "findings": [
       {
         "bbox": [
@@ -1878,8 +1878,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 417.45,
-    "triage_time_ms": 390.42,
+    "processing_time_ms": 14485.91,
+    "triage_time_ms": 66.6,
     "slice_hu_mean": -146.4,
     "slice_hu_std": 298.06,
     "stats": {
@@ -1916,7 +1916,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:41.542832+00:00",
+    "timestamp": "2026-08-08T18:56:12.488316+00:00",
     "findings": [
       {
         "bbox": [
@@ -1959,8 +1959,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 407.14,
-    "triage_time_ms": 384.04,
+    "processing_time_ms": 14573.01,
+    "triage_time_ms": 67.67,
     "slice_hu_mean": -146.01,
     "slice_hu_std": 297.01,
     "stats": {
@@ -1997,7 +1997,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:42.148700+00:00",
+    "timestamp": "2026-08-08T18:56:12.574462+00:00",
     "findings": [
       {
         "bbox": [
@@ -2040,8 +2040,8 @@
         "finding_type": "Statistical Hypodense"
       }
     ],
-    "processing_time_ms": 408.29,
-    "triage_time_ms": 382.13,
+    "processing_time_ms": 14659.16,
+    "triage_time_ms": 66.47,
     "slice_hu_mean": -145.8,
     "slice_hu_std": 295.04,
     "stats": {
@@ -2078,7 +2078,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:42.768402+00:00",
+    "timestamp": "2026-08-08T18:56:12.656207+00:00",
     "findings": [
       {
         "bbox": [
@@ -2101,8 +2101,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 435.0,
-    "triage_time_ms": 407.6,
+    "processing_time_ms": 14740.89,
+    "triage_time_ms": 62.29,
     "slice_hu_mean": -145.11,
     "slice_hu_std": 294.05,
     "stats": {
@@ -2139,7 +2139,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:43.353920+00:00",
+    "timestamp": "2026-08-08T18:56:12.737517+00:00",
     "findings": [
       {
         "bbox": [
@@ -2162,8 +2162,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 410.15,
-    "triage_time_ms": 382.62,
+    "processing_time_ms": 14822.22,
+    "triage_time_ms": 62.55,
     "slice_hu_mean": -145.79,
     "slice_hu_std": 294.03,
     "stats": {
@@ -2200,7 +2200,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:43.926784+00:00",
+    "timestamp": "2026-08-08T18:56:12.822642+00:00",
     "findings": [
       {
         "bbox": [
@@ -2243,8 +2243,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 414.35,
-    "triage_time_ms": 383.53,
+    "processing_time_ms": 14907.28,
+    "triage_time_ms": 66.38,
     "slice_hu_mean": -147.52,
     "slice_hu_std": 295.75,
     "stats": {
@@ -2281,7 +2281,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:44.547385+00:00",
+    "timestamp": "2026-08-08T18:56:12.909913+00:00",
     "findings": [
       {
         "bbox": [
@@ -2344,8 +2344,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 446.78,
-    "triage_time_ms": 419.98,
+    "processing_time_ms": 14994.61,
+    "triage_time_ms": 68.87,
     "slice_hu_mean": -147.55,
     "slice_hu_std": 295.08,
     "stats": {
@@ -2382,7 +2382,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:45.133449+00:00",
+    "timestamp": "2026-08-08T18:56:12.998018+00:00",
     "findings": [
       {
         "bbox": [
@@ -2445,8 +2445,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 423.44,
-    "triage_time_ms": 395.62,
+    "processing_time_ms": 15082.71,
+    "triage_time_ms": 69.18,
     "slice_hu_mean": -147.45,
     "slice_hu_std": 295.33,
     "stats": {
@@ -2483,7 +2483,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:45.703117+00:00",
+    "timestamp": "2026-08-08T18:56:13.087455+00:00",
     "findings": [
       {
         "bbox": [
@@ -2546,8 +2546,8 @@
         "finding_type": "Statistical Hypodense"
       }
     ],
-    "processing_time_ms": 415.64,
-    "triage_time_ms": 388.52,
+    "processing_time_ms": 15172.15,
+    "triage_time_ms": 70.51,
     "slice_hu_mean": -150.1,
     "slice_hu_std": 297.88,
     "stats": {
@@ -2584,7 +2584,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:46.308365+00:00",
+    "timestamp": "2026-08-08T18:56:13.178162+00:00",
     "findings": [
       {
         "bbox": [
@@ -2647,8 +2647,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 419.53,
-    "triage_time_ms": 391.2,
+    "processing_time_ms": 15262.86,
+    "triage_time_ms": 70.41,
     "slice_hu_mean": -149.3,
     "slice_hu_std": 297.65,
     "stats": {
@@ -2685,7 +2685,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:46.991708+00:00",
+    "timestamp": "2026-08-08T18:56:13.274648+00:00",
     "findings": [
       {
         "bbox": [
@@ -2788,8 +2788,8 @@
         "finding_type": "Statistical Hyperdense"
       }
     ],
-    "processing_time_ms": 513.03,
-    "triage_time_ms": 484.67,
+    "processing_time_ms": 15359.34,
+    "triage_time_ms": 77.68,
     "slice_hu_mean": -150.84,
     "slice_hu_std": 297.9,
     "stats": {
@@ -2826,7 +2826,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:47.624312+00:00",
+    "timestamp": "2026-08-08T18:56:13.369786+00:00",
     "findings": [
       {
         "bbox": [
@@ -2909,8 +2909,8 @@
         "finding_type": "Statistical Hyperdense"
       }
     ],
-    "processing_time_ms": 463.15,
-    "triage_time_ms": 436.76,
+    "processing_time_ms": 15454.48,
+    "triage_time_ms": 76.2,
     "slice_hu_mean": -151.85,
     "slice_hu_std": 299.2,
     "stats": {
@@ -2947,7 +2947,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:48.339315+00:00",
+    "timestamp": "2026-08-08T18:56:13.471162+00:00",
     "findings": [
       {
         "bbox": [
@@ -3070,8 +3070,8 @@
         "finding_type": "Statistical Hyperdense"
       }
     ],
-    "processing_time_ms": 529.64,
-    "triage_time_ms": 499.7,
+    "processing_time_ms": 15555.86,
+    "triage_time_ms": 81.26,
     "slice_hu_mean": -154.03,
     "slice_hu_std": 300.92,
     "stats": {
@@ -3108,7 +3108,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:49.099244+00:00",
+    "timestamp": "2026-08-08T18:56:13.569684+00:00",
     "findings": [
       {
         "bbox": [
@@ -3211,8 +3211,8 @@
         "finding_type": "Statistical Hyperdense"
       }
     ],
-    "processing_time_ms": 577.66,
-    "triage_time_ms": 547.0,
+    "processing_time_ms": 15654.38,
+    "triage_time_ms": 79.72,
     "slice_hu_mean": -152.94,
     "slice_hu_std": 300.68,
     "stats": {
@@ -3249,7 +3249,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:49.779707+00:00",
+    "timestamp": "2026-08-08T18:56:13.662886+00:00",
     "findings": [
       {
         "bbox": [
@@ -3332,8 +3332,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 507.98,
-    "triage_time_ms": 472.13,
+    "processing_time_ms": 15747.59,
+    "triage_time_ms": 74.12,
     "slice_hu_mean": -153.66,
     "slice_hu_std": 301.58,
     "stats": {
@@ -3370,7 +3370,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:50.450457+00:00",
+    "timestamp": "2026-08-08T18:56:13.754968+00:00",
     "findings": [
       {
         "bbox": [
@@ -3433,8 +3433,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 485.58,
-    "triage_time_ms": 459.47,
+    "processing_time_ms": 15839.6,
+    "triage_time_ms": 72.51,
     "slice_hu_mean": -154.56,
     "slice_hu_std": 302.23,
     "stats": {
@@ -3471,7 +3471,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:51.080417+00:00",
+    "timestamp": "2026-08-08T18:56:13.848279+00:00",
     "findings": [
       {
         "bbox": [
@@ -3554,8 +3554,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 465.34,
-    "triage_time_ms": 437.7,
+    "processing_time_ms": 15932.98,
+    "triage_time_ms": 73.77,
     "slice_hu_mean": -153.97,
     "slice_hu_std": 301.54,
     "stats": {
@@ -3592,7 +3592,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:51.695269+00:00",
+    "timestamp": "2026-08-08T18:56:13.941866+00:00",
     "findings": [
       {
         "bbox": [
@@ -3675,8 +3675,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 448.71,
-    "triage_time_ms": 424.32,
+    "processing_time_ms": 16026.57,
+    "triage_time_ms": 73.93,
     "slice_hu_mean": -155.72,
     "slice_hu_std": 302.27,
     "stats": {
@@ -3713,7 +3713,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:52.289065+00:00",
+    "timestamp": "2026-08-08T18:56:14.032458+00:00",
     "findings": [
       {
         "bbox": [
@@ -3776,8 +3776,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 429.85,
-    "triage_time_ms": 405.26,
+    "processing_time_ms": 16117.16,
+    "triage_time_ms": 71.35,
     "slice_hu_mean": -154.05,
     "slice_hu_std": 300.73,
     "stats": {
@@ -3814,7 +3814,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:52.882461+00:00",
+    "timestamp": "2026-08-08T18:56:14.116952+00:00",
     "findings": [
       {
         "bbox": [
@@ -3857,8 +3857,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 414.85,
-    "triage_time_ms": 390.58,
+    "processing_time_ms": 16201.66,
+    "triage_time_ms": 65.02,
     "slice_hu_mean": -155.94,
     "slice_hu_std": 302.37,
     "stats": {
@@ -3895,7 +3895,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:53.541631+00:00",
+    "timestamp": "2026-08-08T18:56:14.204229+00:00",
     "findings": [
       {
         "bbox": [
@@ -3938,8 +3938,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 457.5,
-    "triage_time_ms": 427.31,
+    "processing_time_ms": 16288.93,
+    "triage_time_ms": 67.21,
     "slice_hu_mean": -156.71,
     "slice_hu_std": 302.22,
     "stats": {
@@ -3976,7 +3976,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:54.166679+00:00",
+    "timestamp": "2026-08-08T18:56:14.290928+00:00",
     "findings": [
       {
         "bbox": [
@@ -4019,8 +4019,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 453.31,
-    "triage_time_ms": 415.34,
+    "processing_time_ms": 16375.63,
+    "triage_time_ms": 66.77,
     "slice_hu_mean": -158.07,
     "slice_hu_std": 303.49,
     "stats": {
@@ -4057,7 +4057,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:54.780003+00:00",
+    "timestamp": "2026-08-08T18:56:14.385834+00:00",
     "findings": [
       {
         "bbox": [
@@ -4120,8 +4120,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 439.22,
-    "triage_time_ms": 412.82,
+    "processing_time_ms": 16470.51,
+    "triage_time_ms": 74.49,
     "slice_hu_mean": -158.47,
     "slice_hu_std": 303.52,
     "stats": {
@@ -4158,7 +4158,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:55.355602+00:00",
+    "timestamp": "2026-08-08T18:56:14.476828+00:00",
     "findings": [
       {
         "bbox": [
@@ -4201,8 +4201,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 399.15,
-    "triage_time_ms": 371.52,
+    "processing_time_ms": 16561.52,
+    "triage_time_ms": 70.62,
     "slice_hu_mean": -160.32,
     "slice_hu_std": 304.41,
     "stats": {
@@ -4239,7 +4239,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:55.930112+00:00",
+    "timestamp": "2026-08-08T18:56:14.569216+00:00",
     "findings": [
       {
         "bbox": [
@@ -4282,8 +4282,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 400.83,
-    "triage_time_ms": 374.18,
+    "processing_time_ms": 16653.92,
+    "triage_time_ms": 71.23,
     "slice_hu_mean": -161.25,
     "slice_hu_std": 304.8,
     "stats": {
@@ -4320,7 +4320,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:56.562904+00:00",
+    "timestamp": "2026-08-08T18:56:14.659784+00:00",
     "findings": [
       {
         "bbox": [
@@ -4363,8 +4363,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 426.02,
-    "triage_time_ms": 396.9,
+    "processing_time_ms": 16744.48,
+    "triage_time_ms": 68.82,
     "slice_hu_mean": -161.27,
     "slice_hu_std": 304.46,
     "stats": {
@@ -4401,7 +4401,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:57.194174+00:00",
+    "timestamp": "2026-08-08T18:56:14.753640+00:00",
     "findings": [
       {
         "bbox": [
@@ -4484,8 +4484,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 474.84,
-    "triage_time_ms": 447.65,
+    "processing_time_ms": 16838.34,
+    "triage_time_ms": 73.79,
     "slice_hu_mean": -162.88,
     "slice_hu_std": 305.7,
     "stats": {
@@ -4522,7 +4522,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:57.884817+00:00",
+    "timestamp": "2026-08-08T18:56:14.854927+00:00",
     "findings": [
       {
         "bbox": [
@@ -4645,8 +4645,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 522.19,
-    "triage_time_ms": 492.32,
+    "processing_time_ms": 16939.6,
+    "triage_time_ms": 81.43,
     "slice_hu_mean": -162.95,
     "slice_hu_std": 305.55,
     "stats": {
@@ -4683,7 +4683,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:58.611056+00:00",
+    "timestamp": "2026-08-08T18:56:14.956123+00:00",
     "findings": [
       {
         "bbox": [
@@ -4806,8 +4806,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 532.7,
-    "triage_time_ms": 504.69,
+    "processing_time_ms": 17040.82,
+    "triage_time_ms": 81.17,
     "slice_hu_mean": -164.47,
     "slice_hu_std": 305.61,
     "stats": {
@@ -4844,7 +4844,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:37:59.333833+00:00",
+    "timestamp": "2026-08-08T18:56:15.064491+00:00",
     "findings": [
       {
         "bbox": [
@@ -4987,8 +4987,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 545.0,
-    "triage_time_ms": 519.3,
+    "processing_time_ms": 17149.19,
+    "triage_time_ms": 87.57,
     "slice_hu_mean": -164.3,
     "slice_hu_std": 305.22,
     "stats": {
@@ -5025,7 +5025,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:00.052652+00:00",
+    "timestamp": "2026-08-08T18:56:15.171052+00:00",
     "findings": [
       {
         "bbox": [
@@ -5148,8 +5148,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 531.5,
-    "triage_time_ms": 505.43,
+    "processing_time_ms": 17255.72,
+    "triage_time_ms": 85.59,
     "slice_hu_mean": -164.84,
     "slice_hu_std": 305.49,
     "stats": {
@@ -5186,7 +5186,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:00.749538+00:00",
+    "timestamp": "2026-08-08T18:56:15.278666+00:00",
     "findings": [
       {
         "bbox": [
@@ -5309,8 +5309,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 515.7,
-    "triage_time_ms": 489.3,
+    "processing_time_ms": 17363.37,
+    "triage_time_ms": 85.98,
     "slice_hu_mean": -167.07,
     "slice_hu_std": 307.32,
     "stats": {
@@ -5347,7 +5347,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:01.475957+00:00",
+    "timestamp": "2026-08-08T18:56:15.385319+00:00",
     "findings": [
       {
         "bbox": [
@@ -5490,8 +5490,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 549.47,
-    "triage_time_ms": 522.15,
+    "processing_time_ms": 17470.02,
+    "triage_time_ms": 84.32,
     "slice_hu_mean": -167.98,
     "slice_hu_std": 306.87,
     "stats": {
@@ -5528,7 +5528,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:02.166946+00:00",
+    "timestamp": "2026-08-08T18:56:15.483858+00:00",
     "findings": [
       {
         "bbox": [
@@ -5631,8 +5631,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 504.45,
-    "triage_time_ms": 474.29,
+    "processing_time_ms": 17568.56,
+    "triage_time_ms": 77.79,
     "slice_hu_mean": -167.85,
     "slice_hu_std": 306.28,
     "stats": {
@@ -5669,7 +5669,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:02.884837+00:00",
+    "timestamp": "2026-08-08T18:56:15.598796+00:00",
     "findings": [
       {
         "bbox": [
@@ -5832,8 +5832,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 535.29,
-    "triage_time_ms": 509.61,
+    "processing_time_ms": 17683.5,
+    "triage_time_ms": 93.19,
     "slice_hu_mean": -166.48,
     "slice_hu_std": 304.93,
     "stats": {
@@ -5870,7 +5870,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:03.618111+00:00",
+    "timestamp": "2026-08-08T18:56:15.701881+00:00",
     "findings": [
       {
         "bbox": [
@@ -5993,8 +5993,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 561.81,
-    "triage_time_ms": 536.55,
+    "processing_time_ms": 17786.53,
+    "triage_time_ms": 81.65,
     "slice_hu_mean": -168.88,
     "slice_hu_std": 307.31,
     "stats": {
@@ -6031,7 +6031,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:04.335823+00:00",
+    "timestamp": "2026-08-08T18:56:15.813870+00:00",
     "findings": [
       {
         "bbox": [
@@ -6154,8 +6154,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 534.28,
-    "triage_time_ms": 506.34,
+    "processing_time_ms": 17898.57,
+    "triage_time_ms": 89.98,
     "slice_hu_mean": -171.92,
     "slice_hu_std": 310.02,
     "stats": {
@@ -6192,7 +6192,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:05.092388+00:00",
+    "timestamp": "2026-08-08T18:56:15.924048+00:00",
     "findings": [
       {
         "bbox": [
@@ -6335,8 +6335,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 580.52,
-    "triage_time_ms": 554.31,
+    "processing_time_ms": 18008.75,
+    "triage_time_ms": 88.83,
     "slice_hu_mean": -173.79,
     "slice_hu_std": 311.23,
     "stats": {
@@ -6373,7 +6373,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:05.903457+00:00",
+    "timestamp": "2026-08-08T18:56:16.038825+00:00",
     "findings": [
       {
         "bbox": [
@@ -6536,8 +6536,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 607.23,
-    "triage_time_ms": 579.63,
+    "processing_time_ms": 18123.53,
+    "triage_time_ms": 91.75,
     "slice_hu_mean": -176.2,
     "slice_hu_std": 314.13,
     "stats": {
@@ -6574,7 +6574,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:06.696695+00:00",
+    "timestamp": "2026-08-08T18:56:16.154309+00:00",
     "findings": [
       {
         "bbox": [
@@ -6757,8 +6757,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 611.31,
-    "triage_time_ms": 582.39,
+    "processing_time_ms": 18239.01,
+    "triage_time_ms": 93.28,
     "slice_hu_mean": -177.88,
     "slice_hu_std": 315.42,
     "stats": {
@@ -6795,7 +6795,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:07.516618+00:00",
+    "timestamp": "2026-08-08T18:56:16.287681+00:00",
     "findings": [
       {
         "bbox": [
@@ -6998,8 +6998,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 627.99,
-    "triage_time_ms": 600.5,
+    "processing_time_ms": 18372.26,
+    "triage_time_ms": 110.59,
     "slice_hu_mean": -179.0,
     "slice_hu_std": 316.24,
     "stats": {
@@ -7036,7 +7036,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:08.310696+00:00",
+    "timestamp": "2026-08-08T18:56:16.411262+00:00",
     "findings": [
       {
         "bbox": [
@@ -7199,8 +7199,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 587.43,
-    "triage_time_ms": 556.43,
+    "processing_time_ms": 18495.92,
+    "triage_time_ms": 99.62,
     "slice_hu_mean": -179.78,
     "slice_hu_std": 316.39,
     "stats": {
@@ -7237,7 +7237,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:09.144931+00:00",
+    "timestamp": "2026-08-08T18:56:16.533827+00:00",
     "findings": [
       {
         "bbox": [
@@ -7400,8 +7400,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 625.5,
-    "triage_time_ms": 595.95,
+    "processing_time_ms": 18618.45,
+    "triage_time_ms": 98.03,
     "slice_hu_mean": -181.82,
     "slice_hu_std": 318.39,
     "stats": {
@@ -7438,7 +7438,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:09.995526+00:00",
+    "timestamp": "2026-08-08T18:56:16.657500+00:00",
     "findings": [
       {
         "bbox": [
@@ -7601,8 +7601,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 630.25,
-    "triage_time_ms": 600.18,
+    "processing_time_ms": 18742.0,
+    "triage_time_ms": 99.05,
     "slice_hu_mean": -181.14,
     "slice_hu_std": 317.94,
     "stats": {
@@ -7639,7 +7639,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:10.780486+00:00",
+    "timestamp": "2026-08-08T18:56:16.779377+00:00",
     "findings": [
       {
         "bbox": [
@@ -7802,8 +7802,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 573.44,
-    "triage_time_ms": 545.83,
+    "processing_time_ms": 18864.01,
+    "triage_time_ms": 97.69,
     "slice_hu_mean": -182.96,
     "slice_hu_std": 319.17,
     "stats": {
@@ -7840,7 +7840,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:11.601165+00:00",
+    "timestamp": "2026-08-08T18:56:16.901435+00:00",
     "findings": [
       {
         "bbox": [
@@ -7983,8 +7983,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 631.42,
-    "triage_time_ms": 600.19,
+    "processing_time_ms": 18986.08,
+    "triage_time_ms": 96.01,
     "slice_hu_mean": -182.46,
     "slice_hu_std": 317.95,
     "stats": {
@@ -8021,7 +8021,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:12.406577+00:00",
+    "timestamp": "2026-08-08T18:56:17.033680+00:00",
     "findings": [
       {
         "bbox": [
@@ -8184,8 +8184,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 601.41,
-    "triage_time_ms": 574.34,
+    "processing_time_ms": 19118.36,
+    "triage_time_ms": 108.39,
     "slice_hu_mean": -182.51,
     "slice_hu_std": 318.19,
     "stats": {
@@ -8222,7 +8222,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:13.109900+00:00",
+    "timestamp": "2026-08-08T18:56:17.144053+00:00",
     "findings": [
       {
         "bbox": [
@@ -8345,8 +8345,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 506.77,
-    "triage_time_ms": 477.63,
+    "processing_time_ms": 19228.7,
+    "triage_time_ms": 85.96,
     "slice_hu_mean": -182.96,
     "slice_hu_std": 319.37,
     "stats": {
@@ -8383,7 +8383,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:13.888335+00:00",
+    "timestamp": "2026-08-08T18:56:17.263691+00:00",
     "findings": [
       {
         "bbox": [
@@ -8506,8 +8506,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 584.02,
-    "triage_time_ms": 555.3,
+    "processing_time_ms": 19348.38,
+    "triage_time_ms": 96.01,
     "slice_hu_mean": -182.68,
     "slice_hu_std": 318.51,
     "stats": {
@@ -8544,7 +8544,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:14.645099+00:00",
+    "timestamp": "2026-08-08T18:56:17.386119+00:00",
     "findings": [
       {
         "bbox": [
@@ -8687,8 +8687,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 561.89,
-    "triage_time_ms": 536.28,
+    "processing_time_ms": 19470.75,
+    "triage_time_ms": 97.94,
     "slice_hu_mean": -187.09,
     "slice_hu_std": 320.64,
     "stats": {
@@ -8725,7 +8725,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:15.479371+00:00",
+    "timestamp": "2026-08-08T18:56:17.517309+00:00",
     "findings": [
       {
         "bbox": [
@@ -8908,8 +8908,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 634.33,
-    "triage_time_ms": 602.87,
+    "processing_time_ms": 19601.97,
+    "triage_time_ms": 104.62,
     "slice_hu_mean": -189.58,
     "slice_hu_std": 322.26,
     "stats": {
@@ -8946,7 +8946,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:16.307014+00:00",
+    "timestamp": "2026-08-08T18:56:17.647374+00:00",
     "findings": [
       {
         "bbox": [
@@ -9129,8 +9129,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 624.27,
-    "triage_time_ms": 598.93,
+    "processing_time_ms": 19732.0,
+    "triage_time_ms": 104.96,
     "slice_hu_mean": -190.41,
     "slice_hu_std": 322.74,
     "stats": {
@@ -9167,7 +9167,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:17.132818+00:00",
+    "timestamp": "2026-08-08T18:56:17.780878+00:00",
     "findings": [
       {
         "bbox": [
@@ -9350,8 +9350,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 621.85,
-    "triage_time_ms": 595.63,
+    "processing_time_ms": 19865.59,
+    "triage_time_ms": 107.12,
     "slice_hu_mean": -191.58,
     "slice_hu_std": 323.91,
     "stats": {
@@ -9388,7 +9388,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:17.976234+00:00",
+    "timestamp": "2026-08-08T18:56:17.915128+00:00",
     "findings": [
       {
         "bbox": [
@@ -9571,8 +9571,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 648.76,
-    "triage_time_ms": 620.76,
+    "processing_time_ms": 19999.71,
+    "triage_time_ms": 109.06,
     "slice_hu_mean": -192.07,
     "slice_hu_std": 323.52,
     "stats": {
@@ -9609,7 +9609,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:18.879350+00:00",
+    "timestamp": "2026-08-08T18:56:18.059181+00:00",
     "findings": [
       {
         "bbox": [
@@ -9812,8 +9812,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 673.66,
-    "triage_time_ms": 643.49,
+    "processing_time_ms": 20143.89,
+    "triage_time_ms": 109.73,
     "slice_hu_mean": -192.13,
     "slice_hu_std": 323.36,
     "stats": {
@@ -9850,7 +9850,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:19.760612+00:00",
+    "timestamp": "2026-08-08T18:56:18.185327+00:00",
     "findings": [
       {
         "bbox": [
@@ -10013,8 +10013,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 665.02,
-    "triage_time_ms": 636.46,
+    "processing_time_ms": 20270.0,
+    "triage_time_ms": 99.32,
     "slice_hu_mean": -195.02,
     "slice_hu_std": 325.89,
     "stats": {
@@ -10051,7 +10051,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:20.584742+00:00",
+    "timestamp": "2026-08-08T18:56:18.305804+00:00",
     "findings": [
       {
         "bbox": [
@@ -10174,8 +10174,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 587.07,
-    "triage_time_ms": 558.28,
+    "processing_time_ms": 20390.5,
+    "triage_time_ms": 93.54,
     "slice_hu_mean": -194.93,
     "slice_hu_std": 325.66,
     "stats": {
@@ -10212,7 +10212,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:21.464026+00:00",
+    "timestamp": "2026-08-08T18:56:18.430822+00:00",
     "findings": [
       {
         "bbox": [
@@ -10355,8 +10355,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 648.07,
-    "triage_time_ms": 613.66,
+    "processing_time_ms": 20515.54,
+    "triage_time_ms": 98.13,
     "slice_hu_mean": -195.78,
     "slice_hu_std": 326.9,
     "stats": {
@@ -10393,7 +10393,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:22.290342+00:00",
+    "timestamp": "2026-08-08T18:56:18.553734+00:00",
     "findings": [
       {
         "bbox": [
@@ -10576,8 +10576,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 615.09,
-    "triage_time_ms": 585.36,
+    "processing_time_ms": 20638.36,
+    "triage_time_ms": 97.24,
     "slice_hu_mean": -194.97,
     "slice_hu_std": 326.98,
     "stats": {
@@ -10614,7 +10614,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:23.083102+00:00",
+    "timestamp": "2026-08-08T18:56:18.681626+00:00",
     "findings": [
       {
         "bbox": [
@@ -10797,8 +10797,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 571.3,
-    "triage_time_ms": 540.95,
+    "processing_time_ms": 20766.3,
+    "triage_time_ms": 101.56,
     "slice_hu_mean": -195.49,
     "slice_hu_std": 327.39,
     "stats": {
@@ -10835,7 +10835,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:23.886832+00:00",
+    "timestamp": "2026-08-08T18:56:18.803451+00:00",
     "findings": [
       {
         "bbox": [
@@ -10978,8 +10978,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 575.45,
-    "triage_time_ms": 548.67,
+    "processing_time_ms": 20888.09,
+    "triage_time_ms": 95.15,
     "slice_hu_mean": -197.45,
     "slice_hu_std": 328.33,
     "stats": {
@@ -11016,7 +11016,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:24.880715+00:00",
+    "timestamp": "2026-08-08T18:56:18.940872+00:00",
     "findings": [
       {
         "bbox": [
@@ -11239,8 +11239,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 740.23,
-    "triage_time_ms": 711.6,
+    "processing_time_ms": 21025.49,
+    "triage_time_ms": 109.6,
     "slice_hu_mean": -197.29,
     "slice_hu_std": 327.63,
     "stats": {
@@ -11277,7 +11277,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:25.748358+00:00",
+    "timestamp": "2026-08-08T18:56:19.085047+00:00",
     "findings": [
       {
         "bbox": [
@@ -11500,8 +11500,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 618.81,
-    "triage_time_ms": 588.26,
+    "processing_time_ms": 21169.73,
+    "triage_time_ms": 116.56,
     "slice_hu_mean": -198.46,
     "slice_hu_std": 328.29,
     "stats": {
@@ -11538,7 +11538,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:26.301343+00:00",
+    "timestamp": "2026-08-08T18:56:19.238956+00:00",
     "findings": [
       {
         "bbox": [
@@ -11781,8 +11781,8 @@
         "finding_type": "Statistical Hypodense"
       }
     ],
-    "processing_time_ms": 331.9,
-    "triage_time_ms": 309.02,
+    "processing_time_ms": 21323.62,
+    "triage_time_ms": 124.06,
     "slice_hu_mean": -200.05,
     "slice_hu_std": 328.96,
     "stats": {
@@ -11819,7 +11819,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:26.728937+00:00",
+    "timestamp": "2026-08-08T18:56:19.398589+00:00",
     "findings": [
       {
         "bbox": [
@@ -12122,8 +12122,8 @@
         "finding_type": "Statistical Hypodense"
       }
     ],
-    "processing_time_ms": 272.04,
-    "triage_time_ms": 255.03,
+    "processing_time_ms": 21483.2,
+    "triage_time_ms": 129.06,
     "slice_hu_mean": -199.22,
     "slice_hu_std": 327.42,
     "stats": {
@@ -12160,7 +12160,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:27.070462+00:00",
+    "timestamp": "2026-08-08T18:56:19.544633+00:00",
     "findings": [
       {
         "bbox": [
@@ -12403,8 +12403,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 233.71,
-    "triage_time_ms": 221.73,
+    "processing_time_ms": 21629.26,
+    "triage_time_ms": 116.67,
     "slice_hu_mean": -198.77,
     "slice_hu_std": 326.63,
     "stats": {
@@ -12441,7 +12441,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:27.413077+00:00",
+    "timestamp": "2026-08-08T18:56:19.683965+00:00",
     "findings": [
       {
         "bbox": [
@@ -12664,8 +12664,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 219.19,
-    "triage_time_ms": 207.78,
+    "processing_time_ms": 21768.64,
+    "triage_time_ms": 109.47,
     "slice_hu_mean": -196.14,
     "slice_hu_std": 323.88,
     "stats": {
@@ -12702,7 +12702,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:27.805790+00:00",
+    "timestamp": "2026-08-08T18:56:19.823001+00:00",
     "findings": [
       {
         "bbox": [
@@ -12905,8 +12905,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 291.27,
-    "triage_time_ms": 280.18,
+    "processing_time_ms": 21907.6,
+    "triage_time_ms": 107.46,
     "slice_hu_mean": -194.28,
     "slice_hu_std": 321.81,
     "stats": {
@@ -12943,7 +12943,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:28.139971+00:00",
+    "timestamp": "2026-08-08T18:56:19.959287+00:00",
     "findings": [
       {
         "bbox": [
@@ -13146,8 +13146,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 223.46,
-    "triage_time_ms": 210.92,
+    "processing_time_ms": 22043.97,
+    "triage_time_ms": 105.58,
     "slice_hu_mean": -195.11,
     "slice_hu_std": 322.09,
     "stats": {
@@ -13184,7 +13184,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:28.457418+00:00",
+    "timestamp": "2026-08-08T18:56:20.103978+00:00",
     "findings": [
       {
         "bbox": [
@@ -13367,8 +13367,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 204.81,
-    "triage_time_ms": 192.22,
+    "processing_time_ms": 22188.61,
+    "triage_time_ms": 110.22,
     "slice_hu_mean": -192.21,
     "slice_hu_std": 319.7,
     "stats": {
@@ -13405,7 +13405,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:28.796220+00:00",
+    "timestamp": "2026-08-08T18:56:20.240325+00:00",
     "findings": [
       {
         "bbox": [
@@ -13588,8 +13588,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 227.21,
-    "triage_time_ms": 212.72,
+    "processing_time_ms": 22325.04,
+    "triage_time_ms": 104.96,
     "slice_hu_mean": -192.45,
     "slice_hu_std": 319.7,
     "stats": {
@@ -13626,7 +13626,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:29.124705+00:00",
+    "timestamp": "2026-08-08T18:56:20.369089+00:00",
     "findings": [
       {
         "bbox": [
@@ -13809,8 +13809,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 219.96,
-    "triage_time_ms": 208.81,
+    "processing_time_ms": 22453.8,
+    "triage_time_ms": 99.26,
     "slice_hu_mean": -190.43,
     "slice_hu_std": 318.84,
     "stats": {
@@ -13847,7 +13847,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:29.462132+00:00",
+    "timestamp": "2026-08-08T18:56:20.499252+00:00",
     "findings": [
       {
         "bbox": [
@@ -14030,8 +14030,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 230.06,
-    "triage_time_ms": 214.9,
+    "processing_time_ms": 22583.95,
+    "triage_time_ms": 99.86,
     "slice_hu_mean": -190.33,
     "slice_hu_std": 319.5,
     "stats": {
@@ -14068,7 +14068,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:29.877416+00:00",
+    "timestamp": "2026-08-08T18:56:20.630080+00:00",
     "findings": [
       {
         "bbox": [
@@ -14251,8 +14251,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 292.97,
-    "triage_time_ms": 277.47,
+    "processing_time_ms": 22714.78,
+    "triage_time_ms": 100.24,
     "slice_hu_mean": -191.15,
     "slice_hu_std": 320.61,
     "stats": {
@@ -14289,7 +14289,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:30.667970+00:00",
+    "timestamp": "2026-08-08T18:56:20.779341+00:00",
     "findings": [
       {
         "bbox": [
@@ -14452,8 +14452,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 560.69,
-    "triage_time_ms": 533.25,
+    "processing_time_ms": 22864.01,
+    "triage_time_ms": 116.6,
     "slice_hu_mean": -192.02,
     "slice_hu_std": 320.21,
     "stats": {
@@ -14490,7 +14490,7 @@
         "description": "Dynamic severity mapping"
       }
     ],
-    "timestamp": "2026-08-08T05:38:31.477880+00:00",
+    "timestamp": "2026-08-08T18:56:20.944545+00:00",
     "findings": [
       {
         "bbox": [
@@ -14713,8 +14713,8 @@
         "finding_type": "Extreme Air"
       }
     ],
-    "processing_time_ms": 563.07,
-    "triage_time_ms": 537.81,
+    "processing_time_ms": 23029.14,
+    "triage_time_ms": 131.26,
     "slice_hu_mean": -193.25,
     "slice_hu_std": 320.91,
     "stats": {

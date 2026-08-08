@@ -44,6 +44,8 @@ class SliceBuffer:
         self._buffer: OrderedDict[int, dict] = OrderedDict()
         self._expected_count = expected_count
         self._last_insert_time: float = time.monotonic()
+        self._last_raw_arrival_time: float | None = None
+        self._first_buffered_time: float | None = None
         self._next_expected: int = 1  # 1-indexed InstanceNumber
         self._flushed_up_to: int = 0  # last flushed instance number
 
@@ -79,6 +81,8 @@ class SliceBuffer:
             raise ValueError(f"InstanceNumber must be >= 1, got {instance_number}")
 
         with self._lock:
+            self._last_raw_arrival_time = time.monotonic()
+
             if instance_number in self._buffer:
                 logger.warning(
                     "Duplicate slice %d received — ignoring", instance_number
@@ -87,6 +91,8 @@ class SliceBuffer:
 
             self._buffer[instance_number] = data
             self._last_insert_time = time.monotonic()
+            if len(self._buffer) == 1:
+                self._first_buffered_time = time.monotonic()
 
             # Re-sort the OrderedDict by key (InstanceNumber)
             sorted_items = sorted(self._buffer.items(), key=lambda x: x[0])
@@ -137,6 +143,10 @@ class SliceBuffer:
             if item is None:
                 break
             results.append(item)
+            
+        if len(self._buffer) == 0:
+            self._first_buffered_time = None
+            
         return results
 
     def flush_if_stale(self, timeout_seconds: float = 5.0) -> list[tuple[int, dict]]:
@@ -158,21 +168,65 @@ class SliceBuffer:
             if len(self._buffer) == 0:
                 return []
 
-            elapsed = time.monotonic() - self._last_insert_time
+            now = time.monotonic()
+            
+            # Gap-specific timeout: if we are stuck waiting for a missing slice while 
+            # later slices keep arriving, force-drop the missing slice and unblock
+            if self._first_buffered_time and (now - self._first_buffered_time) > 2.0:
+                first_available = list(self._buffer.keys())[0]
+                expected = self._flushed_up_to + 1
+                if first_available > expected:
+                    logger.warning(
+                        "Gap timeout! Missing slice(s) %d to %d dropped. Unblocking buffer.", 
+                        expected, first_available - 1
+                    )
+                    self._flushed_up_to = first_available - 1
+                    # we don't return here, we let the caller pop_all_ready() on their next loop,
+                    # or we could just do it here:
+                    
+            # Traditional stale flush: nothing arriving at all
+            elapsed = now - self._last_insert_time
             if elapsed < timeout_seconds:
-                return []
+                # If we just dropped a gap, return the newly ready slices
+                return []  # Wait, to make it clean without duplicating pop_all_ready logic:
+                # Actually pipeline.py calls pop_all_ready() every time, then flush_if_stale().
+                # If we updated _flushed_up_to here, the next iteration of pipeline's _flush_loop 
+                # will call pop_all_ready() eventually. But we can also just return it now by calling pop_all_ready.
 
-            # Flush everything
-            logger.warning(
-                "Stale flush triggered after %.1fs — releasing %d buffered slices",
-                elapsed,
-                len(self._buffer),
-            )
-            items = list(self._buffer.items())
-            self._buffer.clear()
-            if items:
-                self._flushed_up_to = items[-1][0]
-            return items
+            # Instead of returning empty, if we dropped a gap, let's pop what's ready now
+            # Wait, no, we need to return if nothing has arrived. Let's just adjust the logic:
+            if elapsed < timeout_seconds:
+                # we might have advanced _flushed_up_to due to gap timeout.
+                # if so, those items are now ready! But flush_if_stale is normally only called when ready_slices is empty.
+                # If we don't return them here, we have to wait for the next iteration.
+                pass
+            else:
+                # Flush everything (true stall)
+                logger.warning(
+                    "Stale flush triggered after %.1fs — releasing %d buffered slices",
+                    elapsed,
+                    len(self._buffer),
+                )
+                items = list(self._buffer.items())
+                self._buffer.clear()
+                self._first_buffered_time = None
+                if items:
+                    self._flushed_up_to = items[-1][0]
+                return items
+                
+        # If we didn't flush everything, but might have resolved a gap, pop the now-ready ones
+        return self.pop_all_ready()
+
+    def is_truly_idle(self, timeout_sec: float = 5.0) -> bool:
+        """
+        The ONLY valid staleness signal. True only when NOTHING has
+        arrived at the socket in timeout_sec - not when nothing has been
+        forwarded, which is a completely different condition.
+        """
+        with self._lock:
+            if self._last_raw_arrival_time is None:
+                return False
+            return (time.monotonic() - self._last_raw_arrival_time) > timeout_sec
 
     def peek_buffer_state(self) -> dict:
         """Return a snapshot of the buffer state for diagnostics."""
@@ -191,5 +245,7 @@ class SliceBuffer:
         """Clear all buffered slices."""
         with self._lock:
             self._buffer.clear()
+            self._first_buffered_time = None
             self._flushed_up_to = 0
             self._last_insert_time = time.monotonic()
+            self._last_raw_arrival_time = None

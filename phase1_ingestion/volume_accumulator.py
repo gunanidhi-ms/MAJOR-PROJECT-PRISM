@@ -23,7 +23,7 @@ CRITICAL ORDERING:
 Usage:
     from phase1_ingestion.volume_accumulator import VolumeAccumulator
 
-    acc = VolumeAccumulator(min_slices=20, timeout_sec=5.0)
+    acc = VolumeAccumulator(min_slices=20)
     acc.add(instance_number, hu_array, findings, spacing_meta)
 
     if acc.is_ready():
@@ -58,17 +58,14 @@ class VolumeAccumulator:
     fixes.
     """
 
-    def __init__(self, min_slices: int = 20, timeout_sec: float = 5.0):
+    def __init__(self, min_slices: int = 20):
         """
         Args:
             min_slices: Minimum number of slices before the volume is
                         considered potentially ready (sanity floor only,
                         never the trigger).
-            timeout_sec: Seconds of inactivity after which the timeout
-                         fallback fires.
         """
         self._min_slices = min_slices
-        self._timeout_sec = timeout_sec
         self._lock = threading.Lock()
 
         # Storage: keyed by instance_number to prevent duplicates
@@ -81,8 +78,8 @@ class VolumeAccumulator:
         #   "spacing_meta": dict,
         # }
 
-        self._last_add_time: float = time.monotonic()
         self._association_released: bool = False
+        self._stream_stalled: bool = False
         self._triggered: bool = False  # one-shot guard: prevents firing more than once per series
         self._series_instance_uid: str = ""
         self._study_instance_uid: str = ""
@@ -138,8 +135,6 @@ class VolumeAccumulator:
                 )
                 self._modality = spacing_meta.get("modality", "CT")
 
-            self._last_add_time = time.monotonic()
-
             logger.debug(
                 "VolumeAccumulator: added instance %d (z=%.2f, total=%d)",
                 instance_number,
@@ -164,6 +159,17 @@ class VolumeAccumulator:
 
     # Keep the old name as an alias so nothing breaks during transition
     signal_association_release = mark_association_released
+
+    def mark_stream_stalled(self) -> None:
+        """
+        Signal that the DICOM stream has stalled.
+        
+        Call this ONLY from SliceBuffer.is_truly_idle() being True -
+        never from any timer local to this class.
+        """
+        with self._lock:
+            self._stream_stalled = True
+            logger.info("VolumeAccumulator: stream stall signaled by buffer")
 
     def is_ready(self) -> bool:
         """
@@ -195,14 +201,11 @@ class VolumeAccumulator:
                 )
                 return True
 
-            # Fallback trigger: no new slice within timeout window
-            if self._last_add_time and (
-                time.monotonic() - self._last_add_time
-            ) > self._timeout_sec:
+            # Fallback trigger: stream stalled (reported by buffer)
+            if self._stream_stalled:
                 logger.info(
-                    "VolumeAccumulator: READY via timeout fallback "
-                    "(%.1fs elapsed, %d slices)",
-                    time.monotonic() - self._last_add_time,
+                    "VolumeAccumulator: READY via stream stall fallback "
+                    "(%d slices)",
                     len(self._slices),
                 )
                 return True
@@ -312,9 +315,9 @@ class VolumeAccumulator:
         with self._lock:
             self._slices.clear()
             self._association_released = False
+            self._stream_stalled = False
             self._triggered = False
             self._series_instance_uid = ""
             self._study_instance_uid = ""
             self._modality = "CT"
-            self._last_add_time = time.monotonic()
             logger.info("VolumeAccumulator: reset for next series")

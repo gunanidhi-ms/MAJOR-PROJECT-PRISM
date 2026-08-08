@@ -84,7 +84,7 @@ class TestVolumeAccumulatorOrdering:
         Construct a series where InstanceNumber order and Z order DISAGREE.
         The volume must come out in Z order.
         """
-        acc = VolumeAccumulator(min_slices=1, timeout_sec=0.1)
+        acc = VolumeAccumulator(min_slices=1)
 
         # InstanceNumbers: 1, 2, 3, 4, 5
         # Z coordinates:   50, 10, 40, 20, 30  (deliberately shuffled)
@@ -167,57 +167,52 @@ class TestVolumeAccumulatorTriggers:
     """
 
     def test_association_release_trigger(self):
-        """Association release fires even with only 1 slice (below floor)."""
-        acc = VolumeAccumulator(min_slices=100, timeout_sec=999)
+        """Association release fires."""
+        acc = VolumeAccumulator(min_slices=1)
 
         data = make_slice_data(1, z_coordinate=0.0, shape=(4, 4))
         acc.add(1, data["hu_array"], [], data)
 
-        assert not acc.ready_on_slice_floor()  # Only 1 < 100
-        assert not acc.ready_on_timeout()       # No time elapsed
+        assert not acc.is_ready()       # Floor met, but not triggered
 
         acc.signal_association_release()
-        assert acc.ready_on_association_release()
+        assert acc.is_ready()
 
     def test_slice_floor_trigger(self):
         """Slice floor fires when min_slices is reached."""
         min_slices = 5
-        acc = VolumeAccumulator(min_slices=min_slices, timeout_sec=999)
+        acc = VolumeAccumulator(min_slices=min_slices)
 
         for i in range(min_slices - 1):
             data = make_slice_data(i + 1, z_coordinate=float(i), shape=(4, 4))
             acc.add(i + 1, data["hu_array"], [], data)
 
-        assert not acc.ready_on_slice_floor()  # 4 < 5
-
-        # Add one more to hit the floor
-        data = make_slice_data(min_slices, z_coordinate=float(min_slices), shape=(4, 4))
-        acc.add(min_slices, data["hu_array"], [], data)
-
-        assert acc.ready_on_slice_floor()
+        assert not acc.is_ready() # Floor is not a trigger!
 
     def test_timeout_trigger(self):
-        """Timeout fires after inactivity period."""
-        acc = VolumeAccumulator(min_slices=999, timeout_sec=0.1)
+        """Stream stalled trigger fires when external signal is sent."""
+        acc = VolumeAccumulator(min_slices=1)
 
         data = make_slice_data(1, z_coordinate=0.0, shape=(4, 4))
         acc.add(1, data["hu_array"], [], data)
 
-        assert not acc.ready_on_timeout()  # Just added
+        assert not acc.is_ready()  # Just added
 
-        time.sleep(0.15)  # Wait past timeout
+        acc.mark_stream_stalled()
 
-        assert acc.ready_on_timeout()
+        assert acc.is_ready()
 
     def test_timeout_does_not_fire_on_empty(self):
-        """Timeout should not fire if accumulator is empty."""
-        acc = VolumeAccumulator(min_slices=1, timeout_sec=0.01)
-        time.sleep(0.02)
-        assert not acc.ready_on_timeout()
+        """Stream stalled should not trigger if accumulator is empty (or below floor? wait, is_ready checks floor)."""
+        acc = VolumeAccumulator(min_slices=5)
+        acc.mark_stream_stalled()
+        # Below floor of 5, should be false even if stalled. Wait, the actual code says:
+        # if len(self._slices) < self._min_slices: return False
+        assert not acc.is_ready()
 
     def test_reset_clears_state(self):
         """Reset clears all accumulated data."""
-        acc = VolumeAccumulator(min_slices=1, timeout_sec=999)
+        acc = VolumeAccumulator(min_slices=1)
 
         data = make_slice_data(1, z_coordinate=0.0, shape=(4, 4))
         acc.add(1, data["hu_array"], [], data)
@@ -230,12 +225,16 @@ class TestVolumeAccumulatorTriggers:
 
     def test_is_ready_combines_all_triggers(self):
         """is_ready() should be True if ANY trigger fires."""
-        acc = VolumeAccumulator(min_slices=1, timeout_sec=999)
+        acc = VolumeAccumulator(min_slices=1)
 
         data = make_slice_data(1, z_coordinate=0.0, shape=(4, 4))
         acc.add(1, data["hu_array"], [], data)
 
-        # Slice floor fires (1 >= 1)
+        # We added 1 slice, so it hits the floor. But floor is not a trigger!
+        assert not acc.is_ready()
+        
+        # Now trigger it
+        acc.signal_association_release()
         assert acc.is_ready()
 
 
