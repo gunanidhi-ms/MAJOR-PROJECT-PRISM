@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 
 /**
  * Phase1Viewer — Live CT Slice Viewer with DICOM-style Controls
@@ -31,7 +31,17 @@ export default function Phase1Viewer() {
   const [slices, setSlices] = useState([])
   const [selectedIdx, setSelectedIdx] = useState(0)
   const [connectionStatus, setConnectionStatus] = useState('disconnected')
-  const [stats, setStats] = useState({ total: 0, flagged: 0, avgTime: 0 })
+  // Stats derived from current slices array — always reflects current patient only
+  const stats = useMemo(() => {
+    const total = slices.length
+    const flagged = slices.filter(s => s.flagged).length
+    const totalTime = slices.reduce((sum, s) => sum + (s.processing_time_ms || 0), 0)
+    return {
+      total,
+      flagged,
+      avgTime: total > 0 ? totalTime / total : 0
+    }
+  }, [slices])
 
   // Scanner Control State
   const [scannerRunning, setScannerRunning] = useState(false)
@@ -93,16 +103,6 @@ export default function Phase1Viewer() {
             return updated
           })
 
-          setStats(prev => {
-            const total = prev.total + 1
-            const flagged = prev.flagged + (alert.flagged ? 1 : 0)
-            const totalTime = prev.avgTime * prev.total + (alert.processing_time_ms || 0)
-            return {
-              total,
-              flagged,
-              avgTime: total > 0 ? totalTime / total : 0
-            }
-          })
           
 
         } catch (e) {
@@ -366,7 +366,6 @@ export default function Phase1Viewer() {
         setScannerRunning(true)
         setSlices([])
         setSelectedIdx(0)
-        setStats({ total: 0, flagged: 0, avgTime: 0 })
       } else {
         alert(`Scanner failed to start: ${data.message}`)
       }

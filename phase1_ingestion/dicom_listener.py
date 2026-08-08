@@ -61,6 +61,7 @@ class DICOMListener:
         on_slice_received: Callable[[dict], None] | None = None,
         save_to_disk: bool = True,
         incoming_dir: str = INCOMING_DIR,
+        accumulator=None,
     ):
         """
         Args:
@@ -83,12 +84,15 @@ class DICOMListener:
                                 - modality: str  (CT, MR, etc.)
             save_to_disk: Whether to save incoming .dcm files.
             incoming_dir: Directory path for saving incoming files.
+            accumulator: VolumeAccumulator instance. If provided, EVT_RELEASED
+                         will call accumulator.mark_association_released().
         """
         self._port = port
         self._ae_title = ae_title
         self._on_slice_received = on_slice_received
         self._save_to_disk = save_to_disk
         self._incoming_dir = incoming_dir
+        self._accumulator = accumulator
         self._ae: AE | None = None
         self._server = None
         self._thread: threading.Thread | None = None
@@ -242,6 +246,33 @@ class DICOMListener:
         # Return success status
         return 0x0000
 
+    def _handle_release(self, event) -> None:
+        """
+        Handler for EVT_RELEASED — fires when the DICOM association is
+        released (i.e. all slices for this series have been sent).
+
+        This is the PRIMARY trigger for Phase 2 volume export. Without this
+        hook, the accumulator would never know the series is complete and
+        would fall back to the timeout path every time.
+        """
+        logger.info(
+            "DICOM association released (total slices received: %d)",
+            self._slice_count,
+        )
+        if self._accumulator is not None:
+            self._accumulator.mark_association_released()
+            logger.info(
+                "VolumeAccumulator.mark_association_released() called "
+                "from EVT_RELEASED handler"
+            )
+
+    def _build_event_handlers(self) -> list:
+        """Build the list of pynetdicom event handlers."""
+        handlers = [(evt.EVT_C_STORE, self._handle_store)]
+        # Wire EVT_RELEASED → mark_association_released
+        handlers.append((evt.EVT_RELEASED, self._handle_release))
+        return handlers
+
     def start(self) -> None:
         """
         Start the DICOM SCP (blocking). 
@@ -256,7 +287,7 @@ class DICOMListener:
         for cx in StoragePresentationContexts:
             self._ae.add_supported_context(cx.abstract_syntax)
 
-        handlers = [(evt.EVT_C_STORE, self._handle_store)]
+        handlers = self._build_event_handlers()
 
         logger.info(
             "Starting DICOM C-STORE SCP '%s' on port %d...",
@@ -284,7 +315,7 @@ class DICOMListener:
         for cx in StoragePresentationContexts:
             self._ae.add_supported_context(cx.abstract_syntax)
 
-        handlers = [(evt.EVT_C_STORE, self._handle_store)]
+        handlers = self._build_event_handlers()
 
         logger.info(
             "Starting DICOM SCP '%s' on port %d (background)...",

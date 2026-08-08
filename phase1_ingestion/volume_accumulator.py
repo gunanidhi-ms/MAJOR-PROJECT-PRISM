@@ -3,11 +3,22 @@ volume_accumulator.py — Phase 1 → Phase 2 Volume Accumulator
 
 Collects HU-transformed 2D slices alongside their per-slice findings as they
 stream in from the real-time pipeline. When the series is complete (detected
-via association-release, slice-count floor, or timeout fallback), exports
-a spatially-ordered 3D volume.
+via association-release or timeout fallback), exports a spatially-ordered 3D
+volume.
 
-CRITICAL: Ordering is by ImagePositionPatient Z-coordinate, NOT by
-InstanceNumber.  These can (and routinely do) disagree in clinical data.
+CRITICAL TRIGGER SEMANTICS:
+    - association_released is the PRIMARY trigger (set externally by
+      dicom_listener.py's EVT_RELEASED handler).
+    - timeout fallback fires if no new slice arrives within timeout_sec.
+    - min_slices is a SANITY FLOOR only — it gates against segmenting a
+      near-empty series, it is NEVER the trigger by itself.
+    - The `triggered` flag guards against firing more than once for the same
+      series. Once export_volume() is called, is_ready() returns False until
+      reset() is called.
+
+CRITICAL ORDERING:
+    Ordering is by ImagePositionPatient Z-coordinate, NOT by InstanceNumber.
+    These can (and routinely do) disagree in clinical data.
 
 Usage:
     from phase1_ingestion.volume_accumulator import VolumeAccumulator
@@ -15,14 +26,15 @@ Usage:
     acc = VolumeAccumulator(min_slices=20, timeout_sec=5.0)
     acc.add(instance_number, hu_array, findings, spacing_meta)
 
-    if acc.ready_on_association_release():
+    if acc.is_ready():
         volume, findings, inst_nums, spacing = acc.export_volume()
+        acc.reset()
 """
 
 import time
 import logging
 import threading
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 
 import numpy as np
 
@@ -34,20 +46,24 @@ class VolumeAccumulator:
     Accumulates HU-transformed slices and per-slice findings for Phase 2
     volume assembly.
 
-    Three independent trigger paths for readiness:
-      1. association_release — external signal that DICOM association closed
-      2. min_slices floor   — enough slices accumulated for a useful volume
-      3. timeout fallback   — no new slice in timeout_sec seconds
+    Trigger logic (is_ready):
+        1. If already triggered for this series → False (one-shot guard).
+        2. If fewer than min_slices accumulated → False (sanity floor).
+        3. If association_released flag is set → True (primary trigger).
+        4. If timeout_sec elapsed since last add() → True (fallback).
+        5. Otherwise → False.
 
-    Ordering is always by ImagePositionPatient Z-coordinate (spatial order),
-    never by InstanceNumber.
+    min_slices alone NEVER triggers. This prevents the accumulator from
+    re-firing on every slice past the floor — the exact bug this rewrite
+    fixes.
     """
 
     def __init__(self, min_slices: int = 20, timeout_sec: float = 5.0):
         """
         Args:
             min_slices: Minimum number of slices before the volume is
-                        considered potentially ready (floor trigger).
+                        considered potentially ready (sanity floor only,
+                        never the trigger).
             timeout_sec: Seconds of inactivity after which the timeout
                          fallback fires.
         """
@@ -67,6 +83,7 @@ class VolumeAccumulator:
 
         self._last_add_time: float = time.monotonic()
         self._association_released: bool = False
+        self._triggered: bool = False  # one-shot guard: prevents firing more than once per series
         self._series_instance_uid: str = ""
         self._study_instance_uid: str = ""
         self._modality: str = "CT"
@@ -130,10 +147,12 @@ class VolumeAccumulator:
                 len(self._slices),
             )
 
-    def signal_association_release(self) -> None:
+    def mark_association_released(self) -> None:
         """
-        Signal that the DICOM association has been released (all slices
-        for this series have been sent by the modality).
+        Signal that the DICOM association has been released.
+
+        Call this from dicom_listener.py's association-release handler
+        (pynetdicom evt.EVT_RELEASED), NOT inferred from slice count.
         """
         with self._lock:
             self._association_released = True
@@ -143,75 +162,52 @@ class VolumeAccumulator:
                 len(self._slices),
             )
 
-    def ready_on_association_release(self) -> bool:
+    # Keep the old name as an alias so nothing breaks during transition
+    signal_association_release = mark_association_released
+
+    def is_ready(self) -> bool:
         """
-        Check if the volume is ready because the DICOM association was released.
+        Primary trigger: association_released (or timeout fallback).
+        min_slices is a SANITY FLOOR only — it gates against segmenting a
+        near-empty series, it is NEVER the trigger by itself.
+        triggered guards against firing more than once for the same series.
 
         Returns:
-            True if association was released AND we have at least 1 slice.
+            True if the volume should be exported now. Once True is returned
+            and export_volume() is called, subsequent calls return False until
+            reset() is called.
         """
         with self._lock:
-            ready = self._association_released and len(self._slices) > 0
-            if ready:
+            # Guard: already fired for this series
+            if self._triggered:
+                return False
+
+            # Sanity floor: not enough slices for a useful volume
+            if len(self._slices) < self._min_slices:
+                return False
+
+            # Primary trigger: association released by the DICOM peer
+            if self._association_released:
                 logger.info(
                     "VolumeAccumulator: READY via association-release "
                     "(%d slices)",
                     len(self._slices),
                 )
-            return ready
+                return True
 
-    def ready_on_slice_floor(self) -> bool:
-        """
-        Check if the volume has accumulated at least min_slices.
-
-        Returns:
-            True if we have >= min_slices slices accumulated.
-        """
-        with self._lock:
-            ready = len(self._slices) >= self._min_slices
-            if ready:
-                logger.info(
-                    "VolumeAccumulator: READY via slice-count floor "
-                    "(%d >= %d slices)",
-                    len(self._slices),
-                    self._min_slices,
-                )
-            return ready
-
-    def ready_on_timeout(self) -> bool:
-        """
-        Check if the timeout fallback has triggered (no new slice received
-        within timeout_sec).
-
-        Returns:
-            True if we have slices AND the timeout has elapsed.
-        """
-        with self._lock:
-            if len(self._slices) == 0:
-                return False
-            elapsed = time.monotonic() - self._last_add_time
-            ready = elapsed >= self._timeout_sec
-            if ready:
+            # Fallback trigger: no new slice within timeout window
+            if self._last_add_time and (
+                time.monotonic() - self._last_add_time
+            ) > self._timeout_sec:
                 logger.info(
                     "VolumeAccumulator: READY via timeout fallback "
                     "(%.1fs elapsed, %d slices)",
-                    elapsed,
+                    time.monotonic() - self._last_add_time,
                     len(self._slices),
                 )
-            return ready
+                return True
 
-    def is_ready(self) -> bool:
-        """
-        Check any of the three readiness triggers.
-
-        Returns:
-            True if any trigger condition is met.
-        """
-        return (
-            self.ready_on_association_release()
-            or self.ready_on_slice_floor()
-            or self.ready_on_timeout()
-        )
+            return False
 
     @property
     def slice_count(self) -> int:
@@ -228,6 +224,9 @@ class VolumeAccumulator:
         CRITICAL: Orders by Z-coordinate from ImagePositionPatient, NOT by
         InstanceNumber.  These routinely disagree in clinical DICOM data.
 
+        Sets the triggered flag to prevent is_ready() from firing again
+        for the same series.
+
         Returns:
             Tuple of:
                 - volume: np.ndarray of shape (Z, Y, X) — 3D HU volume
@@ -238,6 +237,9 @@ class VolumeAccumulator:
                 - spacing: (row_mm, col_mm, z_mm) tuple
         """
         with self._lock:
+            # Mark as triggered FIRST, before any processing
+            self._triggered = True
+
             if len(self._slices) == 0:
                 raise ValueError("VolumeAccumulator is empty — nothing to export")
 
@@ -300,10 +302,17 @@ class VolumeAccumulator:
             }
 
     def reset(self) -> None:
-        """Clear all accumulated data for the next series."""
+        """
+        Clear all accumulated data for the next series.
+
+        Call after export_volume() to prepare for the next series.
+        Resets the triggered guard, association_released flag, and all
+        accumulated slice data.
+        """
         with self._lock:
             self._slices.clear()
             self._association_released = False
+            self._triggered = False
             self._series_instance_uid = ""
             self._study_instance_uid = ""
             self._modality = "CT"

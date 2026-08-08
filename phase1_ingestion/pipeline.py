@@ -221,6 +221,7 @@ class Phase1Pipeline:
         self.listener = DICOMListener(
             port=self.dicom_port,
             on_slice_received=self._on_slice_received,
+            accumulator=self.accumulator,
         )
         dicom_server = self.listener.start_background()
 
