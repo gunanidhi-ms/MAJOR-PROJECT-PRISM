@@ -288,19 +288,33 @@ class Phase1Pipeline:
                     series_meta.get("series_instance_uid", "unknown")[:20],
                 )
 
-                # Spawn Phase 2 as a separate process.
-                # phase2_orchestrator.run is not yet implemented (Package 2+),
-                # so we log the trigger and reset for now.
-                # When Package 2 is ready, uncomment:
-                # multiprocessing.Process(
-                #     target=phase2_orchestrator.run,
-                #     args=(volume, findings_per_slice, instance_numbers, spacing),
-                # ).start()
-
                 print(
                     f"\n  [PHASE2] Trigger fired — "
                     f"volume {volume.shape}, {len(instance_numbers)} slices, "
                     f"spacing {spacing}"
+                )
+
+                # Spawn Phase 2 as a separate process for clean memory
+                # teardown of TotalSegmentator's C++-backed tensors.
+                from phase2_segmentation.lifecycle_manager import run_phase2
+
+                p = multiprocessing.Process(
+                    target=run_phase2,
+                    args=(
+                        volume,
+                        findings_per_slice,
+                        instance_numbers,
+                        spacing,
+                        series_meta,
+                    ),
+                    name="phase2-worker",
+                    daemon=True,
+                )
+                p.start()
+
+                logger.info(
+                    "Phase 2 subprocess spawned (PID=%s)",
+                    p.pid,
                 )
 
                 self.accumulator.reset()

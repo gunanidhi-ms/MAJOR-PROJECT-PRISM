@@ -26,7 +26,7 @@
 **Current Status (Phase 2)** — 🚧 In Progress
 - [x] **Package 0:** Schema contracts frozen (`phase1_handoff.json`, `organ_statistics.json`, `findings_output.json`, shared `Candidate` dataclass)
 - [x] **Package 1:** Phase 1 → Phase 2 handoff infrastructure (Volume Accumulator, Finding Tracker, extended DICOM tags, dual-path Phase 2 trigger)
-- [ ] Package 2: Volume Assembly & Segmentation Runner
+- [x] **Package 2:** Volume Assembly & Segmentation Runner
 - [ ] Package 3: Organ Baseline & Region Detection
 - [ ] Package 4: Path A — 3D Clustering of Phase 1 Seeds
 - [ ] Package 5: Path B — Independent Organ-Wide Sweep
@@ -817,6 +817,112 @@ def track_persistence_ok(track, min_slices=3) -> bool: ...
 59 passed in 1.67s  (Full test suite — zero regressions)
 ```
 
+### Package 2 — Volume Assembly & Segmentation Runner (✅ Complete)
+
+**Objective:** Convert the accumulated stack of HU slices into a correctly oriented, correctly spaced 3D NIfTI volume, run TotalSegmentator on it inside a properly isolated subprocess, parse the output metrics, and guarantee that memory is fully released.
+
+#### Package 2 Output Structure
+
+Each Phase 2 execution isolates outputs by creating a separate `run_<timestamp>/` directory under `phase2_work/`. Below is the structure and purpose of the generated files and directories:
+
+* **`run_<timestamp>/`** — Isolates each Phase 2 execution so outputs from concurrent or consecutive runs do not overwrite each other.
+* **`temp_volume.nii.gz`** — The 3D NIfTI volume created from the accumulated DICOM Hounsfield Unit (HU) slices, used as the input for TotalSegmentator.
+* **`temp_seg.nii`** — The multi-label segmentation map produced by TotalSegmentator when running in multi-label (`--ml`) mode.
+* **`statistics.json`** — Organ-level statistics (such as volume and intensity) generated and normalized from the segmentation output.
+* **`temp_seg/`** — The TotalSegmentator output path. It may remain empty in multi-label (`--ml`) mode because the segmentation is written directly as `temp_seg.nii`.
+
+> [!NOTE]
+> **File Retention for Inspection & Downstream Testing:**
+> The NIfTI volume (`temp_volume.nii.gz`), segmentation map (`temp_seg.nii`), and parsed statistics (`statistics.json`) are currently retained in each run directory for Package 2 inspection, validation, and debugging because Package 3 is not yet implemented.
+
+#### Package 2 Setup & Installation
+
+To run Package 2, a developer must install the required dependencies and verify the `TotalSegmentator` environment:
+
+1. **Install Dependencies:**
+   From the repository root, install the required packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   This installs the medical imaging and support packages: `SimpleITK` (for NIfTI volume building), `psutil` (for CPU/RAM resource monitoring), and `TotalSegmentator` (the segmentation subprocess executable).
+
+2. **TotalSegmentator & Model Setup:**
+   - **Required Model Weights:** TotalSegmentator requires the pretrained model weights for the selected task (e.g., `total` for CT, `total_mr` for MR). The required weights must be available through the TotalSegmentator setup before running Package 2.
+   - **Verification Command:** Verify that the executable is successfully installed and available on your system path by running:
+     ```bash
+     TotalSegmentator --help
+     ```
+
+3. **Integrated Pipeline Execution:**
+   The Phase 1 ingestion pipeline (`phase1_ingestion/pipeline.py`) triggers Package 2 and spawns a `multiprocessing.Process` running the Package 2 lifecycle manager (`phase2_segmentation/lifecycle_manager.py`) for NIfTI assembly and segmentation.
+   To run the entire pipeline end-to-end:
+   - Start the pipeline listener daemon:
+     ```bash
+     python -m phase1_ingestion.pipeline
+     ```
+   - In a separate terminal, stream a series of sample slices using the replay sender:
+     ```bash
+     python phase1_ingestion/replay_sender.py
+     ```
+
+#### What Was Built
+
+**1. NIfTI Volume Assembly** ([`volume_builder.py`](phase2_segmentation/volume_builder.py) — new)
+
+- **SimpleITK Spacing Translation** — Correctly translates and swaps the accumulator's `(row_mm, col_mm, z_mm)` order to SimpleITK's internal `(X, Y, Z)` coordinate mapping `(col_mm, row_mm, z_mm)` to avoid metric distortion.
+- **Physical Geometry Mapping** — Employs direction cosines derived from patient orientation matrices to resolve the 3D volume grid geometry.
+- **Verification Boundaries** — Enforces minimum resolution floors, thickness thresholds, and non-empty voxel metrics.
+
+```python
+def assemble_nifti(volume_array: np.ndarray, spacing_meta: tuple, out_path: str = "temp_volume.nii.gz", orientation_patient: Optional[list] = None) -> str: ...
+```
+
+**2. TotalSegmentator Subprocess Isolation Wrapper** ([`segment_runner.py`](phase2_segmentation/segment_runner.py) — new)
+
+- **Subprocess Isolation** — Invokes `TotalSegmentator` as a separate command-line subprocess to guarantee C++-backed tensor memory (ONNX/PyTorch) is freed upon process exit.
+- **Modality-Driven Routing** — Dynamically adjusts segmentation pipeline parameters based on modality (`total` for CT, `total_mr` for MR scans).
+- **Schema Normalization** — Transforms TotalSegmentator v2.17+ simplified output keys (`intensity`, `volume`) to match the quantitative parameters defined in `organ_statistics.json`.
+
+```python
+def run_totalsegmentator(nifti_path: str, out_dir: str = DEFAULT_OUT_DIR, modality: str = "CT", timeout: int = TIMEOUT_SECONDS) -> tuple[str, dict]: ...
+```
+
+**3. Isolated Process Lifecycle and Safety Manager** ([`lifecycle_manager.py`](phase2_segmentation/lifecycle_manager.py) — new)
+
+- **Resource Watchdog** — Monitors active process RSS memory allocations via a background polling thread (`RAMWatchdog`), logging and asserting that peak memory usage remains within the 3.0 GB budget.
+- **Temporary File Retention for Inspection** — Retains `temp_volume.nii.gz`, `temp_seg.nii`, and `statistics.json` in the execution run directory on disk for developer validation, manual inspection, and testing of downstream Package 3 components.
+
+```python
+class Phase2Result:
+    def __init__(self, volume_shape: tuple): ...
+
+class Phase2LifecycleManager:
+    def __init__(self, work_dir: str = None, ram_budget_gb: float = 3.0, cleanup_on_success: bool = True): ...
+    def run(self, volume: np.ndarray, spacing: Tuple[float, float, float], series_meta: Optional[Dict] = None) -> Phase2Result: ...
+
+def run_phase2(volume: np.ndarray, findings_per_slice: list, instance_numbers: list, spacing: Tuple[float, float, float], series_meta: Optional[Dict[str, str]] = None) -> Phase2Result: ...
+```
+
+#### Acceptance Checklist Results
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| SimpleITK Spacing Swap Verification | ✅ Pass | `test_volume_to_nifti_pipeline` |
+| TotalSegmentator Task and Parameter Discovery | ✅ Pass | `test_build_ct_command`, `test_build_mr_command` |
+| Output Schema Key Normalization | ✅ Pass | `test_normalize_organ_entry_complete`, `test_parse_statistics_dict_format` |
+| Execution Timeout Guards | ✅ Pass | `test_subprocess_timeout` |
+| RSS RAM Watchdog Alerts | ✅ Pass | `test_ram_watchdog_budget_exceeded` |
+| Temporary File Handling | ✅ Pass | `test_cleanup_on_success`, `test_cleanup_on_failure` |
+| Thread-Safe Parallel Executions | ✅ Pass | `test_concurrent_safety` |
+| End-to-End Pipeline Validation | ✅ Pass | `test_full_lifecycle_with_test_data` |
+
+#### Test Results
+
+```
+65 passed, 2 skipped in 24.63s  (Package 2 tests)
+119 passed, 2 skipped in 27.41s  (Full test suite — zero regressions)
+```
+
 ---
 
 ## 14. Limitations
@@ -847,6 +953,18 @@ MAJOR-PROJECT-PRISM/
 │       ├── test_hu_transform.py   # HU Transform tests
 │       ├── test_slice_buffer.py   # Slice Buffer tests
 │       └── test_triage_screen.py  # Triage Screen tests
+│
+├── phase2_segmentation/           # [NEW] Volume Assembly & Segmentation
+│   ├── volume_builder.py          # [NEW] NIfTI Volume Assembly
+│   ├── segment_runner.py          # [NEW] TotalSegmentator Wrapper
+│   ├── lifecycle_manager.py       # [NEW] Subprocess & Watchdog Orchestrator
+│   └── tests/
+│       ├── conftest.py            # Test configuration and fixtures
+│       ├── test_integration.py    # Pipeline integration tests
+│       ├── test_lifecycle_manager.py # Watchdog and manager tests
+│       ├── test_run_commands.py   # CLI and execution tests
+│       ├── test_segment_runner.py # TotalSegmentator runner tests
+│       └── test_volume_builder.py # NIfTI builder tests
 │
 ├── schemas/                       # [NEW] Frozen Phase 2 Contracts
 │   ├── phase1_handoff.json        # Phase 1 → Phase 2 handoff schema

@@ -8,3 +8,9 @@ websockets>=11.0
 scipy>=1.10.0
 Pillow>=10.0.0
 pytest>=7.4.0
+
+# PRISM Phase 2 — Package 2 Dependencies
+SimpleITK>=2.3.0
+psutil>=5.9.0
+TotalSegmentator>=2.0.0
+# pyradiomics>=3.0.0  # Optional: build may fail on Python 3.12+
