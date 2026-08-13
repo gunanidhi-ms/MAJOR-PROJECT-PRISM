@@ -27,7 +27,7 @@
 - [x] **Package 0:** Schema contracts frozen (`phase1_handoff.json`, `organ_statistics.json`, `findings_output.json`, shared `Candidate` dataclass)
 - [x] **Package 1:** Phase 1 → Phase 2 handoff infrastructure (Volume Accumulator, Finding Tracker, extended DICOM tags, dual-path Phase 2 trigger)
 - [x] **Package 2:** Volume Assembly & Segmentation Runner
-- [ ] Package 3: Organ Baseline & Region Detection
+- [x] **Package 3:** Organ Baseline & Region Detection
 - [ ] Package 4: Path A — 3D Clustering of Phase 1 Seeds
 - [ ] Package 5: Path B — Independent Organ-Wide Sweep
 - [ ] Package 6: Technical Suppression Cascade, Merge & 3D Re-validation
@@ -50,7 +50,7 @@
 10. [Data Models](#10-data-models)
 11. [Configuration](#11-configuration)
 12. [Developer Guide](#12-developer-guide)
-13. [Phase 2 Development — Handoff Infrastructure](#13-phase-2-development--handoff-infrastructure)
+13. [Phase 2 Development & Package Architecture](#13-phase-2-development--handoff-infrastructure)
 14. [Limitations](#13-limitations)
 15. [Repository Structure](#14-repository-structure)
 16. [License / References](#15-license--references)
@@ -729,7 +729,7 @@ Before any implementation code, three JSON schemas and one shared Python datacla
 | `findings_output.json` | Final findings handed to Phase 3 (one entry per surviving candidate) | `schemas/` |
 | `candidate.py` | Shared `Candidate`, `ShapeFeatures`, `DensityHU` dataclasses | `schemas/` |
 
-The `Candidate` dataclass includes lifecycle-annotated fields (`[CREATION]`, `[MERGE]`, `[FILTER]`, `[SCORE]`) ensuring every downstream package knows exactly which fields it's responsible for populating.
+The `Candidate` dataclass includes lifecycle-annotated fields (`[CREATION]`, `[MERGE]`, `[FILTER]`, `[SCORE]`) ensuring every downstream package knows exactly which fields it's responsible for populating. Optional fields like `texture_features` default to `{}` when `--radiomics` is disabled.
 
 ### Package 1 — Phase 1 → Phase 2 Handoff Infrastructure (✅ Complete)
 
@@ -739,7 +739,7 @@ The `Candidate` dataclass includes lifecycle-annotated fields (`[CREATION]`, `[M
 
 **1. Extended DICOM Tag Extraction** (`dicom_listener.py` — modified)
 
-6 new DICOM tags are now captured alongside the existing fields:
+7 new DICOM tags are now captured alongside the existing fields:
 
 | Tag | DICOM ID | Purpose |
 |---|---|---|
@@ -759,21 +759,21 @@ Thread-safe accumulator that collects HU-transformed 2D slices alongside per-sli
 
 - **Spatial ordering by ImagePositionPatient Z** — never by InstanceNumber. These routinely disagree in clinical DICOM data, and using InstanceNumber produces subtly misaligned volumes.
 - **Z-spacing computed from actual slice positions** (median of inter-slice distances), not from the `SliceThickness` tag which is nominal and often wrong.
-- **Two independent readiness triggers:**
-  1. **Association-release** — DICOM association closed (all slices sent)
-  2. **Stream stall fallback** — `SliceBuffer` detects no new data on socket for N seconds (default: 5.0s)
-- **Slice-count floor** — Minimum viable volume size (default: 20 slices). This acts purely as a sanity floor to prevent segmenting near-empty sequences and is *never* a trigger by itself.
-- **Lost Packet Drop** — `SliceBuffer` will forcefully drop a delayed slice and unblock the sequence if the slice fails to arrive within a short gap-timeout (e.g., 2s) while later slices actively arrive.
+- **Two readiness paths:** association-release (`mark_association_released()`) and stream-stall fallback (`STREAM_STALL_TIMEOUT = 15.0s`), both subject to the minimum-slice sanity gate (`min_slices = 20`) and one-shot trigger guard (`_triggered`).
+- **Slice-count floor** — Minimum viable volume size (default: 20 slices). This acts purely as a mandatory sanity gate to prevent segmenting near-empty sequences and is *never* a trigger by itself.
+- **One-shot state guard** — Guarantees Phase 2 is triggered at most once per series execution via the `_triggered` state flag.
+- **Lost Packet Drop** — `SliceBuffer` will forcefully drop a delayed slice and unblock the sequence if the slice fails to arrive within a short gap-timeout while later slices actively arrive.
 - **Non-blocking** — `add()` completes in < 5ms for a 512×512 slice (measured), consuming < 10% of the real-time path's 50ms budget.
 
 ```python
 class VolumeAccumulator:
-    def __init__(self, min_slices=20, timeout_sec=5.0): ...
+    def __init__(self, min_slices=20): ...
     def add(self, instance_number, hu_array, findings, spacing_meta): ...
-    def ready_on_association_release(self) -> bool: ...
-    def ready_on_slice_floor(self) -> bool: ...
-    def ready_on_timeout(self) -> bool: ...
+    def mark_association_released(self) -> None: ...
+    def mark_stream_stalled(self) -> None: ...
+    def is_ready(self) -> bool: ...
     def export_volume(self) -> tuple[np.ndarray, list[list], list[int], tuple]: ...
+    def reset(self) -> None: ...
 ```
 
 **3. Finding Tracker** (`finding_tracker.py` — new)
@@ -792,49 +792,89 @@ def track_persistence_ok(track, min_slices=3) -> bool: ...
 **4. Pipeline Integration** (`pipeline.py` — modified)
 
 - Accumulator fed HU-transformed arrays (not raw pixels) and triage findings after each slice processes
-- Dual-path Phase 2 trigger wired into the existing flush loop
+- Two readiness paths (association-release and stream-stall fallback) wired into the pipeline flush loop
 - Phase 2 spawn uses `multiprocessing.Process` (not `threading.Thread`) for clean C++ tensor memory teardown
 - Real-time WebSocket alert path completely unchanged
+
+#### Multiple Trigger Bug & Production Fix
+
+During initial integration testing, a critical trigger bug was identified where Phase 2 re-triggered continuously on every incoming slice once the slice count exceeded `min_slices`.
+
+* **The Problems Identified**:
+  1. **Unbounded Re-firing**: `min_slices` previously acted as an automatic trigger, causing `is_ready()` to evaluate `True` repeatedly for every single slice past the 20-slice threshold.
+  2. **Connection-Release Race Condition**: `EVT_RELEASED` (association close) fired Phase 2 before the background worker thread finished processing buffered/queued slices, causing premature export of partial volumes.
+  3. **Concurrent Stream Interference**: Active secondary DICOM connections could trigger Phase 2 prematurely before all associations completed.
+
+* **The Production Fixes Implemented**:
+  1. **One-Shot State Guard (`_triggered` flag)**: Added an explicit `_triggered` state variable in `VolumeAccumulator`. Once `export_volume()` executes, `is_ready()` strictly returns `False` until `reset()` is called, guaranteeing a maximum of one Phase 2 trigger per series.
+  2. **`min_slices` as Sanity Floor Gate ONLY**: `min_slices` (default: 20) was refactored into a strict gate condition. It prevents segmenting near-empty sequences, but `min_slices` alone **never** triggers Phase 2.
+  3. **Strict 5-Step Pipeline Sequencing (`on_association_released`)**: When a DICOM association closes, `pipeline.py` enforces a deterministic sequence:
+     - Check `listener.has_active_association()` (defer if active peers remain)
+     - Drain worker thread queue via `self._queue.join()`
+     - Flush remaining buffered slices via `self.buffer.flush_all()` and process through 2D triage
+     - Signal `accumulator.mark_association_released()`
+     - Execute `self._check_phase2_trigger()` exactly once
 
 #### Acceptance Checklist Results
 
 | Criterion | Status | Evidence |
 |---|---|---|
-| All 6 new DICOM tags captured | ✅ Pass | `TestDicomTagExtraction` (4 tests) |
+| All 7 new DICOM tags captured | ✅ Pass | `TestDicomTagExtraction` (4 tests) |
 | VolumeAccumulator orders by ImagePositionPatient Z | ✅ Pass | `test_ordering_disagrees_with_instance_number` — deliberately shuffled Z vs InstanceNumber |
 | Association-release trigger fires independently | ✅ Pass | `test_association_release_trigger` |
-| Slice-count floor trigger fires independently | ✅ Pass | `test_slice_floor_trigger` |
+| Slice-count floor acts as mandatory sanity gate | ✅ Pass | `test_slice_floor_gate` — verified min_slices alone does not trigger |
 | Timeout fallback fires independently | ✅ Pass | `test_timeout_trigger` |
 | Finding tracker: smooth drift → 1 track, persistent | ✅ Pass | `test_smooth_drift_single_track` |
 | Finding tracker: large jump → separate tracks, not persistent | ✅ Pass | `test_large_jump_separate_tracks` |
 | Accumulator.add() < 5ms per 512×512 slice | ✅ Pass | `test_accumulator_add_is_fast` |
 | Thread safety (concurrent adds) | ✅ Pass | `test_accumulator_thread_safe` |
-| No existing test regressions | ✅ Pass | 59/59 tests passing (25 new + 34 existing) |
+| No existing test regressions | ✅ Pass | 136/136 tests passing cleanly |
 
 #### Test Results
 
 ```
 25 passed in 0.76s  (Package 1 tests)
-59 passed in 1.67s  (Full test suite — zero regressions)
+136 passed, 2 skipped in 23.64s  (Full test suite — zero regressions)
 ```
 
 ### Package 2 — Volume Assembly & Segmentation Runner (✅ Complete)
 
 **Objective:** Convert the accumulated stack of HU slices into a correctly oriented, correctly spaced 3D NIfTI volume, run TotalSegmentator on it inside a properly isolated subprocess, parse the output metrics, and guarantee that memory is fully released.
 
-#### Package 2 Output Structure
+#### Package 2 Output Structure & Intermediate Artifacts
 
-Each Phase 2 execution isolates outputs by creating a separate `run_<timestamp>/` directory under `phase2_work/`. Below is the structure and purpose of the generated files and directories:
+Each Phase 2 execution isolates outputs by creating a separate `run_<timestamp>/` directory under `phase2_work/`. Below is the distinction between Package 2 artifacts and downstream Package 3 outputs:
 
 * **`run_<timestamp>/`** — Isolates each Phase 2 execution so outputs from concurrent or consecutive runs do not overwrite each other.
-* **`temp_volume.nii.gz`** — The 3D NIfTI volume created from the accumulated DICOM Hounsfield Unit (HU) slices, used as the input for TotalSegmentator.
-* **`temp_seg.nii`** — The multi-label segmentation map produced by TotalSegmentator when running in multi-label (`--ml`) mode.
-* **`statistics.json`** — Organ-level statistics (such as volume and intensity) generated and normalized from the segmentation output.
-* **`temp_seg/`** — The TotalSegmentator output path. It may remain empty in multi-label (`--ml`) mode because the segmentation is written directly as `temp_seg.nii`.
+* **`temp_seg/`** — Consolidated output folder containing all run artifacts:
+  * **Package 2 Direct Artifacts (Stages 1 & 2)**:
+    * **`temp_volume.nii.gz`** — Assembled 3D NIfTI volume created from accumulated DICOM HU slices (`volume_builder.py`).
+    * **`temp_seg.nii`** — 3D multi-label organ segmentation mask produced by TotalSegmentator (`segment_runner.py`).
+    * **Raw `statistics.json` (Intermediate Artifact)** — TotalSegmentator is executed with `--statistics`, initially writing a raw `statistics.json` file containing un-trimmed mean HU and voxel counts. Package 2 (`segment_runner.py`) reads, parses, and normalizes this raw file in memory into `ts_stats`.
+
+##### Stage-by-Stage Statistics Lifecycle
+
+```text
+Package 2 (Stage 2 execution):
+    temp_volume.nii.gz
+          ↓
+    TotalSegmentator (--fast --statistics --ml)
+          ↓
+    temp_seg.nii  +  raw statistics.json (intermediate artifact)
+          ↓
+    segment_runner.py parses & normalizes raw statistics in memory
+
+Package 3 (Stage 3 execution):
+    temp_seg.nii  +  original 3D HU volume
+          ↓
+    organ_baseline.py (percentile-trimmed baselines & physical volume in cc)
+          ↓
+    final temp_seg/statistics.json (replaces/overwrites raw file on disk)
+```
 
 > [!NOTE]
-> **File Retention for Inspection & Downstream Testing:**
-> The NIfTI volume (`temp_volume.nii.gz`), segmentation map (`temp_seg.nii`), and parsed statistics (`statistics.json`) are currently retained in each run directory for Package 2 inspection, validation, and debugging because Package 3 is not yet implemented.
+> **Single Final Statistics File on Disk:**
+> TotalSegmentator's raw `statistics.json` is a legitimate intermediate output of Stage 2 parsed in memory by Package 2. During Stage 3, Package 3 independently calculates patient-specific baselines directly from `temp_seg.nii` and the original 3D HU volume array using `organ_baseline.py`, writing the final `temp_seg/statistics.json` to disk and removing the loose intermediate Stage 2 file during consolidation. There are **not** two final statistics files on disk.
 
 #### Package 2 Setup & Installation
 
@@ -891,14 +931,23 @@ def run_totalsegmentator(nifti_path: str, out_dir: str = DEFAULT_OUT_DIR, modali
 **3. Isolated Process Lifecycle and Safety Manager** ([`lifecycle_manager.py`](phase2_segmentation/lifecycle_manager.py) — new)
 
 - **Resource Watchdog** — Monitors active process RSS memory allocations via a background polling thread (`RAMWatchdog`), logging and asserting that peak memory usage remains within the 3.0 GB budget.
-- **Temporary File Retention for Inspection** — Retains `temp_volume.nii.gz`, `temp_seg.nii`, and `statistics.json` in the execution run directory on disk for developer validation, manual inspection, and testing of downstream Package 3 components.
+- **Temporary File Retention for Inspection** — Retains `temp_volume.nii.gz`, `temp_seg.nii`, and `statistics.json` in the execution run directory on disk for developer validation, manual inspection, and testing.
 
 ```python
+@dataclass
 class Phase2Result:
-    def __init__(self, volume_shape: tuple): ...
+    success: bool = False
+    nifti_path: str = ""
+    segmentation_dir: str = ""
+    organ_stats: dict = field(default_factory=dict)
+    peak_ram_gb: float = 0.0
+    total_time_sec: float = 0.0
+    volume_shape: tuple = ()
+    num_organs_detected: int = 0
+    region: str = "unknown"
 
 class Phase2LifecycleManager:
-    def __init__(self, work_dir: str = None, ram_budget_gb: float = 3.0, cleanup_on_success: bool = True): ...
+    def __init__(self, work_dir: str = DEFAULT_WORK_DIR, ram_budget_gb: float = 3.0, cleanup_on_success: bool = False, cleanup_on_failure: bool = False): ...
     def run(self, volume: np.ndarray, spacing: Tuple[float, float, float], series_meta: Optional[Dict] = None) -> Phase2Result: ...
 
 def run_phase2(volume: np.ndarray, findings_per_slice: list, instance_numbers: list, spacing: Tuple[float, float, float], series_meta: Optional[Dict[str, str]] = None) -> Phase2Result: ...
@@ -921,7 +970,81 @@ def run_phase2(volume: np.ndarray, findings_per_slice: list, instance_numbers: l
 
 ```
 65 passed, 2 skipped in 24.63s  (Package 2 tests)
-119 passed, 2 skipped in 27.41s  (Full test suite — zero regressions)
+136 passed, 2 skipped in 23.64s  (Full test suite — zero regressions)
+```
+
+#### Package 2 — Radiomics Handoff Note
+
+* **Original Plan Requirement**: The original Package 2 implementation plan specifies running TotalSegmentator with flags: `--fast --statistics --radiomics --ml` to generate both `statistics.json` and `statistics_radiomics.json`.
+* **Current Execution State**: The current implementation intentionally runs TotalSegmentator with flags: `--fast --statistics --ml` (omitting `--radiomics`).
+* **Environment Context**: The project environment currently uses **Python 3.12.6**, where PyRadiomics is not currently installed/compatible due to legacy CPython C-extension build constraints under Python 3.12+.
+* **Current Generated Outputs**: Package 2 execution produces `temp_seg.nii` and TotalSegmentator's basic `statistics.json`, but does not currently produce `statistics_radiomics.json`.
+* **Package 3 Status (Unaffected)**: Package 3 is **NOT** affected by this pending radiomics item. Package 3 calculates its own final patient-specific organ statistics from the TotalSegmentator segmentation mask (`temp_seg.nii`) and the original 3D HU volume array, writing the final `temp_seg/statistics.json` and `temp_seg/region.txt`.
+* **Handoff Instructions for Future Developers (Package 4+)**:
+  1. Establish a Python/PyRadiomics/TotalSegmentator environment compatible with the original Package 2 requirement.
+  2. Verify that `--radiomics` works with TotalSegmentator.
+  3. Verify that `statistics_radiomics.json` is generated alongside segmentation outputs.
+  4. Complete the Package 2 radiomics integration so that `texture_features` can be populated for later packages.
+* **Note**: This is a known pending handoff item/deviation from the original Package 2 plan, **NOT** a failure of the current Package 3 patient-specific statistics implementation.
+
+### Package 3 — Organ Baseline & Region Detection (✅ Complete)
+
+**Objective:** Compute every organ's patient-specific statistical baseline (never a population lookup table) from the patient's own voxel HU intensity array, and determine the broad body region (e.g. neuro, KUB, cardiothoracic, etc.) covered by the scan based on the set of organ labels identified by TotalSegmentator.
+
+#### What Was Built
+
+**1. Patient-Adaptive Organ Baseline Calculator** ([`organ_baseline.py`](phase2_segmentation/organ_baseline.py) — new)
+
+- **Voxel-Level Percentile Trimming** — Isolates voxel intensities inside each organ's segmentation mask and sorts them to find P5 and P95 percentiles.
+- **Robust Statistical Summarization** — Computes trimmed mean and trimmed standard deviation on the `[P5, P95]` subset to prevent anomaly inflation. Computes median, median absolute deviation (MAD), first quartile (Q1), third quartile (Q3), and interquartile range (IQR) on the full array.
+- **Physical Volume Tracking** — Maps the voxel count and scales it by the calculated physical voxel volume (cc) to yield precise per-organ volumes.
+- **No Population Hardcoding** — Functions purely on patient data without relying on population HU lookup tables.
+
+```python
+def compute_organ_baseline(organ_voxels_hu: np.ndarray, voxel_volume_cc: float = 0.0) -> dict: ...
+```
+
+**2. Scan Body Region Classifier** ([`region_detector.py`](phase2_segmentation/region_detector.py) — new)
+
+- **Label Mapping** — Maps TotalSegmentator's class labels (including wildcards like `vertebrae_*` and `rib_*`) to structural regions: `neuro`, `cardiothoracic`, `abdomen_pelvis`, `spine`, `ortho`.
+- **KUB Clinical Override** — Detects focused renal scans (`kub`) if kidneys and urinary bladder are present, but liver and spleen are absent, bypassing generic voting blocks.
+- **Majority-Vote Resolution** — Applies a tally-weighted majority vote across detected structure categories to determine the dominant scan region, logging mixed scan distributions.
+
+```python
+def detect_region(present_labels: list[str]) -> str: ...
+```
+
+**3. Integration & Flow Execution** ([`lifecycle_manager.py`](phase2_segmentation/lifecycle_manager.py) — modified)
+
+- Seamlessly wires the baseline calculator and region classifier into Stage 3 of the Phase 2 lifecycle process.
+- Extracts unique label values from the generated `temp_seg.nii` mask and maps them to Hounsfield Unit intensities in the source volume to compute patient-specific statistics.
+- Writes patient-specific baseline statistics to `statistics.json` and body region classification to `region.txt` inside `phase2_work/run_<timestamp>/temp_seg/`.
+- Returns the resolved region classification and statistical baseline dictionary in `Phase2Result`.
+
+#### Package 3 Generated Artifacts
+
+Package 3 generates two primary clinical metadata artifacts inside `phase2_work/run_<timestamp>/temp_seg/`:
+
+* **`statistics.json`** — Rich patient-adaptive organ statistics (P5–P95 percentile-trimmed mean/std, median, MAD, Q1, Q3, IQR, and physical volume in cc) computed by `organ_baseline.py` overlaying the HU volume on `temp_seg.nii` (replaces raw TS stats).
+* **`region.txt`** — Classified scan body region (`neuro`, `cardiothoracic`, `abdomen_pelvis`, `spine`, `ortho`, `kub`) generated by `region_detector.py`.
+
+#### Acceptance Checklist Results
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Hand-built Region Fixture Classifications | ✅ Pass | `test_pure_chest_classification`, `test_pure_abdomen_classification`, `test_head_classification` |
+| Mixed-Region Handling and Decision Logging | ✅ Pass | `test_mixed_classification` |
+| KUB Clinical Override Rules | ✅ Pass | `test_kub_clinical_override` |
+| Spine and Ortho Wildcard Label Mapping | ✅ Pass | `test_spine_wildcards`, `test_ortho_wildcards` |
+| Baseline Math Verification vs. Ground Truth | ✅ Pass | `test_baseline_math_correctness` |
+| Tiny Voxel Array Exception Resilience | ✅ Pass | `test_tiny_baseline`, `test_empty_baseline` |
+| Integrated End-to-End Pipeline Verification | ✅ Pass | `test_successful_pipeline_with_baselines` |
+
+#### Test Results
+
+```
+11 passed in 0.23s  (Package 3 unit tests)
+136 passed, 2 skipped in 23.64s  (Full test suite — zero regressions)
 ```
 
 ---
@@ -958,9 +1081,12 @@ MAJOR-PROJECT-PRISM/
 ├── phase2_segmentation/           # [NEW] Volume Assembly & Segmentation
 │   ├── volume_builder.py          # [NEW] NIfTI Volume Assembly
 │   ├── segment_runner.py          # [NEW] TotalSegmentator Wrapper
+│   ├── organ_baseline.py          # [NEW - Package 3] Patient-Adaptive Organ Baseline Calculator
+│   ├── region_detector.py         # [NEW - Package 3] Scan Body Region Classifier & KUB Override
 │   ├── lifecycle_manager.py       # [NEW] Subprocess & Watchdog Orchestrator
 │   └── tests/
 │       ├── conftest.py            # Test configuration and fixtures
+│       ├── test_package3.py       # [NEW - Package 3] Baseline math & region classification tests (11 tests)
 │       ├── test_integration.py    # Pipeline integration tests
 │       ├── test_lifecycle_manager.py # Watchdog and manager tests
 │       ├── test_run_commands.py   # CLI and execution tests

@@ -54,6 +54,7 @@ class Phase2Result:
     error_message: str = ""
     volume_shape: Tuple[int, ...] = ()
     num_organs_detected: int = 0
+    region: str = "unknown"
 
 
 class RAMWatchdog:
@@ -277,15 +278,110 @@ class Phase2LifecycleManager:
 
             # ── Stage 2: TotalSegmentator ──
             t_seg_start = time.perf_counter()
-            result.segmentation_dir, result.organ_stats = self._segment(
+            result.segmentation_dir, ts_stats = self._segment(
                 result.nifti_path, seg_dir, modality
             )
             result.segmentation_time_sec = time.perf_counter() - t_seg_start
-            result.num_organs_detected = len(result.organ_stats)
 
             logger.info(
-                "Stage 2 complete (segmentation): %.2fs, %d organs",
+                "Stage 2 complete (segmentation): %.2fs",
                 result.segmentation_time_sec,
+            )
+
+            # ── Stage 3: Patient-Specific Baselines & Region Detection ──
+            seg_nii_path = os.path.join(self._work_dir, "temp_seg.nii")
+            if not os.path.isfile(seg_nii_path):
+                seg_nii_path = os.path.join(seg_dir, "temp_seg.nii")
+
+            if os.path.isfile(seg_nii_path):
+                import SimpleITK as sitk
+                from phase2_segmentation.organ_baseline import compute_organ_baseline
+                from phase2_segmentation.region_detector import detect_region
+                try:
+                    from totalsegmentator.map_to_binary import class_map
+                    task_key = "total_mr" if modality.upper() in ("MR", "MRI") else "total"
+                    cmap = class_map.get(task_key, {})
+                except ImportError:
+                    cmap = {}
+                    logger.warning("Could not import totalsegmentator class_map")
+
+                seg_img = sitk.ReadImage(seg_nii_path)
+                seg_arr = sitk.GetArrayFromImage(seg_img)
+
+                voxel_volume_cc = float(spacing[0] * spacing[1] * spacing[2] / 1000.0)
+                
+                # Compute patient-specific baselines
+                patient_stats = {}
+                present_labels = []
+                
+                unique_vals = np.unique(seg_arr)
+                for val in unique_vals:
+                    if val == 0:
+                        continue
+                    label = cmap.get(val, f"organ_{val}")
+                    mask = (seg_arr == val)
+                    voxels = volume[mask]
+                    
+                    baseline = compute_organ_baseline(voxels, voxel_volume_cc=voxel_volume_cc)
+                    patient_stats[label] = baseline
+                    
+                    if baseline["voxel_count"] > 0:
+                        present_labels.append(label)
+                
+                result.organ_stats = patient_stats
+                result.num_organs_detected = len(patient_stats)
+                result.region = detect_region(present_labels)
+
+                # Write rich patient-specific statistics and region to disk exclusively in seg_dir
+                import json
+                os.makedirs(seg_dir, exist_ok=True)
+                stats_path = os.path.join(seg_dir, "statistics.json")
+                try:
+                    with open(stats_path, "w") as f:
+                        json.dump(patient_stats, f, indent=4)
+                    logger.info("Saved rich patient-specific statistics.json to %s", stats_path)
+                except Exception as e:
+                    logger.warning("Failed to save statistics.json to %s: %s", stats_path, e)
+
+                region_path = os.path.join(seg_dir, "region.txt")
+                try:
+                    with open(region_path, "w") as f:
+                        f.write(result.region)
+                    logger.info("Saved classified region to %s", region_path)
+                except Exception as e:
+                    logger.warning("Failed to save region.txt to %s: %s", region_path, e)
+
+                # Move volume and segmentation files into temp_seg directory so everything is inside temp_seg
+                try:
+                    target_vol = os.path.join(seg_dir, "temp_volume.nii.gz")
+                    if os.path.isfile(nifti_path) and os.path.abspath(nifti_path) != os.path.abspath(target_vol):
+                        shutil.move(nifti_path, target_vol)
+                        result.nifti_path = target_vol
+                    
+                    target_seg = os.path.join(seg_dir, "temp_seg.nii")
+                    if os.path.isfile(seg_nii_path) and os.path.abspath(seg_nii_path) != os.path.abspath(target_seg):
+                        shutil.move(seg_nii_path, target_seg)
+
+                    loose_stats = os.path.join(self._work_dir, "statistics.json")
+                    if os.path.isfile(loose_stats) and os.path.abspath(loose_stats) != os.path.abspath(stats_path):
+                        os.remove(loose_stats)
+                    loose_region = os.path.join(self._work_dir, "region.txt")
+                    if os.path.isfile(loose_region) and os.path.abspath(loose_region) != os.path.abspath(region_path):
+                        os.remove(loose_region)
+                except Exception as move_err:
+                    logger.warning("Failed to consolidate files into temp_seg dir: %s", move_err)
+            else:
+                logger.warning(
+                    "Segmentation label map temp_seg.nii not found at %s. Baseline stats / region detection fallback to TS stats.",
+                    seg_nii_path
+                )
+                result.organ_stats = ts_stats
+                result.num_organs_detected = len(ts_stats)
+                result.region = "unknown"
+
+            logger.info(
+                "Stage 3 complete (baseline & region): detected region=%s, %d organs characterized",
+                result.region,
                 result.num_organs_detected,
             )
 
@@ -340,7 +436,11 @@ class Phase2LifecycleManager:
         return run_totalsegmentator(nifti_path, out_dir=out_dir, modality=modality)
 
     def _cleanup(self, nifti_path: str, seg_dir: str) -> None:
-        """Remove temporary files created during processing."""
+        """Remove temporary files created during processing if cleanup is enabled."""
+        if not self._cleanup_on_success and not self._cleanup_on_failure:
+            logger.info("Cleanup disabled — retaining all Phase 2 files in %s", self._work_dir)
+            return
+
         try:
             if os.path.isfile(nifti_path):
                 os.remove(nifti_path)

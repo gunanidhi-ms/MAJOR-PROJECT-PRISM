@@ -81,6 +81,7 @@ class VolumeAccumulator:
         self._association_released: bool = False
         self._stream_stalled: bool = False
         self._triggered: bool = False  # one-shot guard: prevents firing more than once per series
+        self._completed_series_uids: set[str] = set()  # guards against re-triggering same series UID
         self._series_instance_uid: str = ""
         self._study_instance_uid: str = ""
         self._modality: str = "CT"
@@ -242,6 +243,8 @@ class VolumeAccumulator:
         with self._lock:
             # Mark as triggered FIRST, before any processing
             self._triggered = True
+            if self._series_instance_uid:
+                self._completed_series_uids.add(self._series_instance_uid)
 
             if len(self._slices) == 0:
                 raise ValueError("VolumeAccumulator is empty — nothing to export")
@@ -317,7 +320,14 @@ class VolumeAccumulator:
             self._association_released = False
             self._stream_stalled = False
             self._triggered = False
+            self._completed_series_uids.clear()
             self._series_instance_uid = ""
             self._study_instance_uid = ""
             self._modality = "CT"
             logger.info("VolumeAccumulator: reset for next series")
+
+    def reset_all(self) -> None:
+        """Clear all accumulated data and reset completed series UID guards."""
+        with self._lock:
+            self.reset()
+            self._completed_series_uids.clear()

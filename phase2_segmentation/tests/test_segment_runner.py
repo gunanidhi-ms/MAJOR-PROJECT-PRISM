@@ -276,8 +276,9 @@ class TestFullSegmentation:
             f.write(b"dummy nifti content" * 1000)
             dummy_file = f.name
         
+        out_target = os.path.join(os.path.dirname(dummy_file), "temp_seg")
         try:
-            out_dir, stats = run_totalsegmentator(dummy_file)
+            out_dir, stats = run_totalsegmentator(dummy_file, out_dir=out_target)
             
             # run_totalsegmentator returns (out_dir, stats_dict)
             assert os.path.isabs(out_dir)
@@ -301,9 +302,10 @@ class TestFullSegmentation:
             f.write(b"dummy nifti content" * 1000)
             dummy_file = f.name
         
+        out_target = os.path.join(os.path.dirname(dummy_file), "temp_seg")
         try:
             with pytest.raises(RuntimeError, match="TotalSegmentator failed"):
-                run_totalsegmentator(dummy_file)
+                run_totalsegmentator(dummy_file, out_dir=out_target)
         finally:
             os.unlink(dummy_file)
 

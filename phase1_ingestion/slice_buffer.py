@@ -217,6 +217,22 @@ class SliceBuffer:
         # If we didn't flush everything, but might have resolved a gap, pop the now-ready ones
         return self.pop_all_ready()
 
+    def flush_all(self) -> list[tuple[int, dict]]:
+        """
+        Immediately flush all remaining buffered slices regardless of sequence gaps.
+        Called when DICOM association is released to drain the buffer completely.
+        """
+        with self._lock:
+            if len(self._buffer) == 0:
+                return []
+            logger.info("Flush all triggered — releasing %d remaining buffered slices", len(self._buffer))
+            items = list(self._buffer.items())
+            self._buffer.clear()
+            self._first_buffered_time = None
+            if items:
+                self._flushed_up_to = items[-1][0]
+            return items
+
     def is_truly_idle(self, timeout_sec: float = 5.0) -> bool:
         """
         The ONLY valid staleness signal. True only when NOTHING has

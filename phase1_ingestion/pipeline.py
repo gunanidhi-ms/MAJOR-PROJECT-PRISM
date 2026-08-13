@@ -20,6 +20,7 @@ Usage:
 import os
 import sys
 import time
+import queue
 import signal
 import logging
 import threading
@@ -45,7 +46,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 DICOM_PORT = 11112
 WS_PORT = 8001
 WS_HOST = "0.0.0.0"
-BUFFER_FLUSH_TIMEOUT = 5.0  # seconds
+BUFFER_FLUSH_TIMEOUT = 3.0  # seconds (re-ordering buffer flush)
+STREAM_STALL_TIMEOUT = 15.0  # seconds (fallback timeout before declaring stream stalled)
 
 
 class Phase1Pipeline:
@@ -66,6 +68,8 @@ class Phase1Pipeline:
         self.buffer = SliceBuffer()
         self.accumulator = VolumeAccumulator(min_slices=20)
         self.listener: DICOMListener | None = None
+        self._queue = queue.Queue()
+        self._worker_thread: threading.Thread | None = None
         self._running = False
         self._stats = {
             "slices_received": 0,
@@ -76,33 +80,45 @@ class Phase1Pipeline:
 
     def _on_slice_received(self, slice_data: dict) -> None:
         """
-        Callback from DICOM listener — processes each incoming slice
-        through the full pipeline.
+        Callback from DICOM listener — enqueues each incoming slice
+        for asynchronous processing.
         
-        This runs in the pynetdicom handler thread.
+        This runs in the pynetdicom handler thread and must return instantly
+        to prevent blocking the DICOM association/connection.
         """
-        t_start = time.perf_counter()
-        instance_number = slice_data["instance_number"]
+        self._queue.put(slice_data)
+        self._stats["slices_received"] += 1
 
-        try:
-            # ── Step 1: Buffer the slice ──
-            self.buffer.add_slice(instance_number, slice_data)
-            self._stats["slices_received"] += 1
+    def _worker_loop(self) -> None:
+        """Worker loop running in a background thread to process queued slices asynchronously."""
+        while self._running:
+            try:
+                slice_data = self._queue.get(timeout=1.0)
+            except queue.Empty:
+                continue
 
-            # ── Step 2: Process all ready slices in order ──
-            ready_slices = self.buffer.pop_all_ready()
+            t_start = time.perf_counter()
+            instance_number = slice_data["instance_number"]
+            try:
+                # ── Step 1: Buffer the slice ──
+                self.buffer.add_slice(instance_number, slice_data)
 
-            # If no sequential slices are ready, try stale flush
-            if not ready_slices:
-                ready_slices = self.buffer.flush_if_stale(BUFFER_FLUSH_TIMEOUT)
+                # ── Step 2: Process all ready slices in order ──
+                ready_slices = self.buffer.pop_all_ready()
 
-            for inst_num, data in ready_slices:
-                self._process_single_slice(inst_num, data, t_start)
+                # If no sequential slices are ready, try stale flush
+                if not ready_slices:
+                    ready_slices = self.buffer.flush_if_stale(BUFFER_FLUSH_TIMEOUT)
 
-        except Exception as e:
-            logger.error(
-                "Pipeline error for slice %d: %s", instance_number, e, exc_info=True
-            )
+                for inst_num, data in ready_slices:
+                    self._process_single_slice(inst_num, data, t_start)
+
+            except Exception as e:
+                logger.error(
+                    "Pipeline error in worker for slice %d: %s", instance_number, e, exc_info=True
+                )
+            finally:
+                self._queue.task_done()
 
     def _process_single_slice(
         self, instance_number: int, slice_data: dict, t_pipeline_start: float
@@ -193,6 +209,40 @@ class Phase1Pipeline:
             f"{findings_str}"
         )
 
+    def on_association_released(self) -> None:
+        """
+        Callback from DICOM listener on EVT_RELEASED.
+        
+        Sequencing logic:
+        1. Wait for all queued slices in the worker queue to be processed.
+        2. First completely drain any remaining slices from SliceBuffer.
+        3. Process those flushed slices through the exact same existing 2D triage/processing path (_process_single_slice).
+        4. Only after all buffered slices have been processed, call VolumeAccumulator.mark_association_released().
+        5. Then let the existing Phase 2 trigger logic run so the accumulated volume triggers Phase 2 once.
+        """
+        logger.info("Pipeline: DICOM association released — waiting for worker queue to clear...")
+        self._queue.join()
+
+        # Defer Phase 2 trigger if other active DICOM associations are still streaming
+        if self.listener and self.listener.has_active_association():
+            logger.info(
+                "Pipeline: DICOM association released but other active association(s) remain — deferring Phase 2 trigger"
+            )
+            return
+
+        logger.info("Pipeline: Queue cleared — draining remaining buffered slices...")
+        t_start = time.perf_counter()
+        flushed_slices = self.buffer.flush_all()
+        for inst_num, data in flushed_slices:
+            self._process_single_slice(inst_num, data, t_start)
+
+        logger.info(
+            "Pipeline: buffer drained (%d slices processed) — marking VolumeAccumulator released",
+            len(flushed_slices),
+        )
+        self.accumulator.mark_association_released()
+        self._check_phase2_trigger()
+
     def run(self) -> None:
         """
         Start the complete pipeline.
@@ -204,6 +254,12 @@ class Phase1Pipeline:
         Blocks until shutdown (Ctrl+C).
         """
         self._running = True
+
+        # ── Start worker thread for async slice processing ──
+        self._worker_thread = threading.Thread(
+            target=self._worker_loop, daemon=True, name="pipeline-worker"
+        )
+        self._worker_thread.start()
 
         print("=" * 60)
         print("  PRISM Phase 1 — Live Ingestion & 2D Screening Pipeline")
@@ -221,6 +277,7 @@ class Phase1Pipeline:
         self.listener = DICOMListener(
             port=self.dicom_port,
             on_slice_received=self._on_slice_received,
+            on_association_released=self.on_association_released,
             accumulator=self.accumulator,
         )
         dicom_server = self.listener.start_background()
@@ -262,7 +319,11 @@ class Phase1Pipeline:
             # Check if the volume accumulator is ready via any trigger path.
             # The timeout fallback fires here based on true stream stall;
             # association-release is signaled externally by the DICOM listener.
-            if self.buffer.is_truly_idle(BUFFER_FLUSH_TIMEOUT):
+            if (
+                self.buffer.is_truly_idle(STREAM_STALL_TIMEOUT) 
+                and self._queue.empty()
+                and not (self.listener and self.listener.has_active_association())
+            ):
                 self.accumulator.mark_stream_stalled()
 
             self._check_phase2_trigger()

@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 # ── Constants ──────────────────────────────────────────────────────────────────
 
 TIMEOUT_SECONDS = 120  # Hard kill if TotalSegmentator hangs
-DEFAULT_OUT_DIR = "temp_seg"
+DEFAULT_OUT_DIR = os.path.join("phase2_work", "temp_seg")
 
 # TotalSegmentator flags per the specification.
 # NOTE: --radiomics excluded because pyradiomics fails to build on Python 3.12.

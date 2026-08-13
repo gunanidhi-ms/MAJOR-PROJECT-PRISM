@@ -257,6 +257,55 @@ class TestPhase2LifecycleManager:
             
             assert os.path.isdir(nonexistent_dir)
 
+    @patch('phase2_segmentation.lifecycle_manager.Phase2LifecycleManager._segment')
+    @patch('phase2_segmentation.lifecycle_manager.Phase2LifecycleManager._assemble')
+    @patch('phase2_segmentation.lifecycle_manager.RAMWatchdog')
+    def test_successful_pipeline_with_baselines(self, mock_watchdog_class, mock_assemble, mock_segment):
+        """Test pipeline run with baseline stats and region detection (when temp_seg.nii exists)."""
+        import SimpleITK as sitk
+        # Mock watchdog
+        mock_watchdog = MagicMock()
+        mock_watchdog.stop.return_value = 1.5
+        mock_watchdog_class.return_value = mock_watchdog
+        
+        # Mock assembly
+        nifti_path = os.path.join(self.temp_dir, "volume.nii.gz")
+        mock_assemble.return_value = nifti_path
+        
+        # Mock segmentation
+        seg_dir = os.path.join(self.temp_dir, "seg")
+        ts_stats = {"liver": {"volume": 100, "intensity": 50}}
+        mock_segment.return_value = (seg_dir, ts_stats)
+        
+        # Create a fake temp_seg.nii containing label 5 (liver)
+        seg_arr = np.zeros_like(self.test_volume, dtype=np.uint8)
+        # Mark a portion of the volume as liver (label 5)
+        seg_arr[2:8, 2:8, 2:8] = 5
+        
+        # Write to self.temp_dir as temp_seg.nii
+        seg_img = sitk.GetImageFromArray(seg_arr)
+        seg_nii_path = os.path.join(self.temp_dir, "temp_seg.nii")
+        sitk.WriteImage(seg_img, seg_nii_path)
+        
+        manager = Phase2LifecycleManager(work_dir=self.temp_dir)
+        result = manager.run(self.test_volume, self.test_spacing, self.test_series_meta)
+        
+        assert result.success
+        assert result.num_organs_detected == 1
+        assert "liver" in result.organ_stats
+        
+        # Verify stats populated conform to organ_statistics.json schema
+        liver_stats = result.organ_stats["liver"]
+        assert "trimmed_mean" in liver_stats
+        assert "trimmed_std" in liver_stats
+        assert "median" in liver_stats
+        assert "mad" in liver_stats
+        assert "volume_cc" in liver_stats
+        assert liver_stats["voxel_count"] == 216  # 6 * 6 * 6 = 216
+        
+        # Region classification check (liver present only -> abdomen_pelvis)
+        assert result.region == "abdomen_pelvis"
+
     def teardown_method(self):
         """Clean up test fixtures."""
         import shutil

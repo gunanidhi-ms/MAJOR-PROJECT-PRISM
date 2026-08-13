@@ -59,6 +59,7 @@ class DICOMListener:
         port: int = 11112,
         ae_title: str = "PRISM_SCP",
         on_slice_received: Callable[[dict], None] | None = None,
+        on_association_released: Callable[[], None] | None = None,
         save_to_disk: bool = True,
         incoming_dir: str = INCOMING_DIR,
         accumulator=None,
@@ -68,28 +69,15 @@ class DICOMListener:
             port: TCP port to listen on (default 11112, standard DICOM).
             ae_title: Application Entity title for this SCP.
             on_slice_received: Callback invoked for each received slice.
-                              Receives a dict with keys:
-                                - instance_number: int
-                                - rescale_slope: float
-                                - rescale_intercept: float
-                                - pixel_array: np.ndarray
-                                - sop_instance_uid: str
-                                - filepath: str (if saved to disk)
-                                - series_instance_uid: str
-                                - study_instance_uid: str
-                                - pixel_spacing: list[float]  [row_mm, col_mm]
-                                - slice_thickness: float
-                                - image_position_patient: list[float]  [x, y, z]
-                                - image_orientation_patient: list[float]  6 direction cosines
-                                - modality: str  (CT, MR, etc.)
+            on_association_released: Callback invoked when DICOM association releases.
             save_to_disk: Whether to save incoming .dcm files.
             incoming_dir: Directory path for saving incoming files.
-            accumulator: VolumeAccumulator instance. If provided, EVT_RELEASED
-                         will call accumulator.mark_association_released().
+            accumulator: VolumeAccumulator instance.
         """
         self._port = port
         self._ae_title = ae_title
         self._on_slice_received = on_slice_received
+        self._on_association_released = on_association_released
         self._save_to_disk = save_to_disk
         self._incoming_dir = incoming_dir
         self._accumulator = accumulator
@@ -97,6 +85,8 @@ class DICOMListener:
         self._server = None
         self._thread: threading.Thread | None = None
         self._slice_count = 0
+        self._active_associations = 0
+        self._assoc_lock = threading.Lock()
 
         if self._save_to_disk:
             os.makedirs(self._incoming_dir, exist_ok=True)
@@ -246,31 +236,53 @@ class DICOMListener:
         # Return success status
         return 0x0000
 
+    def _handle_established(self, event) -> None:
+        """Handler for EVT_ESTABLISHED — fires when a DICOM association is opened."""
+        with self._assoc_lock:
+            self._active_associations += 1
+            logger.info("DICOM association established (active: %d)", self._active_associations)
+
     def _handle_release(self, event) -> None:
         """
         Handler for EVT_RELEASED — fires when the DICOM association is
         released (i.e. all slices for this series have been sent).
-
-        This is the PRIMARY trigger for Phase 2 volume export. Without this
-        hook, the accumulator would never know the series is complete and
-        would fall back to the timeout path every time.
         """
+        with self._assoc_lock:
+            self._active_associations = max(0, self._active_associations - 1)
         logger.info(
-            "DICOM association released (total slices received: %d)",
+            "DICOM association released (active: %d, total slices received: %d)",
+            self._active_associations,
             self._slice_count,
         )
-        if self._accumulator is not None:
+        if self._on_association_released is not None:
+            self._on_association_released()
+            logger.info("on_association_released callback executed from EVT_RELEASED handler")
+        elif self._accumulator is not None:
             self._accumulator.mark_association_released()
             logger.info(
                 "VolumeAccumulator.mark_association_released() called "
                 "from EVT_RELEASED handler"
             )
 
+    def _handle_aborted(self, event) -> None:
+        """Handler for EVT_ABORTED — fires when a DICOM association is aborted."""
+        with self._assoc_lock:
+            self._active_associations = max(0, self._active_associations - 1)
+        logger.warning("DICOM association aborted (active: %d)", self._active_associations)
+
+    def has_active_association(self) -> bool:
+        """Return True if there is at least one active DICOM association."""
+        with self._assoc_lock:
+            return self._active_associations > 0
+
     def _build_event_handlers(self) -> list:
         """Build the list of pynetdicom event handlers."""
-        handlers = [(evt.EVT_C_STORE, self._handle_store)]
-        # Wire EVT_RELEASED → mark_association_released
-        handlers.append((evt.EVT_RELEASED, self._handle_release))
+        handlers = [
+            (evt.EVT_C_STORE, self._handle_store),
+            (evt.EVT_ESTABLISHED, self._handle_established),
+            (evt.EVT_RELEASED, self._handle_release),
+            (evt.EVT_ABORTED, self._handle_aborted),
+        ]
         return handlers
 
     def start(self) -> None:
