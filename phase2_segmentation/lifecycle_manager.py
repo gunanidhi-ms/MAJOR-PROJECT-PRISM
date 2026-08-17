@@ -55,6 +55,8 @@ class Phase2Result:
     volume_shape: Tuple[int, ...] = ()
     num_organs_detected: int = 0
     region: str = "unknown"
+    candidates: list = field(default_factory=list)
+    candidates_path: str = ""
 
 
 class RAMWatchdog:
@@ -219,6 +221,7 @@ class Phase2LifecycleManager:
         volume: np.ndarray,
         spacing: Tuple[float, float, float],
         series_meta: Optional[Dict[str, str]] = None,
+        findings_per_slice: Optional[list] = None,
     ) -> Phase2Result:
         """
         Execute the complete Phase 2 processing pipeline.
@@ -350,6 +353,46 @@ class Phase2LifecycleManager:
                     logger.info("Saved classified region to %s", region_path)
                 except Exception as e:
                     logger.warning("Failed to save region.txt to %s: %s", region_path, e)
+
+                # ── Stage 4: Path A/B Candidate Generation, Merge & Clinical Filter ──
+                # json is already imported above (used for statistics.json) — no re-import needed.
+                # seg_arr and cmap are already in scope from Stage 3 above.
+                if findings_per_slice:
+                    from phase1_ingestion.finding_tracker import link_findings_across_slices
+                    from phase2_segmentation.seed_clusterer import cluster_phase1_seeds
+                    from phase2_segmentation.organ_sweep import sweep_organs
+                    from phase2_segmentation.candidate_merger import merge_candidates
+
+                    t_cand_start = time.perf_counter()
+                    tracks = link_findings_across_slices(findings_per_slice)
+                    path_a = cluster_phase1_seeds(tracks, volume, spacing)
+                    path_b = sweep_organs(volume, seg_arr, cmap, patient_stats, spacing)
+                    candidates = merge_candidates(
+                        path_a, path_b, seg_arr, volume, cmap, patient_stats,
+                        spacing, result.region,
+                    )
+                    result.candidates = candidates
+
+                    candidates_path = os.path.join(seg_dir, "candidates.json")
+                    try:
+                        os.makedirs(seg_dir, exist_ok=True)
+                        with open(candidates_path, "w") as f:
+                            json.dump([c.to_internal_dict() for c in candidates], f, indent=2)
+                        result.candidates_path = candidates_path
+                        logger.info("Saved %d candidates to %s", len(candidates), candidates_path)
+                    except Exception as e:
+                        logger.warning("Failed to save candidates.json: %s", e)
+
+                    logger.info(
+                        "Stage 4 complete (candidate generation): %.2fs, "
+                        "%d path_a, %d path_b, %d merged",
+                        time.perf_counter() - t_cand_start,
+                        len(path_a), len(path_b), len(candidates),
+                    )
+                else:
+                    logger.warning(
+                        "Stage 4 skipped — no findings_per_slice provided to run()"
+                    )
 
                 # Move volume and segmentation files into temp_seg directory so everything is inside temp_seg
                 try:
@@ -531,6 +574,6 @@ def run_phase2(
         cleanup_on_failure=False,
     )
 
-    result = manager.run(volume, spacing, series_meta)
+    result = manager.run(volume, spacing, series_meta, findings_per_slice=findings_per_slice)
 
     return result

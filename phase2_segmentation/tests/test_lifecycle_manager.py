@@ -338,7 +338,7 @@ class TestMultiprocessingEntryPoint:
         
         # Verify manager was created and called
         mock_manager_class.assert_called_once()
-        mock_manager.run.assert_called_once_with(volume, spacing, series_meta)
+        mock_manager.run.assert_called_once_with(volume, spacing, series_meta, findings_per_slice=findings_per_slice)
 
     @patch('phase2_segmentation.lifecycle_manager.logging.basicConfig')
     @patch('phase2_segmentation.lifecycle_manager.Phase2LifecycleManager')

@@ -28,9 +28,9 @@
 - [x] **Package 1:** Phase 1 → Phase 2 handoff infrastructure (Volume Accumulator, Finding Tracker, extended DICOM tags, dual-path Phase 2 trigger)
 - [x] **Package 2:** Volume Assembly & Segmentation Runner
 - [x] **Package 3:** Organ Baseline & Region Detection
-- [ ] Package 4: Path A — 3D Clustering of Phase 1 Seeds
-- [ ] Package 5: Path B — Independent Organ-Wide Sweep
-- [ ] Package 6: Technical Suppression Cascade, Merge & 3D Re-validation
+- [x] **Package 4:** Path A — 3D Clustering of Phase 1 Seeds
+- [x] **Package 5:** Path B — Independent Organ-Wide Sweep
+- [x] **Package 6:** Technical Suppression Cascade, Merge & 3D Re-validation
 - [ ] Package 7: Confidence Fusion, Scoring & Phase 3 Handoff
 - [ ] Package 8: Testing, Calibration & Final Report
 
@@ -1049,6 +1049,131 @@ Package 3 generates two primary clinical metadata artifacts inside `phase2_work/
 
 ---
 
+### Package 5 — Path B: Independent Organ-Wide Sweep (✅ Complete)
+
+**Objective:** Independently scan every TotalSegmentator-segmented organ for statistical outlier regions using the patient-adaptive baselines from Package 3. Path B produces `Candidate` objects that are entirely agnostic of Phase 1's 2D findings — it catches what Path A misses by looking at the full 3D organ volume rather than only the voxels under Phase 1 seeds.
+
+#### Why Path B Exists
+
+Path A (Package 4) is fast and leverages Phase 1's real-time evidence, but it is fundamentally limited to the 2D spatial footprint of Phase 1's detections. A lesion that Phase 1 missed — because it fell below the per-slice anomaly threshold, or sat in a region with high local variance — will never become a Path A candidate. Path B provides an independent, exhaustive second opinion: for every organ TotalSegmentator labelled, it computes connected components of voxels whose HU values deviate from the patient's own organ baseline and promotes any large, persistent component to a `Candidate`. When both paths find the same 3D region, Package 6 marks it `corroborated=True`, producing a strong double-confirmed signal for the clinical gate.
+
+#### What Was Built
+
+**1. Organ-Wide Statistical Sweep** ([`organ_sweep.py`](phase2_segmentation/organ_sweep.py) — new)
+
+- **Patient-Adaptive Thresholds, Not Population Norms** — Outlier detection uses the organ's own `trimmed_mean` and `trimmed_std` from Package 3's baseline, not a fixed HU window. A liver at 80 HU in this patient is normal; a cluster at 140 HU in the same liver is flagged. This prevents both false positives in naturally dense organs and false negatives in naturally hypodense ones.
+- **Connected-Component Voxel Counting, Not Bounding-Box Approximation** — `scipy.ndimage.label` identifies connected outlier regions at the true voxel level. `volume_cc` is computed from the actual component mask (not the full bbox rectangle), making it strictly more accurate than Path A's whole-bbox estimate.
+- **3D Persistence, Not 2D Slice Count** — Persistence is measured by the number of unique Z-slices the component spans (`len(np.unique(z_idx)) >= min_persistent_slices`), not by a cross-slice tracking chain. This is the correct 3D definition for an organ-derived component.
+- **Organ Context at Birth** — Unlike Path A (which always starts with `organ_label="unclassified"`), every Path B candidate is born with `organ_label`, `organ_local_zscore`, and `organ_overlap_fraction` already populated — no backfill step needed for Path B survivors.
+- **Uniform Coordinate Convention** — `bbox_3d = [x_min, y_min, z_min, x_max, y_max, z_max]` and `centroid_3d = [X, Y, Z]` — identical to Path A's convention, confirmed by cross-checking both implementations before Package 6's merge step was designed.
+
+```python
+def sweep_organs(
+    volume: np.ndarray,            # (Z, Y, X) HU volume
+    seg_arr: np.ndarray,           # (Z, Y, X) TotalSegmentator label mask
+    value_to_label: dict,          # {int → str} from class_map
+    organ_stats: dict,             # {str → baseline} from organ_baseline.py
+    spacing: tuple,                # (row_mm, col_mm, z_mm)
+    outlier_sigma: float = 2.5,
+    min_component_voxels: int = 10,
+    min_persistent_slices: int = 3,
+) -> list[Candidate]: ...
+```
+
+#### Acceptance Checklist Results
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Hyperdense component is detected as a Candidate | ✅ Pass | `test_hyperdense_component_detected` |
+| Homogeneous organ produces no candidates | ✅ Pass | `test_no_outliers_returns_empty` |
+| Tiny components below size threshold are filtered | ✅ Pass | `test_tiny_component_filtered_out` |
+| Single-slice component fails persistence check | ✅ Pass | `test_single_slice_component_not_persistent` |
+| No regressions in previous packages | ✅ Pass | Full suite |
+
+#### Test Results
+4 passed in 0.09s  (Package 5 tests)
+Full suite — zero regressions against Packages 1–4.
+
+---
+
+### Package 6 — Technical Suppression Cascade, Merge & 3D Re-validation (✅ Complete)
+
+**Objective:** Unify the Path A and Path B candidate lists into a single fully-attributed list, resolve the Path A organ context gap, compute 3D shape descriptors (sphericity, margin curvature variance), and apply a rule-driven clinical suppression cascade — all before Package 7's confidence fusion. Package 6 does NOT compute `fused_confidence`, `gate`, or `emergency_score`; those are `[SCORE]` lifecycle fields owned exclusively by Package 7.
+
+#### What Was Built
+
+**1. 3D IoU-Based Corroboration Merge** ([`candidate_merger.py`](phase2_segmentation/candidate_merger.py) — new)
+
+- **Greedy IoU Matching with Inclusive-Bounds Correction** — Merges Path A and Path B lists by 3D bounding-box IoU (threshold: 0.3, confirmed in design review). Uses inclusive integer voxel bounds throughout: `(x_max − x_min + 1)` not `(x_max − x_min)`. Without the `+1`, single-voxel-wide bounding boxes return volume=0 and IoU=0, silently breaking corroboration for the most common overlap case.
+- **Path B Spatial Fields Win on Merge, Path A Provenance Always Preserved** — When two candidates are merged: `centroid_3d`, `bbox_3d`, `organ_label`, `organ_local_zscore`, `organ_overlap_fraction`, `shape`, and `density_hu` come from Path B (mask-derived, more accurate); `phase1_confidence`, `phase1_severity`, `phase1_anomaly_type`, and `candidate_id` come from Path A (unique provenance).
+- **Organ Context Backfill for Path A Survivors** — Unmatched Path A candidates carry `organ_label="unclassified"` from `seed_clusterer.py`. The backfill step looks up each candidate's `bbox_3d` in `seg_arr`, takes the majority-vote (most frequent non-zero) TotalSegmentator label, and computes `organ_local_zscore` and `organ_overlap_fraction` using exactly the same formulas as `organ_sweep.py`. Note: the z-score uses `density_hu.mean` as a scalar point estimate — an acknowledged approximation because Path A candidates carry no component mask.
+- **Shape Geometry from HU Approximation Mask** — `sphericity` and `margin_curvature_variance` (both `0.0` from P4 and P5) are computed from an HU-threshold-derived binary mask within each candidate's bbox. Surface area uses the mean of all three voxel face orientations: `(row_mm×col_mm + row_mm×z_mm + col_mm×z_mm) / 3` — critical for anisotropic CT spacing (e.g. thick-slice acquisitions where z_mm >> col_mm).
+
+**2. Rule-Driven Clinical Suppression Filter**
+
+Five rules evaluated in order (first match wins). Returns ALL candidates — never silently drops any. Every rejected candidate carries a machine-readable `suppression_reason` string for audit traceability.
+
+| Rule key | Condition |
+|---|---|
+| `"not_persistent"` | `persistence_ok=False` AND not corroborated |
+| `"lung_nodule_<6mm"` | Lung label, `long_axis_mm < 6.0`, `region="cardiothoracic"` |
+| `"simple_renal_cyst"` | Renal label, `density_hu.mean < 20 HU`, `std < 15 HU`, `sphericity > 0.7` |
+| `"population_common"` | `organ_local_zscore < 2.5` AND not corroborated |
+
+Candidates with `organ_label="unclassified"` after backfill are **never auto-suppressed** — Package 7 routes them to `gate="MANUAL_REVIEW"`.
+
+Corroborated candidates are exempt from `"not_persistent"` and `"population_common"`; organ-specific size/density rules still apply.
+
+```python
+def merge_candidates(
+    path_a: list, path_b: list,
+    seg_arr: np.ndarray,   # (Z, Y, X) TotalSegmentator label mask
+    volume: np.ndarray,    # (Z, Y, X) HU volume
+    value_to_label: dict,  # {int → str}
+    organ_stats: dict,     # {str → baseline} from organ_baseline.py
+    spacing: tuple,        # (row_mm, col_mm, z_mm)
+    region: str,           # from region_detector.py
+    iou_threshold: float = 0.3,
+) -> list[Candidate]: ...
+
+def clinical_filter(
+    candidates: list,
+    region: str,
+    z_suppress_threshold: float = 2.5,  # keyword param — testable without monkeypatching
+) -> list[Candidate]: ...
+```
+
+#### Pre-Implementation Audit
+
+Before any code was written, a field-by-field audit verified every Candidate field read or written by Package 6 against the frozen schema, Package 4, and Package 5. Five high/medium findings were identified and resolved:
+- **H1/H2:** `organ_label`, `organ_local_zscore`, `organ_overlap_fraction` absent for Path A → fixed by backfill step.
+- **H3:** IoU formula used `(max-min)` instead of inclusive `(max-min+1)` → corrected.
+- **H4:** `fused_confidence`, `gate`, `emergency_score` must not be touched by P6 → explicitly enforced.
+- **M1/M2:** Shape geometry approximation and `volume_cc` semantic difference documented in module docstring.
+
+#### Acceptance Checklist Results
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Overlapping candidates corroborated with IoU ≥ 0.3 | ✅ Pass | `test_corroborated_merge_high_iou` |
+| H3 fix: single-voxel bbox IoU == 1.0 | ✅ Pass | `test_iou_identical_single_voxel_boxes` |
+| Path B spatial fields win on merge | ✅ Pass | `test_corroborated_merge_high_iou` |
+| Path A phase1 provenance preserved | ✅ Pass | `test_corroborated_merge_high_iou` |
+| Backfill assigns organ_label from seg_arr | ✅ Pass | `test_backfill_assigns_organ_label` |
+| Backfill z-score matches P5 formula | ✅ Pass | `test_backfill_zscore_is_point_estimate` |
+| Unclassified candidates NOT suppressed | ✅ Pass | `test_unclassified_candidate_never_suppressed` |
+| Corroborated candidates exempt from population_common | ✅ Pass | `test_corroborated_exempt_from_population_common` |
+| `fused_confidence`, `gate`, `emergency_score` untouched | ✅ Pass | `test_fused_confidence_untouched_full_pipeline` |
+| All candidates returned — none silently dropped | ✅ Pass | `test_all_candidates_returned_none_dropped` |
+| No regressions in Packages 1–5 | ✅ Pass | Full suite |
+
+#### Test Results
+34 passed in 1.04s  (Package 6 tests)
+176 passed, 3 skipped in 25.41s  (Full test suite — zero regressions)
+The 3 skips are pre-existing TotalSegmentator GPU integration tests unrelated to Package 6.
+
+---
+
 ## 14. Limitations
 
 * **Lack of 3D Context:** Slices are evaluated in isolation to ensure zero latency. A thin blood vessel curving into the Z-axis may temporarily appear as an isolated dense circle. 
@@ -1083,10 +1208,16 @@ MAJOR-PROJECT-PRISM/
 │   ├── segment_runner.py          # [NEW] TotalSegmentator Wrapper
 │   ├── organ_baseline.py          # [NEW - Package 3] Patient-Adaptive Organ Baseline Calculator
 │   ├── region_detector.py         # [NEW - Package 3] Scan Body Region Classifier & KUB Override
+│   ├── seed_clusterer.py          # [NEW - Package 4] Path A: 3D Clustering of Phase 1 Seeds
+│   ├── organ_sweep.py             # [NEW - Package 5] Path B: Independent Organ-Wide Sweep
+│   ├── candidate_merger.py        # [NEW - Package 6] Merge, Backfill, Shape Geometry & Clinical Filter
 │   ├── lifecycle_manager.py       # [NEW] Subprocess & Watchdog Orchestrator
 │   └── tests/
 │       ├── conftest.py            # Test configuration and fixtures
 │       ├── test_package3.py       # [NEW - Package 3] Baseline math & region classification tests (11 tests)
+│       ├── test_package4.py       # [NEW - Package 4] Seed clustering tests (3 tests)
+│       ├── test_package5.py       # [NEW - Package 5] Organ sweep tests (4 tests)
+│       ├── test_package6.py       # [NEW - Package 6] Merge, backfill & clinical filter tests (34 tests)
 │       ├── test_integration.py    # Pipeline integration tests
 │       ├── test_lifecycle_manager.py # Watchdog and manager tests
 │       ├── test_run_commands.py   # CLI and execution tests
@@ -1121,3 +1252,72 @@ This project is developed as an open-source medical imaging research initiative.
 * **DICOM Standard:** [NEMA DICOM PS3](https://www.dicomstandard.org/)
 * **Hounsfield Unit Mathematics:** Radiographic attenuation standardization algorithms.
 * **Core Libraries:** `pydicom` (DICOM parsing), `scipy.ndimage` (Morphology & Spatial algorithms).
+
+### Package 4 — Path A: 3D Clustering of Phase 1 Seeds (✅ Complete)
+
+**Objective:** Convert the multi-slice 2D finding tracks already validated by `finding_tracker.py` into fully-formed 3D `Candidate` objects — giving every persistent Phase 1 seed a real spatial bounding box, a voxel-accurate density profile, and physical shape measurements, without re-deriving anything Phase 1 or Package 1 already computed.
+
+#### Why Path A Exists
+
+Phase 1 already does the hard real-time work of flagging statistically abnormal regions slice-by-slice, and Package 1's `finding_tracker.py` already links those 2D findings into spatially persistent tracks. What's missing is the bridge from *"this 2D region looked abnormal on 5 consecutive slices"* to *"this is a 3D structure with a real volume, a real shape, and a real density profile."*
+
+Path A is deliberately the fast half of Phase 2's two-path candidate generation strategy. It reuses evidence Phase 1 already produced instead of re-scanning the volume from scratch, so a strong 2D signal can become a 3D candidate almost immediately. Path B (Package 5) will independently sweep every segmented organ using Package 3's patient-adaptive baselines — a slower, more exhaustive pass designed to catch what Path A's seed-based approach might miss. Package 6 then merges both paths, and a candidate found by both Path A and Path B becomes a strong corroborated signal for the final clinical gate.
+
+#### What Was Built
+
+**1. Seed-to-Candidate Clustering** ([`seed_clusterer.py`](phase2_segmentation/seed_clusterer.py) — new)
+
+- **Zero-Lookup Z-Indexing** — `finding_tracker.py`'s `slice_idx` and `VolumeAccumulator.export_volume()`'s stacked Z-axis are derived from the exact same `ordered_findings` list, so no `InstanceNumber` translation is needed. The track's slice index *is* the volume's Z-index — one less place for a silent mismatch to hide.
+- **Voxel-Accurate Density, Not Averaged 2D Estimates** — Rather than averaging each slice's pre-computed `mean_hu` across the track, the clusterer slices the real 3D HU volume at the candidate's bounding box and computes `mean`/`min`/`max`/`std` directly from the underlying voxels. This is strictly more accurate than an average-of-averages and mirrors the philosophy Package 3 already established for organ baselines.
+- **Persistence Reuse, Not Reimplementation** — Calls `finding_tracker.track_persistence_ok()` directly rather than re-implementing the ≥3-slice persistence check, keeping the "what counts as a real finding" logic in exactly one place.
+- **Physical Units from the First Voxel Onward** — `ShapeFeatures` (`volume_cc`, `long_axis_mm`, `short_axis_mm`, `elongation`) are computed in real mm/cc using the accumulator's `(row_mm, col_mm, z_mm)` spacing, never left as raw voxel counts — consistent with the schema's explicit contract in `candidate.py`.
+- **Deferred Fields Stay Honest** — `sphericity` and `margin_curvature_variance` require true 3D morphology (convex hull, surface curvature) that a single bounding-box pass can't responsibly estimate. Rather than fake a placeholder number, Package 4 leaves them at their documented default (`0.0`) and defers real computation to Package 6's re-validation stage, which already re-examines merged 3D candidates.
+- **Strongest-Evidence Provenance** — `phase1_confidence`, `phase1_severity`, and `phase1_anomaly_type` are populated from the single highest-confidence `Finding` in the track (not an average), preserving the strongest 2D evidence as the candidate's provenance record.
+
+```python
+def cluster_phase1_seeds(
+    tracks: list,
+    volume: np.ndarray,            # shape (Z, Y, X), from export_volume()
+    spacing: tuple,                 # (row_mm, col_mm, z_mm)
+    min_slices: int = 3,
+) -> list[Candidate]: ...
+
+Design Verification Before Implementation
+Before any code was written, the three files Package 4 depends on were audited field-by-field to prevent the exact class of bug that hit Phase 1 earlier (hu_mean vs. mean_hu):
+schemas/candidate.py — Every field passed to Candidate(), ShapeFeatures(), DensityHU() matches the frozen schema exactly — no drift.
+phase1_ingestion/finding_tracker.py — track_persistence_ok(track, min_slices) signature and track shape (list[(slice_idx, Finding)]) confirmed directly from source.
+phase1_ingestion/volume_accumulator.py — export_volume() return order — (volume, ordered_findings, ordered_instance_numbers, spacing) — and the (row_mm, col_mm, z_mm) spacing tuple order confirmed against the actual implementation, not assumed from the README.
+This audit — plus a second independent pass by the coding agent immediately before saving — confirmed zero mismatches, meaning seed_clusterer.py shipped correct on the first integration run.
+
+#### Acceptance Checklist Results
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Persistent track (≥3 slices) creates a Candidate | ✅ Pass | `test_persistent_track_becomes_candidate` |
+| Short tracks are excluded | ✅ Pass | `test_short_track_excluded` |
+| Zero Z-drift case handled | ✅ Pass | `test_single_slice_wide_track` |
+| 3D bounding box is calculated correctly | ✅ Pass | Package 4 tests |
+| Density calculated from real 3D voxels | ✅ Pass | Package 4 tests |
+| `detected_by=["phase1_seed"]` | ✅ Pass | Package 4 tests |
+| No regressions in previous packages | ✅ Pass | 138 passed, 3 skipped, 0 failed |
+
+###Test Results
+3 passed in 0.04s  (Package 4 tests)
+138 passed, 3 skipped in 28.70s  (Full test suite — zero regressions)
+The 3 skips are pre-existing Package 2 GPU/TotalSegmentator integration tests (test_full_segmentation_pipeline and related), gated behind a GPU/model-availability check — expected behavior in a non-GPU dev environment, unrelated to Package 4.
+Two more spots to touch, matching your existing conventions:
+
+**1. Checklist at the top** — change:
+```diff
+- [ ] Package 4: Path A — 3D Clustering of Phase 1 Seeds
++ [x] Package 4: Path A — 3D Clustering of Phase 1 Seeds
+
+2. Repository Structure (Section 15) — add these two lines in phase2_segmentation:
+│   ├── region_detector.py         # [NEW - Package 3] Scan Body Region Classifier & KUB Override
++   ├── seed_clusterer.py          # [NEW - Package 4] Path A: 3D Clustering of Phase 1 Seeds
+│   ├── lifecycle_manager.py       # [NEW] Subprocess & Watchdog Orchestrator
+│   └── tests/
+│       ├── conftest.py            # Test configuration and fixtures
+│       ├── test_package3.py       # [NEW - Package 3] Baseline math & region classification tests (11 tests)
++       ├── test_package4.py       # [NEW - Package 4] Seed clustering tests (3 tests)
+│       ├── test_integration.py    # Pipeline integration tests

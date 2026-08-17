@@ -167,7 +167,8 @@ class TestEndToEndPipeline:
             mock_manager.run.assert_called_once_with(
                 sample_hu_volume, 
                 realistic_spacing, 
-                sample_series_metadata
+                sample_series_metadata,
+                findings_per_slice=findings_per_slice
             )
 
 
