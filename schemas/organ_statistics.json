@@ -1,0 +1,16 @@
+{
+  "_comment": "One entry per segmented organ label. Keys are TotalSegmentator label names.",
+  "<organ_label>": {
+    "trimmed_mean": 0.0,
+    "trimmed_std": 0.0,
+    "median": 0.0,
+    "mad": 0.0,
+    "p5": 0.0,
+    "p95": 0.0,
+    "q1": 0.0,
+    "q3": 0.0,
+    "iqr": 0.0,
+    "voxel_count": 0,
+    "volume_cc": 0.0
+  }
+}

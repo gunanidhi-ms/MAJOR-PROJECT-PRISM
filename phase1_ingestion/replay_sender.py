@@ -114,7 +114,7 @@ def replay_dicoms(
     try:
         for i, dcm_path in enumerate(dcm_files):
             try:
-                ds = pydicom.dcmread(dcm_path)
+                ds = pydicom.dcmread(dcm_path, force=True)
                 instance_num = getattr(ds, "InstanceNumber", "?")
 
                 # Filter out non-CT files

@@ -20,10 +20,12 @@ Usage:
 import os
 import sys
 import time
+import queue
 import signal
 import logging
 import threading
 import asyncio
+import multiprocessing
 from datetime import datetime, timezone
 
 import numpy as np
@@ -34,6 +36,7 @@ from .hu_transform import apply_hu_transform, auto_crop
 from .triage_screen import screen_slice
 from .dicom_listener import DICOMListener
 from .ws_server import app, broadcaster, create_alert_payload
+from .volume_accumulator import VolumeAccumulator
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -43,7 +46,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 DICOM_PORT = 11112
 WS_PORT = 8001
 WS_HOST = "0.0.0.0"
-BUFFER_FLUSH_TIMEOUT = 5.0  # seconds
+BUFFER_FLUSH_TIMEOUT = 3.0  # seconds (re-ordering buffer flush)
+STREAM_STALL_TIMEOUT = 15.0  # seconds (fallback timeout before declaring stream stalled)
 
 
 class Phase1Pipeline:
@@ -62,8 +66,10 @@ class Phase1Pipeline:
         self.dicom_port = dicom_port
         self.ws_port = ws_port
         self.buffer = SliceBuffer()
+        self.accumulator = VolumeAccumulator(min_slices=20)
         self.listener: DICOMListener | None = None
-        # self.phase2 = Phase2Orchestrator() # Detached as per user request
+        self._queue = queue.Queue()
+        self._worker_thread: threading.Thread | None = None
         self._running = False
         self._stats = {
             "slices_received": 0,
@@ -74,33 +80,45 @@ class Phase1Pipeline:
 
     def _on_slice_received(self, slice_data: dict) -> None:
         """
-        Callback from DICOM listener — processes each incoming slice
-        through the full pipeline.
+        Callback from DICOM listener — enqueues each incoming slice
+        for asynchronous processing.
         
-        This runs in the pynetdicom handler thread.
+        This runs in the pynetdicom handler thread and must return instantly
+        to prevent blocking the DICOM association/connection.
         """
-        t_start = time.perf_counter()
-        instance_number = slice_data["instance_number"]
+        self._queue.put(slice_data)
+        self._stats["slices_received"] += 1
 
-        try:
-            # ── Step 1: Buffer the slice ──
-            self.buffer.add_slice(instance_number, slice_data)
-            self._stats["slices_received"] += 1
+    def _worker_loop(self) -> None:
+        """Worker loop running in a background thread to process queued slices asynchronously."""
+        while self._running:
+            try:
+                slice_data = self._queue.get(timeout=1.0)
+            except queue.Empty:
+                continue
 
-            # ── Step 2: Process all ready slices in order ──
-            ready_slices = self.buffer.pop_all_ready()
+            t_start = time.perf_counter()
+            instance_number = slice_data["instance_number"]
+            try:
+                # ── Step 1: Buffer the slice ──
+                self.buffer.add_slice(instance_number, slice_data)
 
-            # If no sequential slices are ready, try stale flush
-            if not ready_slices:
-                ready_slices = self.buffer.flush_if_stale(BUFFER_FLUSH_TIMEOUT)
+                # ── Step 2: Process all ready slices in order ──
+                ready_slices = self.buffer.pop_all_ready()
 
-            for inst_num, data in ready_slices:
-                self._process_single_slice(inst_num, data, t_start)
+                # If no sequential slices are ready, try stale flush
+                if not ready_slices:
+                    ready_slices = self.buffer.flush_if_stale(BUFFER_FLUSH_TIMEOUT)
 
-        except Exception as e:
-            logger.error(
-                "Pipeline error for slice %d: %s", instance_number, e, exc_info=True
-            )
+                for inst_num, data in ready_slices:
+                    self._process_single_slice(inst_num, data, t_start)
+
+            except Exception as e:
+                logger.error(
+                    "Pipeline error in worker for slice %d: %s", instance_number, e, exc_info=True
+                )
+            finally:
+                self._queue.task_done()
 
     def _process_single_slice(
         self, instance_number: int, slice_data: dict, t_pipeline_start: float
@@ -134,9 +152,30 @@ class Phase1Pipeline:
         body_part_hint = slice_data.get("body_part", "") or slice_data.get("study_description", "")
         triage_result = screen_slice(hu_array, body_part_hint=body_part_hint)
 
-        # ── Step 5: (Phase 2 Detached) ──
-        # Phase 2 analyzes the volumetric data. Commented out as per user request.
-        # phase2_result = self.phase2.run_pipeline()
+        # ── Step 5: Feed VolumeAccumulator (non-blocking, Package 1) ──
+        # Accumulator receives the HU-transformed array and findings
+        # for Phase 2 volume assembly. This MUST NOT block the real-time path.
+        spacing_meta = {
+            "z_coordinate": slice_data.get("z_coordinate", 0.0),
+            "pixel_spacing": slice_data.get("pixel_spacing", [1.0, 1.0]),
+            "slice_thickness": slice_data.get("slice_thickness", 0.0),
+            "image_position_patient": slice_data.get(
+                "image_position_patient", [0.0, 0.0, 0.0]
+            ),
+            "image_orientation_patient": slice_data.get(
+                "image_orientation_patient",
+                [1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+            ),
+            "series_instance_uid": slice_data.get("series_instance_uid", ""),
+            "study_instance_uid": slice_data.get("study_instance_uid", ""),
+            "modality": slice_data.get("modality", "CT"),
+        }
+        self.accumulator.add(
+            instance_number,
+            hu_array,  # HU-transformed, not raw pixel array
+            triage_result.findings,
+            spacing_meta,
+        )
 
         # ── Step 6: Create and push alert ──
         total_time_ms = (time.perf_counter() - t_pipeline_start) * 1000
@@ -162,13 +201,47 @@ class Phase1Pipeline:
         findings_str = ""
         if triage_result.flagged:
             for f in triage_result.findings:
-                findings_str += f"\n     -> {f.finding_type}: bbox={f.bbox}, HU={f.hu_mean:.0f}"
+                findings_str += f"\n     -> {f.anomaly_type}: bbox={f.bbox}, HU={f.mean_hu:.0f}"
 
         print(
             f"  [{instance_number:3d}] {status}  "
             f"({total_time_ms:.1f}ms total, {triage_result.processing_time_ms:.1f}ms triage)"
             f"{findings_str}"
         )
+
+    def on_association_released(self) -> None:
+        """
+        Callback from DICOM listener on EVT_RELEASED.
+        
+        Sequencing logic:
+        1. Wait for all queued slices in the worker queue to be processed.
+        2. First completely drain any remaining slices from SliceBuffer.
+        3. Process those flushed slices through the exact same existing 2D triage/processing path (_process_single_slice).
+        4. Only after all buffered slices have been processed, call VolumeAccumulator.mark_association_released().
+        5. Then let the existing Phase 2 trigger logic run so the accumulated volume triggers Phase 2 once.
+        """
+        logger.info("Pipeline: DICOM association released — waiting for worker queue to clear...")
+        self._queue.join()
+
+        # Defer Phase 2 trigger if other active DICOM associations are still streaming
+        if self.listener and self.listener.has_active_association():
+            logger.info(
+                "Pipeline: DICOM association released but other active association(s) remain — deferring Phase 2 trigger"
+            )
+            return
+
+        logger.info("Pipeline: Queue cleared — draining remaining buffered slices...")
+        t_start = time.perf_counter()
+        flushed_slices = self.buffer.flush_all()
+        for inst_num, data in flushed_slices:
+            self._process_single_slice(inst_num, data, t_start)
+
+        logger.info(
+            "Pipeline: buffer drained (%d slices processed) — marking VolumeAccumulator released",
+            len(flushed_slices),
+        )
+        self.accumulator.mark_association_released()
+        self._check_phase2_trigger()
 
     def run(self) -> None:
         """
@@ -181,6 +254,12 @@ class Phase1Pipeline:
         Blocks until shutdown (Ctrl+C).
         """
         self._running = True
+
+        # ── Start worker thread for async slice processing ──
+        self._worker_thread = threading.Thread(
+            target=self._worker_loop, daemon=True, name="pipeline-worker"
+        )
+        self._worker_thread.start()
 
         print("=" * 60)
         print("  PRISM Phase 1 — Live Ingestion & 2D Screening Pipeline")
@@ -198,6 +277,8 @@ class Phase1Pipeline:
         self.listener = DICOMListener(
             port=self.dicom_port,
             on_slice_received=self._on_slice_received,
+            on_association_released=self.on_association_released,
+            accumulator=self.accumulator,
         )
         dicom_server = self.listener.start_background()
 
@@ -224,13 +305,88 @@ class Phase1Pipeline:
             self.shutdown()
 
     def _flush_loop(self) -> None:
-        """Periodically check for stale buffer entries."""
+        """Periodically check for stale buffer entries and Phase 2 readiness."""
         while self._running:
             time.sleep(1.0)
+
+            # Flush stale buffer entries (existing behavior)
             stale = self.buffer.flush_if_stale(BUFFER_FLUSH_TIMEOUT)
             t_start = time.perf_counter()
             for inst_num, data in stale:
                 self._process_single_slice(inst_num, data, t_start)
+
+            # ── Phase 2 dual-path trigger (Package 1) ──
+            # Check if the volume accumulator is ready via any trigger path.
+            # The timeout fallback fires here based on true stream stall;
+            # association-release is signaled externally by the DICOM listener.
+            if (
+                self.buffer.is_truly_idle(STREAM_STALL_TIMEOUT) 
+                and self._queue.empty()
+                and not (self.listener and self.listener.has_active_association())
+            ):
+                self.accumulator.mark_stream_stalled()
+
+            self._check_phase2_trigger()
+
+    def _check_phase2_trigger(self) -> None:
+        """
+        Check if the volume accumulator is ready and spawn Phase 2.
+
+        Uses multiprocessing.Process (not threading.Thread) for clean
+        memory teardown — this matters for TotalSegmentator's C++-backed
+        tensor memory in Package 2.
+        """
+        if self.accumulator.is_ready():
+            try:
+                volume, findings_per_slice, instance_numbers, spacing = (
+                    self.accumulator.export_volume()
+                )
+                series_meta = self.accumulator.get_series_metadata()
+
+                logger.info(
+                    "Phase 2 trigger fired: volume shape=%s, "
+                    "%d slices, spacing=%s, series=%s",
+                    volume.shape,
+                    len(instance_numbers),
+                    spacing,
+                    series_meta.get("series_instance_uid", "unknown")[:20],
+                )
+
+                print(
+                    f"\n  [PHASE2] Trigger fired — "
+                    f"volume {volume.shape}, {len(instance_numbers)} slices, "
+                    f"spacing {spacing}"
+                )
+
+                # Spawn Phase 2 as a separate process for clean memory
+                # teardown of TotalSegmentator's C++-backed tensors.
+                from phase2_segmentation.lifecycle_manager import run_phase2
+
+                p = multiprocessing.Process(
+                    target=run_phase2,
+                    args=(
+                        volume,
+                        findings_per_slice,
+                        instance_numbers,
+                        spacing,
+                        series_meta,
+                    ),
+                    name="phase2-worker",
+                    daemon=True,
+                )
+                p.start()
+
+                logger.info(
+                    "Phase 2 subprocess spawned (PID=%s)",
+                    p.pid,
+                )
+
+                self.accumulator.reset()
+
+            except Exception as e:
+                logger.error(
+                    "Phase 2 trigger error: %s", e, exc_info=True
+                )
 
     def shutdown(self) -> None:
         """Graceful shutdown of all components."""
@@ -250,6 +406,16 @@ class Phase1Pipeline:
             )
             print(f"    Avg processing:   {avg:.1f}ms per slice")
         print(f"{'=' * 60}\n")
+        
+        # Archive and clear incoming directory on shutdown
+        try:
+            from phase1_ingestion.ws_server import zip_incoming_dir, clear_incoming_dir
+            print("[INFO] Archiving incoming slices...")
+            zip_incoming_dir("pipeline_shutdown")
+            clear_incoming_dir()
+            print("[INFO] Incoming slices archived and cleared successfully.")
+        except Exception as e:
+            print(f"[ERROR] Failed to archive incoming slices: {e}")
 
 
 def main():

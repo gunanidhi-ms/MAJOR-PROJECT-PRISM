@@ -47,7 +47,9 @@ class DICOMListener:
     DICOM C-STORE SCP that receives CT slices on a configurable port.
     
     On each received dataset:
-      1. Extracts InstanceNumber, RescaleSlope, RescaleIntercept, pixel array
+      1. Extracts InstanceNumber, RescaleSlope, RescaleIntercept, pixel array,
+         plus Phase 2 tags: SeriesInstanceUID, StudyInstanceUID, PixelSpacing,
+         SliceThickness, ImagePositionPatient, ImageOrientationPatient, Modality
       2. Saves raw .dcm to incoming/ directory
       3. Calls the on_slice_received callback with extracted data
     """
@@ -57,33 +59,34 @@ class DICOMListener:
         port: int = 11112,
         ae_title: str = "PRISM_SCP",
         on_slice_received: Callable[[dict], None] | None = None,
+        on_association_released: Callable[[], None] | None = None,
         save_to_disk: bool = True,
         incoming_dir: str = INCOMING_DIR,
+        accumulator=None,
     ):
         """
         Args:
             port: TCP port to listen on (default 11112, standard DICOM).
             ae_title: Application Entity title for this SCP.
             on_slice_received: Callback invoked for each received slice.
-                              Receives a dict with keys:
-                                - instance_number: int
-                                - rescale_slope: float
-                                - rescale_intercept: float
-                                - pixel_array: np.ndarray
-                                - sop_instance_uid: str
-                                - filepath: str (if saved to disk)
+            on_association_released: Callback invoked when DICOM association releases.
             save_to_disk: Whether to save incoming .dcm files.
             incoming_dir: Directory path for saving incoming files.
+            accumulator: VolumeAccumulator instance.
         """
         self._port = port
         self._ae_title = ae_title
         self._on_slice_received = on_slice_received
+        self._on_association_released = on_association_released
         self._save_to_disk = save_to_disk
         self._incoming_dir = incoming_dir
+        self._accumulator = accumulator
         self._ae: AE | None = None
         self._server = None
         self._thread: threading.Thread | None = None
         self._slice_count = 0
+        self._active_associations = 0
+        self._assoc_lock = threading.Lock()
 
         if self._save_to_disk:
             os.makedirs(self._incoming_dir, exist_ok=True)
@@ -99,17 +102,67 @@ class DICOMListener:
         ds.file_meta = event.file_meta
 
         try:
+            # Helper functions for safe extraction of potentially empty/missing tags
+            def _get_float(tag_name, default):
+                val = getattr(ds, tag_name, None)
+                if val is None or val == "": return default
+                try: return float(val)
+                except (TypeError, ValueError): return default
+
+            def _get_int(tag_name, default):
+                val = getattr(ds, tag_name, None)
+                if val is None or val == "": return default
+                try: return int(val)
+                except (TypeError, ValueError): return default
+
+            def _get_str(tag_name, default):
+                val = getattr(ds, tag_name, None)
+                return str(val) if val is not None else default
+
             # ── Extract key DICOM tags ──
-            instance_number = int(getattr(ds, "InstanceNumber", 0))
-            rescale_slope = float(getattr(ds, "RescaleSlope", 1.0))
-            rescale_intercept = float(getattr(ds, "RescaleIntercept", -1024.0))
+            instance_number = _get_int("InstanceNumber", 0)
+            rescale_slope = _get_float("RescaleSlope", 1.0)
+            rescale_intercept = _get_float("RescaleIntercept", -1024.0)
             sop_uid = str(ds.SOPInstanceUID)
 
-            # ── Extract True Physical Z-Coordinate ──
+            # ── Extract Phase 2 required tags (Package 1 §1) ──
+            series_instance_uid = _get_str("SeriesInstanceUID", "")
+            study_instance_uid = _get_str("StudyInstanceUID", "")
+            modality = _get_str("Modality", "CT")
+
+            # PixelSpacing → [row_mm, col_mm]
+            raw_pixel_spacing = getattr(ds, "PixelSpacing", None)
+            if raw_pixel_spacing is not None and len(raw_pixel_spacing) >= 2:
+                try:
+                    pixel_spacing = [float(raw_pixel_spacing[0]), float(raw_pixel_spacing[1])]
+                except (TypeError, ValueError):
+                    pixel_spacing = [1.0, 1.0]
+            else:
+                pixel_spacing = [1.0, 1.0]
+
+            slice_thickness = _get_float("SliceThickness", 0.0)
+
+            # ImagePositionPatient → full [x, y, z] 3-vector
             image_position_patient = getattr(ds, "ImagePositionPatient", None)
             z_coordinate = 0.0
-            if image_position_patient and len(image_position_patient) >= 3:
-                z_coordinate = float(image_position_patient[2])
+            if image_position_patient is not None and len(image_position_patient) >= 3:
+                try:
+                    ipp_vec = [float(image_position_patient[i]) for i in range(3)]
+                    z_coordinate = ipp_vec[2]
+                except (TypeError, ValueError):
+                    ipp_vec = [0.0, 0.0, 0.0]
+            else:
+                ipp_vec = [0.0, 0.0, 0.0]
+
+            # ImageOrientationPatient → 6 direction cosines
+            raw_iop = getattr(ds, "ImageOrientationPatient", None)
+            if raw_iop is not None and len(raw_iop) >= 6:
+                try:
+                    image_orientation_patient = [float(raw_iop[i]) for i in range(6)]
+                except (TypeError, ValueError):
+                    image_orientation_patient = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+            else:
+                image_orientation_patient = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
 
             # ── Extract Window Center/Width ──
             def _extract_first(val, default):
@@ -166,6 +219,14 @@ class DICOMListener:
                     "sop_instance_uid": sop_uid,
                     "patient_id": patient_id,
                     "filepath": filepath,
+                    # ── Phase 2 tags (Package 1) ──
+                    "series_instance_uid": series_instance_uid,
+                    "study_instance_uid": study_instance_uid,
+                    "modality": modality,
+                    "pixel_spacing": pixel_spacing,
+                    "slice_thickness": slice_thickness,
+                    "image_position_patient": ipp_vec,
+                    "image_orientation_patient": image_orientation_patient,
                 }
                 self._on_slice_received(slice_data)
 
@@ -174,6 +235,55 @@ class DICOMListener:
 
         # Return success status
         return 0x0000
+
+    def _handle_established(self, event) -> None:
+        """Handler for EVT_ESTABLISHED — fires when a DICOM association is opened."""
+        with self._assoc_lock:
+            self._active_associations += 1
+            logger.info("DICOM association established (active: %d)", self._active_associations)
+
+    def _handle_release(self, event) -> None:
+        """
+        Handler for EVT_RELEASED — fires when the DICOM association is
+        released (i.e. all slices for this series have been sent).
+        """
+        with self._assoc_lock:
+            self._active_associations = max(0, self._active_associations - 1)
+        logger.info(
+            "DICOM association released (active: %d, total slices received: %d)",
+            self._active_associations,
+            self._slice_count,
+        )
+        if self._on_association_released is not None:
+            self._on_association_released()
+            logger.info("on_association_released callback executed from EVT_RELEASED handler")
+        elif self._accumulator is not None:
+            self._accumulator.mark_association_released()
+            logger.info(
+                "VolumeAccumulator.mark_association_released() called "
+                "from EVT_RELEASED handler"
+            )
+
+    def _handle_aborted(self, event) -> None:
+        """Handler for EVT_ABORTED — fires when a DICOM association is aborted."""
+        with self._assoc_lock:
+            self._active_associations = max(0, self._active_associations - 1)
+        logger.warning("DICOM association aborted (active: %d)", self._active_associations)
+
+    def has_active_association(self) -> bool:
+        """Return True if there is at least one active DICOM association."""
+        with self._assoc_lock:
+            return self._active_associations > 0
+
+    def _build_event_handlers(self) -> list:
+        """Build the list of pynetdicom event handlers."""
+        handlers = [
+            (evt.EVT_C_STORE, self._handle_store),
+            (evt.EVT_ESTABLISHED, self._handle_established),
+            (evt.EVT_RELEASED, self._handle_release),
+            (evt.EVT_ABORTED, self._handle_aborted),
+        ]
+        return handlers
 
     def start(self) -> None:
         """
@@ -189,7 +299,7 @@ class DICOMListener:
         for cx in StoragePresentationContexts:
             self._ae.add_supported_context(cx.abstract_syntax)
 
-        handlers = [(evt.EVT_C_STORE, self._handle_store)]
+        handlers = self._build_event_handlers()
 
         logger.info(
             "Starting DICOM C-STORE SCP '%s' on port %d...",
@@ -217,7 +327,7 @@ class DICOMListener:
         for cx in StoragePresentationContexts:
             self._ae.add_supported_context(cx.abstract_syntax)
 
-        handlers = [(evt.EVT_C_STORE, self._handle_store)]
+        handlers = self._build_event_handlers()
 
         logger.info(
             "Starting DICOM SCP '%s' on port %d (background)...",

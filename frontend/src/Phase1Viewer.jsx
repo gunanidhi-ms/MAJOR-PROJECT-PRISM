@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 
 /**
  * Phase1Viewer — Live CT Slice Viewer with DICOM-style Controls
@@ -31,7 +31,17 @@ export default function Phase1Viewer() {
   const [slices, setSlices] = useState([])
   const [selectedIdx, setSelectedIdx] = useState(0)
   const [connectionStatus, setConnectionStatus] = useState('disconnected')
-  const [stats, setStats] = useState({ total: 0, flagged: 0, avgTime: 0 })
+  // Stats derived from current slices array — always reflects current patient only
+  const stats = useMemo(() => {
+    const total = slices.length
+    const flagged = slices.filter(s => s.flagged).length
+    const totalTime = slices.reduce((sum, s) => sum + (s.processing_time_ms || 0), 0)
+    return {
+      total,
+      flagged,
+      avgTime: total > 0 ? totalTime / total : 0
+    }
+  }, [slices])
 
   // Scanner Control State
   const [scannerRunning, setScannerRunning] = useState(false)
@@ -46,7 +56,7 @@ export default function Phase1Viewer() {
   const [showFindings, setShowFindings] = useState(true)
   const [showPhase2, setShowPhase2] = useState(false)
   const [isAutoPlay, setIsAutoPlay] = useState(false)
-  const [notifications, setNotifications] = useState([])
+
 
   // Image display state
   const [viewerImageUrl, setViewerImageUrl] = useState(null)
@@ -93,49 +103,8 @@ export default function Phase1Viewer() {
             return updated
           })
 
-          setStats(prev => {
-            const total = prev.total + 1
-            const flagged = prev.flagged + (alert.flagged ? 1 : 0)
-            const totalTime = prev.avgTime * prev.total + (alert.processing_time_ms || 0)
-            return {
-              total,
-              flagged,
-              avgTime: total > 0 ? totalTime / total : 0
-            }
-          })
           
-          if (alert.flagged) {
-            const id = Date.now() + Math.random();
-              const notification = {
-                id,
-                uid: alert.uid,
-                slice_id: alert.slice_id,
-                findings: alert.findings || [],
-                closing: false,
-              };
-            
-            let isDuplicate = false;
-            setNotifications(prev => {
-              if (prev.some(n => n.uid === alert.uid)) {
-                isDuplicate = true;
-                return prev;
-              }
-              return [...prev, notification];
-            });
-            
-            // Only schedule the timeout if it wasn't a duplicate
-            // We use a small setTimeout 0 to ensure the state update above is processed and we know if it was duplicate
-            setTimeout(() => {
-              if (!isDuplicate) {
-                setTimeout(() => {
-                  setNotifications(current => current.map(n => n.id === id ? { ...n, closing: true } : n));
-                  setTimeout(() => {
-                    setNotifications(current => current.filter(n => n.id !== id));
-                  }, 300);
-                }, 5000);
-              }
-            }, 0);
-          }
+
         } catch (e) {
           console.error('[PRISM] Parse error:', e)
         }
@@ -397,7 +366,6 @@ export default function Phase1Viewer() {
         setScannerRunning(true)
         setSlices([])
         setSelectedIdx(0)
-        setStats({ total: 0, flagged: 0, avgTime: 0 })
       } else {
         alert(`Scanner failed to start: ${data.message}`)
       }
@@ -893,35 +861,7 @@ export default function Phase1Viewer() {
         </main>
       </div>
 
-      {/* ── Toast Notifications ── */}
-      <div className="toast-container">
-        {notifications.map(n => (
-          <div key={n.id} className={`toast ${n.closing ? 'toast--closing' : ''}`}>
-            <div className="toast__header">
-              <div className="toast__title">
-                <div className="toast__title-icon">!</div>
-                Anomaly Detected
-              </div>
-              <button className="toast__close" onClick={() => {
-                setNotifications(prev => prev.map(notif => notif.id === n.id ? { ...notif, closing: true } : notif));
-                setTimeout(() => setNotifications(prev => prev.filter(notif => notif.id !== n.id)), 300);
-              }}>×</button>
-            </div>
-            <div className="toast__body">
-              Critical finding(s) discovered in <strong>Slice #{n.slice_id}</strong>. Immediate review recommended.
-              {n.findings.length > 0 && (
-                <div>
-                  <span className="toast__finding">
-                    {n.findings[0].finding_type.replace(/_/g, ' ').toUpperCase()} ({n.findings[0].hu_mean?.toFixed(0)} HU)
-                  </span>
-                  {n.findings.length > 1 && <span style={{ marginLeft: 6, fontSize: 10, color: 'var(--text-tertiary)' }}>+{n.findings.length - 1} more</span>}
-                </div>
-              )}
-            </div>
-            <div className="toast__progress"></div>
-          </div>
-        ))}
-      </div>
+
     </div>
   )
 }

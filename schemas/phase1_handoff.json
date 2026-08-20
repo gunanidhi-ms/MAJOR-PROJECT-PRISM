@@ -1,0 +1,23 @@
+{
+  "series_instance_uid": "string",
+  "study_instance_uid": "string",
+  "modality": "CT | MR",
+  "spacing": {
+    "row_mm": 0.0,
+    "col_mm": 0.0,
+    "z_mm": 0.0
+  },
+  "volume_shape": [512, 512, 0],
+  "phase1_candidates": [
+    {
+      "slice_index": 0,
+      "instance_number": 0,
+      "bbox_2d": [0, 0, 0, 0],
+      "centroid": [0.0, 0.0],
+      "mean_hu": 0.0,
+      "confidence": 0.0,
+      "severity_score": 0.0,
+      "anomaly_type": "string"
+    }
+  ]
+}

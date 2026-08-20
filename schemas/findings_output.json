@@ -1,0 +1,25 @@
+{
+  "_comment": "One entry per surviving candidate, handed to Phase 3.",
+  "candidate_id": "string",
+  "organ_label": "string",
+  "detected_by": ["phase1_seed", "organ_sweep"],
+  "corroborated": true,
+  "shape": {
+    "volume_cc": 0.0,
+    "long_axis_mm": 0.0,
+    "short_axis_mm": 0.0,
+    "sphericity": 0.0,
+    "elongation": 0.0,
+    "margin_curvature_variance": 0.0
+  },
+  "density_hu": {
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0,
+    "std": 0.0
+  },
+  "organ_local_zscore": 0.0,
+  "fused_confidence": 0.0,
+  "gate": "AUTO_CONFIRMED | MANUAL_REVIEW",
+  "emergency_score": 0
+}
