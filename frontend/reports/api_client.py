@@ -25,7 +25,7 @@ class PrismAPIError(Exception):
 class PrismAPIClient:
     """Thin wrapper around the Phase 3 reporting REST API."""
 
-    def __init__(self, base_url: str | None = None, timeout: float = 60.0):
+    def __init__(self, base_url: str | None = None, timeout: float = 180.0):
         self.base_url = (base_url or settings.PRISM_API_BASE_URL).rstrip("/")
         self.timeout = timeout
 

@@ -1,0 +1,6786 @@
+[
+  {
+    "slice_id": 52,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.69656336605213085203756646915229091",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 31,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 31,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.197706+00:00",
+    "findings": [
+      {
+        "bbox": [
+          124,
+          173,
+          28,
+          36
+        ],
+        "centroid": [
+          188.6,
+          138.4
+        ],
+        "area": 391,
+        "mean_hu": -573.2,
+        "hu_mean": -573.2,
+        "hu_max": -327.0,
+        "hu_min": -804.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 5571.61,
+    "triage_time_ms": 5571.576500000447,
+    "slice_hu_mean": 19.196868896484375,
+    "slice_hu_std": 84.78268432617188,
+    "stats": {
+      "mean": 19.196868896484375,
+      "std": 84.78268432617188,
+      "median": 50.5,
+      "mad": 60.5,
+      "p005": -453.025,
+      "p01": -368.0,
+      "p99": 265.40999999999985,
+      "p995": 325.0,
+      "iqr": 181.0,
+      "p25": -83.0,
+      "p75": 98.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 53,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.36662130581934406746780747470915133",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 34,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 34,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.304897+00:00",
+    "findings": [
+      {
+        "bbox": [
+          134,
+          173,
+          18,
+          25
+        ],
+        "centroid": [
+          184.2,
+          141.8
+        ],
+        "area": 254,
+        "mean_hu": -558.36,
+        "hu_mean": -558.36,
+        "hu_max": -328.0,
+        "hu_min": -788.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          125,
+          191,
+          8,
+          17
+        ],
+        "centroid": [
+          198.7,
+          128.7
+        ],
+        "area": 78,
+        "mean_hu": -558.5,
+        "hu_mean": -558.5,
+        "hu_max": -337.0,
+        "hu_min": -728.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 5678.79,
+    "triage_time_ms": 5678.757499999847,
+    "slice_hu_mean": 19.942697525024414,
+    "slice_hu_std": 84.82274627685547,
+    "stats": {
+      "mean": 19.942697525024414,
+      "std": 84.82274627685547,
+      "median": 52.0,
+      "mad": 59.0,
+      "p005": -395.405,
+      "p01": -365.0,
+      "p99": 254.0,
+      "p995": 294.0250000000033,
+      "iqr": 179.0,
+      "p25": -82.0,
+      "p75": 97.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 54,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.44120626860022904736024466315795385",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 38,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 38,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.416737+00:00",
+    "findings": [
+      {
+        "bbox": [
+          133,
+          173,
+          19,
+          23
+        ],
+        "centroid": [
+          183.5,
+          141.5
+        ],
+        "area": 224,
+        "mean_hu": -525.94,
+        "hu_mean": -525.94,
+        "hu_max": -325.0,
+        "hu_min": -752.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          125,
+          192,
+          8,
+          14
+        ],
+        "centroid": [
+          198.6,
+          128.9
+        ],
+        "area": 64,
+        "mean_hu": -558.61,
+        "hu_mean": -558.61,
+        "hu_max": -328.0,
+        "hu_min": -735.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          289,
+          233,
+          7,
+          13
+        ],
+        "centroid": [
+          240.4,
+          292.2
+        ],
+        "area": 44,
+        "mean_hu": -383.14,
+        "hu_mean": -383.14,
+        "hu_max": -319.0,
+        "hu_min": -504.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 5790.64,
+    "triage_time_ms": 5790.608799999973,
+    "slice_hu_mean": 20.465301513671875,
+    "slice_hu_std": 84.65596008300781,
+    "stats": {
+      "mean": 20.465301513671875,
+      "std": 84.65596008300781,
+      "median": 53.0,
+      "mad": 58.0,
+      "p005": -390.0,
+      "p01": -347.0,
+      "p99": 253.0,
+      "p995": 301.3650000000016,
+      "iqr": 181.0,
+      "p25": -83.0,
+      "p75": 98.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 55,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.32637213836493422218329690118914965",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 52,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 52,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.527802+00:00",
+    "findings": [
+      {
+        "bbox": [
+          126,
+          173,
+          25,
+          32
+        ],
+        "centroid": [
+          186.4,
+          138.3
+        ],
+        "area": 259,
+        "mean_hu": -519.68,
+        "hu_mean": -519.68,
+        "hu_max": -318.0,
+        "hu_min": -745.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          352,
+          314,
+          38,
+          32
+        ],
+        "centroid": [
+          331.2,
+          370.5
+        ],
+        "area": 300,
+        "mean_hu": -667.31,
+        "hu_mean": -667.31,
+        "hu_max": 342.0,
+        "hu_min": -877.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 5901.7,
+    "triage_time_ms": 5901.6705000012735,
+    "slice_hu_mean": 21.228425979614258,
+    "slice_hu_std": 84.47713470458984,
+    "stats": {
+      "mean": 21.228425979614258,
+      "std": 84.47713470458984,
+      "median": 55.0,
+      "mad": 56.0,
+      "p005": -517.52,
+      "p01": -376.0,
+      "p99": 254.0,
+      "p995": 286.0,
+      "iqr": 179.0,
+      "p25": -82.0,
+      "p75": 97.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 56,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.70800663593288796551092607619814664",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 47,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 47,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.634493+00:00",
+    "findings": [
+      {
+        "bbox": [
+          127,
+          174,
+          23,
+          30
+        ],
+        "centroid": [
+          186.0,
+          137.9
+        ],
+        "area": 221,
+        "mean_hu": -520.52,
+        "hu_mean": -520.52,
+        "hu_max": -316.0,
+        "hu_min": -738.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          356,
+          317,
+          32,
+          28
+        ],
+        "centroid": [
+          331.5,
+          371.3
+        ],
+        "area": 233,
+        "mean_hu": -637.0,
+        "hu_mean": -637.0,
+        "hu_max": 362.0,
+        "hu_min": -875.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 6008.38,
+    "triage_time_ms": 6008.346200000233,
+    "slice_hu_mean": 22.090295791625977,
+    "slice_hu_std": 83.59226989746094,
+    "stats": {
+      "mean": 22.090295791625977,
+      "std": 83.59226989746094,
+      "median": 55.0,
+      "mad": 54.0,
+      "p005": -441.79999999999995,
+      "p01": -365.0,
+      "p99": 253.0,
+      "p995": 279.40000000000146,
+      "iqr": 177.0,
+      "p25": -80.0,
+      "p75": 97.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 57,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.78654992729409165425337171106474519",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 96,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 96,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.754395+00:00",
+    "findings": [
+      {
+        "bbox": [
+          152,
+          151,
+          40,
+          23
+        ],
+        "centroid": [
+          162.6,
+          171.4
+        ],
+        "area": 553,
+        "mean_hu": -592.92,
+        "hu_mean": -592.92,
+        "hu_max": -314.0,
+        "hu_min": -806.0,
+        "confidence": 0.9,
+        "severity_score": 0.81,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          128,
+          174,
+          21,
+          28
+        ],
+        "centroid": [
+          185.2,
+          138.0
+        ],
+        "area": 187,
+        "mean_hu": -499.88,
+        "hu_mean": -499.88,
+        "hu_max": -318.0,
+        "hu_min": -704.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          358,
+          319,
+          30,
+          25
+        ],
+        "centroid": [
+          331.5,
+          372.6
+        ],
+        "area": 181,
+        "mean_hu": -564.61,
+        "hu_mean": -564.61,
+        "hu_max": 394.0,
+        "hu_min": -862.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 6128.24,
+    "triage_time_ms": 6128.185100000337,
+    "slice_hu_mean": 22.034215927124023,
+    "slice_hu_std": 83.54232025146484,
+    "stats": {
+      "mean": 22.034215927124023,
+      "std": 83.54232025146484,
+      "median": 57.0,
+      "mad": 52.0,
+      "p005": -643.88,
+      "p01": -454.0,
+      "p99": 261.7599999999984,
+      "p995": 286.0,
+      "iqr": 176.0,
+      "p25": -80.0,
+      "p75": 96.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 58,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.44357663183210587077450240327658366",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 4,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 4,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.860145+00:00",
+    "findings": [
+      {
+        "bbox": [
+          370,
+          326,
+          12,
+          9
+        ],
+        "centroid": [
+          330.0,
+          375.1
+        ],
+        "area": 46,
+        "mean_hu": -727.39,
+        "hu_mean": -727.39,
+        "hu_max": -576.0,
+        "hu_min": -839.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 6234.03,
+    "triage_time_ms": 6233.996200000547,
+    "slice_hu_mean": -22.946603775024414,
+    "slice_hu_std": 204.58853149414062,
+    "stats": {
+      "mean": -22.946603775024414,
+      "std": 204.58853149414062,
+      "median": 47.0,
+      "mad": 61.0,
+      "p005": -1002.535,
+      "p01": -996.0699999999999,
+      "p99": 263.0,
+      "p995": 287.0,
+      "iqr": 190.0,
+      "p25": -96.0,
+      "p75": 94.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 59,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.35893944141938782523614829544072462",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 17,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 17,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:24.960812+00:00",
+    "findings": [
+      {
+        "bbox": [
+          156,
+          151,
+          31,
+          18
+        ],
+        "centroid": [
+          159.8,
+          170.9
+        ],
+        "area": 257,
+        "mean_hu": -665.18,
+        "hu_mean": -665.18,
+        "hu_max": -567.0,
+        "hu_min": -784.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 6334.71,
+    "triage_time_ms": 6334.6806000008655,
+    "slice_hu_mean": -23.092050552368164,
+    "slice_hu_std": 203.17982482910156,
+    "stats": {
+      "mean": -23.092050552368164,
+      "std": 203.17982482910156,
+      "median": 48.0,
+      "mad": 60.0,
+      "p005": -1002.0,
+      "p01": -997.0,
+      "p99": 264.0,
+      "p995": 286.0,
+      "iqr": 188.0,
+      "p25": -95.0,
+      "p75": 93.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 60,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.52885549825994283715706725572620456",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 16,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 16,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.070381+00:00",
+    "findings": [
+      {
+        "bbox": [
+          155,
+          151,
+          32,
+          16
+        ],
+        "centroid": [
+          158.4,
+          172.1
+        ],
+        "area": 240,
+        "mean_hu": -662.82,
+        "hu_mean": -662.82,
+        "hu_max": -560.0,
+        "hu_min": -770.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 6444.25,
+    "triage_time_ms": 6444.215900000927,
+    "slice_hu_mean": -21.19605827331543,
+    "slice_hu_std": 201.97308349609375,
+    "stats": {
+      "mean": -21.19605827331543,
+      "std": 201.97308349609375,
+      "median": 49.0,
+      "mad": 58.0,
+      "p005": -1002.0,
+      "p01": -997.0,
+      "p99": 271.0,
+      "p995": 292.0,
+      "iqr": 186.0,
+      "p25": -94.0,
+      "p75": 92.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 61,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.26476575027137113409894783972128414",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 17,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 17,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.189529+00:00",
+    "findings": [
+      {
+        "bbox": [
+          158,
+          151,
+          28,
+          14
+        ],
+        "centroid": [
+          157.9,
+          172.5
+        ],
+        "area": 189,
+        "mean_hu": -657.61,
+        "hu_mean": -657.61,
+        "hu_max": -556.0,
+        "hu_min": -759.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          239,
+          164,
+          22,
+          11
+        ],
+        "centroid": [
+          167.9,
+          250.0
+        ],
+        "area": 74,
+        "mean_hu": 354.53,
+        "hu_mean": 354.53,
+        "hu_max": 408.0,
+        "hu_min": 332.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          254,
+          195,
+          19,
+          12
+        ],
+        "centroid": [
+          201.1,
+          262.0
+        ],
+        "area": 99,
+        "mean_hu": 365.76,
+        "hu_mean": 365.76,
+        "hu_max": 423.0,
+        "hu_min": 332.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      }
+    ],
+    "processing_time_ms": 6563.38,
+    "triage_time_ms": 6563.34120000065,
+    "slice_hu_mean": -19.30912208557129,
+    "slice_hu_std": 199.4569091796875,
+    "stats": {
+      "mean": -19.30912208557129,
+      "std": 199.4569091796875,
+      "median": 51.0,
+      "mad": 56.0,
+      "p005": -1002.0,
+      "p01": -997.0,
+      "p99": 287.0,
+      "p995": 322.0,
+      "iqr": 185.0,
+      "p25": -93.0,
+      "p75": 92.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 62,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.40648658450213496406217841382586283",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 26,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 26,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.335573+00:00",
+    "findings": [
+      {
+        "bbox": [
+          158,
+          153,
+          26,
+          11
+        ],
+        "centroid": [
+          157.8,
+          171.7
+        ],
+        "area": 115,
+        "mean_hu": -645.67,
+        "hu_mean": -645.67,
+        "hu_max": -556.0,
+        "hu_min": -739.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          199,
+          153,
+          28,
+          28
+        ],
+        "centroid": [
+          164.9,
+          214.7
+        ],
+        "area": 149,
+        "mean_hu": -639.95,
+        "hu_mean": -639.95,
+        "hu_max": -557.0,
+        "hu_min": -749.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          238,
+          184,
+          8,
+          16
+        ],
+        "centroid": [
+          192.7,
+          241.4
+        ],
+        "area": 36,
+        "mean_hu": 375.17,
+        "hu_mean": 375.17,
+        "hu_max": 435.0,
+        "hu_min": 348.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          249,
+          189,
+          32,
+          13
+        ],
+        "centroid": [
+          197.0,
+          265.6
+        ],
+        "area": 140,
+        "mean_hu": 374.83,
+        "hu_mean": 374.83,
+        "hu_max": 445.0,
+        "hu_min": 347.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      }
+    ],
+    "processing_time_ms": 6709.42,
+    "triage_time_ms": 6709.356400000615,
+    "slice_hu_mean": -18.869062423706055,
+    "slice_hu_std": 197.47679138183594,
+    "stats": {
+      "mean": -18.869062423706055,
+      "std": 197.47679138183594,
+      "median": 51.0,
+      "mad": 56.0,
+      "p005": -1003.0,
+      "p01": -998.0,
+      "p99": 311.0,
+      "p995": 346.0,
+      "iqr": 185.0,
+      "p25": -93.0,
+      "p75": 92.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 63,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.74153884991321462383320322926151245",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 12,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 12,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.459385+00:00",
+    "findings": [
+      {
+        "bbox": [
+          167,
+          154,
+          15,
+          7
+        ],
+        "centroid": [
+          156.7,
+          172.8
+        ],
+        "area": 49,
+        "mean_hu": -643.61,
+        "hu_mean": -643.61,
+        "hu_max": -558.0,
+        "hu_min": -746.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          271,
+          166,
+          16,
+          30
+        ],
+        "centroid": [
+          182.7,
+          280.0
+        ],
+        "area": 126,
+        "mean_hu": 396.82,
+        "hu_mean": 396.82,
+        "hu_max": 478.0,
+        "hu_min": 355.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      }
+    ],
+    "processing_time_ms": 6833.23,
+    "triage_time_ms": 6833.193100001154,
+    "slice_hu_mean": -15.504951477050781,
+    "slice_hu_std": 194.0194549560547,
+    "stats": {
+      "mean": -15.504951477050781,
+      "std": 194.0194549560547,
+      "median": 52.0,
+      "mad": 55.0,
+      "p005": -1004.0,
+      "p01": -998.0,
+      "p99": 292.97000000000116,
+      "p995": 352.0,
+      "iqr": 183.0,
+      "p25": -90.0,
+      "p75": 93.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 64,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.45884776446988217757162811191407583",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.567933+00:00",
+    "findings": [],
+    "processing_time_ms": 6941.81,
+    "triage_time_ms": 6941.7983000003005,
+    "slice_hu_mean": -13.251291275024414,
+    "slice_hu_std": 192.9210968017578,
+    "stats": {
+      "mean": -13.251291275024414,
+      "std": 192.9210968017578,
+      "median": 54.0,
+      "mad": 54.0,
+      "p005": -1003.0,
+      "p01": -998.0,
+      "p99": 236.0,
+      "p995": 277.3799999999974,
+      "iqr": 183.0,
+      "p25": -89.0,
+      "p75": 94.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 65,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.28789397808531887740117731335984037",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.669678+00:00",
+    "findings": [],
+    "processing_time_ms": 7043.54,
+    "triage_time_ms": 7043.527900001209,
+    "slice_hu_mean": -10.626713752746582,
+    "slice_hu_std": 191.98995971679688,
+    "stats": {
+      "mean": -10.626713752746582,
+      "std": 191.98995971679688,
+      "median": 56.0,
+      "mad": 53.0,
+      "p005": -1003.0,
+      "p01": -997.0,
+      "p99": 192.3000000000029,
+      "p995": 229.82500000000073,
+      "iqr": 182.25,
+      "p25": -87.25,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 66,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.67512217186635679873352331711428578",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.774743+00:00",
+    "findings": [],
+    "processing_time_ms": 7148.6,
+    "triage_time_ms": 7148.586299999806,
+    "slice_hu_mean": -9.19398021697998,
+    "slice_hu_std": 189.7216796875,
+    "stats": {
+      "mean": -9.19398021697998,
+      "std": 189.7216796875,
+      "median": 57.0,
+      "mad": 52.0,
+      "p005": -1002.0,
+      "p01": -995.0,
+      "p99": 169.0,
+      "p995": 215.0,
+      "iqr": 182.0,
+      "p25": -87.0,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 67,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.4987176928107845934929078203275241",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.874553+00:00",
+    "findings": [],
+    "processing_time_ms": 7248.42,
+    "triage_time_ms": 7248.406300001079,
+    "slice_hu_mean": -8.218499183654785,
+    "slice_hu_std": 188.44371032714844,
+    "stats": {
+      "mean": -8.218499183654785,
+      "std": 188.44371032714844,
+      "median": 58.0,
+      "mad": 51.0,
+      "p005": -1002.0,
+      "p01": -996.0,
+      "p99": 167.15999999999985,
+      "p995": 207.0799999999981,
+      "iqr": 182.0,
+      "p25": -87.0,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 68,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.60664710142829345120461272529187559",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:25.985762+00:00",
+    "findings": [],
+    "processing_time_ms": 7359.63,
+    "triage_time_ms": 7359.618300000875,
+    "slice_hu_mean": -7.831733226776123,
+    "slice_hu_std": 187.8967742919922,
+    "stats": {
+      "mean": -7.831733226776123,
+      "std": 187.8967742919922,
+      "median": 58.0,
+      "mad": 51.0,
+      "p005": -1002.0,
+      "p01": -996.0,
+      "p99": 171.0,
+      "p995": 209.73500000000058,
+      "iqr": 181.0,
+      "p25": -86.0,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 69,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.20097903194279516530797614872814254",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.088392+00:00",
+    "findings": [],
+    "processing_time_ms": 7462.28,
+    "triage_time_ms": 7462.260500000411,
+    "slice_hu_mean": -6.6316819190979,
+    "slice_hu_std": 186.67825317382812,
+    "stats": {
+      "mean": -6.6316819190979,
+      "std": 186.67825317382812,
+      "median": 59.0,
+      "mad": 52.0,
+      "p005": -1002.0,
+      "p01": -995.0,
+      "p99": 179.0,
+      "p995": 218.0,
+      "iqr": 182.0,
+      "p25": -86.0,
+      "p75": 96.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 70,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.69762130291213869007207655890277185",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 3,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 3,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.197509+00:00",
+    "findings": [
+      {
+        "bbox": [
+          241,
+          196,
+          16,
+          12
+        ],
+        "centroid": [
+          200.7,
+          248.2
+        ],
+        "area": 63,
+        "mean_hu": 340.86,
+        "hu_mean": 340.86,
+        "hu_max": 386.0,
+        "hu_min": 321.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      }
+    ],
+    "processing_time_ms": 7571.38,
+    "triage_time_ms": 7571.355899999617,
+    "slice_hu_mean": -6.65418004989624,
+    "slice_hu_std": 187.4348907470703,
+    "stats": {
+      "mean": -6.65418004989624,
+      "std": 187.4348907470703,
+      "median": 59.0,
+      "mad": 52.0,
+      "p005": -1001.0,
+      "p01": -995.0,
+      "p99": 238.5600000000013,
+      "p995": 276.0,
+      "iqr": 182.0,
+      "p25": -86.0,
+      "p75": 96.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 71,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.22402126772637879004069385117848961",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 8,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 8,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.325151+00:00",
+    "findings": [
+      {
+        "bbox": [
+          280,
+          174,
+          6,
+          15
+        ],
+        "centroid": [
+          181.1,
+          282.6
+        ],
+        "area": 43,
+        "mean_hu": 389.88,
+        "hu_mean": 389.88,
+        "hu_max": 437.0,
+        "hu_min": 362.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          235,
+          184,
+          14,
+          17
+        ],
+        "centroid": [
+          192.7,
+          241.1
+        ],
+        "area": 60,
+        "mean_hu": 390.13,
+        "hu_mean": 390.13,
+        "hu_max": 441.0,
+        "hu_min": 361.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          259,
+          197,
+          11,
+          8
+        ],
+        "centroid": [
+          201.0,
+          264.1
+        ],
+        "area": 35,
+        "mean_hu": 383.03,
+        "hu_mean": 383.03,
+        "hu_max": 425.0,
+        "hu_min": 361.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      }
+    ],
+    "processing_time_ms": 7699.03,
+    "triage_time_ms": 7698.98590000048,
+    "slice_hu_mean": -5.687027931213379,
+    "slice_hu_std": 186.1040802001953,
+    "stats": {
+      "mean": -5.687027931213379,
+      "std": 186.1040802001953,
+      "median": 60.0,
+      "mad": 52.0,
+      "p005": -1001.055,
+      "p01": -995.0,
+      "p99": 315.1100000000006,
+      "p995": 360.0550000000003,
+      "iqr": 182.0,
+      "p25": -86.0,
+      "p75": 96.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 72,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.17667898269700081116541543704961050",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.439976+00:00",
+    "findings": [],
+    "processing_time_ms": 7813.85,
+    "triage_time_ms": 7813.831499999651,
+    "slice_hu_mean": -4.3790082931518555,
+    "slice_hu_std": 184.13052368164062,
+    "stats": {
+      "mean": -4.3790082931518555,
+      "std": 184.13052368164062,
+      "median": 61.0,
+      "mad": 52.0,
+      "p005": -1001.0,
+      "p01": -995.0,
+      "p99": 288.0,
+      "p995": 326.0,
+      "iqr": 184.0,
+      "p25": -87.0,
+      "p75": 97.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 73,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.45268618403283643910525112579210326",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.536842+00:00",
+    "findings": [],
+    "processing_time_ms": 7910.71,
+    "triage_time_ms": 7910.687200001121,
+    "slice_hu_mean": -3.5712389945983887,
+    "slice_hu_std": 183.05418395996094,
+    "stats": {
+      "mean": -3.5712389945983887,
+      "std": 183.05418395996094,
+      "median": 61.0,
+      "mad": 52.0,
+      "p005": -1002.0,
+      "p01": -995.0,
+      "p99": 252.27999999999884,
+      "p995": 287.6399999999994,
+      "iqr": 184.0,
+      "p25": -86.0,
+      "p75": 98.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 74,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.85772487484087136885859289099992422",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.636193+00:00",
+    "findings": [],
+    "processing_time_ms": 8010.04,
+    "triage_time_ms": 8010.01720000022,
+    "slice_hu_mean": -2.7565643787384033,
+    "slice_hu_std": 181.81961059570312,
+    "stats": {
+      "mean": -2.7565643787384033,
+      "std": 181.81961059570312,
+      "median": 62.0,
+      "mad": 52.0,
+      "p005": -1002.0,
+      "p01": -995.0,
+      "p99": 246.0,
+      "p995": 274.34500000000116,
+      "iqr": 183.0,
+      "p25": -85.0,
+      "p75": 98.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 75,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.12371411096899351311551050960387824",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.732083+00:00",
+    "findings": [],
+    "processing_time_ms": 8105.93,
+    "triage_time_ms": 8105.916700000307,
+    "slice_hu_mean": -3.526214122772217,
+    "slice_hu_std": 183.629150390625,
+    "stats": {
+      "mean": -3.526214122772217,
+      "std": 183.629150390625,
+      "median": 61.0,
+      "mad": 53.0,
+      "p005": -1001.0,
+      "p01": -995.0,
+      "p99": 235.61000000000058,
+      "p995": 257.3050000000003,
+      "iqr": 183.0,
+      "p25": -84.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 76,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.66276102475457476339677365462837947",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.827095+00:00",
+    "findings": [],
+    "processing_time_ms": 8200.9,
+    "triage_time_ms": 8200.857699999688,
+    "slice_hu_mean": -1.7863157987594604,
+    "slice_hu_std": 179.9078826904297,
+    "stats": {
+      "mean": -1.7863157987594604,
+      "std": 179.9078826904297,
+      "median": 61.0,
+      "mad": 54.0,
+      "p005": -1001.0,
+      "p01": -995.0,
+      "p99": 236.16999999999825,
+      "p995": 257.0,
+      "iqr": 183.0,
+      "p25": -84.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 77,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.44796773916086603444462957029444004",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:26.923791+00:00",
+    "findings": [],
+    "processing_time_ms": 8297.59,
+    "triage_time_ms": 8297.563400001309,
+    "slice_hu_mean": -2.2330353260040283,
+    "slice_hu_std": 181.1892852783203,
+    "stats": {
+      "mean": -2.2330353260040283,
+      "std": 181.1892852783203,
+      "median": 60.0,
+      "mad": 56.0,
+      "p005": -1003.0,
+      "p01": -996.0,
+      "p99": 232.52000000000044,
+      "p995": 264.0,
+      "iqr": 183.0,
+      "p25": -84.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 78,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.32895824203716576630481501383439258",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.021715+00:00",
+    "findings": [],
+    "processing_time_ms": 8395.57,
+    "triage_time_ms": 8395.55620000101,
+    "slice_hu_mean": -2.392794609069824,
+    "slice_hu_std": 181.44212341308594,
+    "stats": {
+      "mean": -2.392794609069824,
+      "std": 181.44212341308594,
+      "median": 60.0,
+      "mad": 56.0,
+      "p005": -1002.0,
+      "p01": -995.0,
+      "p99": 226.22999999999956,
+      "p995": 253.6150000000016,
+      "iqr": 183.0,
+      "p25": -84.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 79,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.54143538085394450710301234509456902",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.117892+00:00",
+    "findings": [],
+    "processing_time_ms": 8491.74,
+    "triage_time_ms": 8491.729600000326,
+    "slice_hu_mean": -1.961658239364624,
+    "slice_hu_std": 180.5225067138672,
+    "stats": {
+      "mean": -1.961658239364624,
+      "std": 180.5225067138672,
+      "median": 58.0,
+      "mad": 57.0,
+      "p005": -1002.0,
+      "p01": -996.0,
+      "p99": 224.0,
+      "p995": 247.0,
+      "iqr": 184.0,
+      "p25": -84.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 80,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.64784826770675804922437596061197667",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.215336+00:00",
+    "findings": [],
+    "processing_time_ms": 8589.13,
+    "triage_time_ms": 8589.116200000717,
+    "slice_hu_mean": -2.4962406158447266,
+    "slice_hu_std": 181.48410034179688,
+    "stats": {
+      "mean": -2.4962406158447266,
+      "std": 181.48410034179688,
+      "median": 58.0,
+      "mad": 58.0,
+      "p005": -1002.0,
+      "p01": -996.0,
+      "p99": 229.0,
+      "p995": 256.0,
+      "iqr": 185.0,
+      "p25": -85.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 81,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.94503839270369068401711539666491817",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.314442+00:00",
+    "findings": [],
+    "processing_time_ms": 8688.3,
+    "triage_time_ms": 8688.281800001278,
+    "slice_hu_mean": -6.402761459350586,
+    "slice_hu_std": 186.60678100585938,
+    "stats": {
+      "mean": -6.402761459350586,
+      "std": 186.60678100585938,
+      "median": 56.0,
+      "mad": 60.0,
+      "p005": -1004.0,
+      "p01": -996.0,
+      "p99": 225.0,
+      "p995": 248.47999999999956,
+      "iqr": 185.0,
+      "p25": -86.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 82,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.34980240930650974723811380982860331",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.416042+00:00",
+    "findings": [],
+    "processing_time_ms": 8789.9,
+    "triage_time_ms": 8789.882200000648,
+    "slice_hu_mean": -6.208884239196777,
+    "slice_hu_std": 185.24453735351562,
+    "stats": {
+      "mean": -6.208884239196777,
+      "std": 185.24453735351562,
+      "median": 55.0,
+      "mad": 62.0,
+      "p005": -1003.0,
+      "p01": -997.0,
+      "p99": 228.0,
+      "p995": 248.47000000000116,
+      "iqr": 187.0,
+      "p25": -87.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 83,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.47168908031894884910860216690326823",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.514174+00:00",
+    "findings": [],
+    "processing_time_ms": 8888.01,
+    "triage_time_ms": 8887.960800000656,
+    "slice_hu_mean": -5.68157958984375,
+    "slice_hu_std": 182.9738311767578,
+    "stats": {
+      "mean": -5.68157958984375,
+      "std": 182.9738311767578,
+      "median": 54.0,
+      "mad": 63.0,
+      "p005": -1002.0,
+      "p01": -996.0,
+      "p99": 233.0,
+      "p995": 258.35499999999956,
+      "iqr": 187.0,
+      "p25": -87.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 84,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.96993362776821649865406154843017723",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.614850+00:00",
+    "findings": [],
+    "processing_time_ms": 8988.71,
+    "triage_time_ms": 8988.69250000098,
+    "slice_hu_mean": -6.2087578773498535,
+    "slice_hu_std": 183.9918212890625,
+    "stats": {
+      "mean": -6.2087578773498535,
+      "std": 183.9918212890625,
+      "median": 53.0,
+      "mad": 64.0,
+      "p005": -1003.0,
+      "p01": -998.0,
+      "p99": 242.0,
+      "p995": 271.0,
+      "iqr": 187.0,
+      "p25": -87.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 85,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.90212060445843412556684468545369254",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.708495+00:00",
+    "findings": [],
+    "processing_time_ms": 9082.24,
+    "triage_time_ms": 9082.22569999998,
+    "slice_hu_mean": -5.9948201179504395,
+    "slice_hu_std": 182.80511474609375,
+    "stats": {
+      "mean": -5.9948201179504395,
+      "std": 182.80511474609375,
+      "median": 51.0,
+      "mad": 66.0,
+      "p005": -1003.0,
+      "p01": -997.0,
+      "p99": 239.36000000000058,
+      "p995": 269.0,
+      "iqr": 187.0,
+      "p25": -87.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 86,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.59778529878315621079045550690420296",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.800585+00:00",
+    "findings": [],
+    "processing_time_ms": 9174.44,
+    "triage_time_ms": 9174.426400000812,
+    "slice_hu_mean": -5.872996807098389,
+    "slice_hu_std": 182.1385498046875,
+    "stats": {
+      "mean": -5.872996807098389,
+      "std": 182.1385498046875,
+      "median": 51.0,
+      "mad": 67.0,
+      "p005": -1003.0,
+      "p01": -997.0,
+      "p99": 243.0,
+      "p995": 282.0,
+      "iqr": 187.0,
+      "p25": -87.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 87,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.54413498990705506544544853466870186",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.898536+00:00",
+    "findings": [],
+    "processing_time_ms": 9272.4,
+    "triage_time_ms": 9272.383000001355,
+    "slice_hu_mean": -5.247657299041748,
+    "slice_hu_std": 180.561279296875,
+    "stats": {
+      "mean": -5.247657299041748,
+      "std": 180.561279296875,
+      "median": 51.0,
+      "mad": 68.0,
+      "p005": -1003.0,
+      "p01": -998.0,
+      "p99": 243.0,
+      "p995": 284.73999999999796,
+      "iqr": 187.0,
+      "p25": -87.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 88,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.73354851587992675784064620106706999",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:27.993046+00:00",
+    "findings": [],
+    "processing_time_ms": 9366.83,
+    "triage_time_ms": 9366.813100001309,
+    "slice_hu_mean": -5.722628593444824,
+    "slice_hu_std": 180.5549774169922,
+    "stats": {
+      "mean": -5.722628593444824,
+      "std": 180.5549774169922,
+      "median": 50.0,
+      "mad": 69.0,
+      "p005": -1005.0,
+      "p01": -998.0,
+      "p99": 239.65999999999985,
+      "p995": 268.8299999999981,
+      "iqr": 187.0,
+      "p25": -87.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 89,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.52960103225947555097496448028411319",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.087421+00:00",
+    "findings": [],
+    "processing_time_ms": 9461.28,
+    "triage_time_ms": 9461.267500000758,
+    "slice_hu_mean": -7.117903709411621,
+    "slice_hu_std": 181.30992126464844,
+    "stats": {
+      "mean": -7.117903709411621,
+      "std": 181.30992126464844,
+      "median": 47.0,
+      "mad": 71.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p99": 233.0,
+      "p995": 258.005000000001,
+      "iqr": 186.0,
+      "p25": -87.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 90,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.77040971692511773966760413254196451",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.181199+00:00",
+    "findings": [],
+    "processing_time_ms": 9555.0,
+    "triage_time_ms": 9554.962300000625,
+    "slice_hu_mean": -7.5270867347717285,
+    "slice_hu_std": 181.21774291992188,
+    "stats": {
+      "mean": -7.5270867347717285,
+      "std": 181.21774291992188,
+      "median": 46.0,
+      "mad": 73.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p99": 233.84999999999854,
+      "p995": 255.0,
+      "iqr": 186.0,
+      "p25": -87.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 91,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.28129163099541288308404776003213701",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.274338+00:00",
+    "findings": [],
+    "processing_time_ms": 9648.21,
+    "triage_time_ms": 9648.19499999976,
+    "slice_hu_mean": -7.563033580780029,
+    "slice_hu_std": 180.48568725585938,
+    "stats": {
+      "mean": -7.563033580780029,
+      "std": 180.48568725585938,
+      "median": 45.0,
+      "mad": 74.0,
+      "p005": -1004.0,
+      "p01": -998.0,
+      "p99": 243.0,
+      "p995": 267.7049999999981,
+      "iqr": 186.0,
+      "p25": -87.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 92,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.2283282210229228251382930175429564",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.365412+00:00",
+    "findings": [],
+    "processing_time_ms": 9739.28,
+    "triage_time_ms": 9739.261900000201,
+    "slice_hu_mean": -8.347919464111328,
+    "slice_hu_std": 180.9978485107422,
+    "stats": {
+      "mean": -8.347919464111328,
+      "std": 180.9978485107422,
+      "median": 44.0,
+      "mad": 75.0,
+      "p005": -1004.645,
+      "p01": -998.0,
+      "p99": 250.0,
+      "p995": 275.0,
+      "iqr": 187.0,
+      "p25": -88.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 93,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.32288407015291893979052427131178734",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.457192+00:00",
+    "findings": [],
+    "processing_time_ms": 9831.06,
+    "triage_time_ms": 9831.044599999586,
+    "slice_hu_mean": -8.290194511413574,
+    "slice_hu_std": 179.00343322753906,
+    "stats": {
+      "mean": -8.290194511413574,
+      "std": 179.00343322753906,
+      "median": 43.5,
+      "mad": 76.5,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 255.0,
+      "p995": 284.0,
+      "iqr": 188.0,
+      "p25": -89.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 94,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.74245082811789325211176718410433904",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 13,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 13,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.550256+00:00",
+    "findings": [
+      {
+        "bbox": [
+          345,
+          289,
+          10,
+          11
+        ],
+        "centroid": [
+          294.3,
+          349.7
+        ],
+        "area": 75,
+        "mean_hu": -753.72,
+        "hu_mean": -753.72,
+        "hu_max": -566.0,
+        "hu_min": -902.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 9924.13,
+    "triage_time_ms": 9924.098700001196,
+    "slice_hu_mean": -9.207809448242188,
+    "slice_hu_std": 179.7857208251953,
+    "stats": {
+      "mean": -9.207809448242188,
+      "std": 179.7857208251953,
+      "median": 42.0,
+      "mad": 77.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p99": 256.0,
+      "p995": 285.6349999999984,
+      "iqr": 188.0,
+      "p25": -89.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 95,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.60308256179129223712041632051548143",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 17,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 17,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.650634+00:00",
+    "findings": [
+      {
+        "bbox": [
+          343,
+          288,
+          14,
+          13
+        ],
+        "centroid": [
+          294.5,
+          350.0
+        ],
+        "area": 124,
+        "mean_hu": -822.83,
+        "hu_mean": -822.83,
+        "hu_max": -566.0,
+        "hu_min": -953.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 10024.5,
+    "triage_time_ms": 10024.470700000165,
+    "slice_hu_mean": -10.352392196655273,
+    "slice_hu_std": 182.67526245117188,
+    "stats": {
+      "mean": -10.352392196655273,
+      "std": 182.67526245117188,
+      "median": 42.0,
+      "mad": 78.0,
+      "p005": -1006.0,
+      "p01": -1000.0,
+      "p99": 261.0,
+      "p995": 297.0500000000029,
+      "iqr": 189.0,
+      "p25": -90.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 96,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.86426262612297534264727417871573656",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 21,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 21,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.741376+00:00",
+    "findings": [
+      {
+        "bbox": [
+          342,
+          287,
+          17,
+          16
+        ],
+        "centroid": [
+          295.0,
+          350.4
+        ],
+        "area": 181,
+        "mean_hu": -838.35,
+        "hu_mean": -838.35,
+        "hu_max": -572.0,
+        "hu_min": -971.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 10115.24,
+    "triage_time_ms": 10115.211500000441,
+    "slice_hu_mean": -12.397224426269531,
+    "slice_hu_std": 186.36334228515625,
+    "stats": {
+      "mean": -12.397224426269531,
+      "std": 186.36334228515625,
+      "median": 41.0,
+      "mad": 79.0,
+      "p005": -1003.0,
+      "p01": -998.0,
+      "p99": 269.0,
+      "p995": 304.4249999999993,
+      "iqr": 190.0,
+      "p25": -91.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 97,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.51069036418692831052381405006091827",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 35,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 35,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.841127+00:00",
+    "findings": [
+      {
+        "bbox": [
+          340,
+          287,
+          20,
+          18
+        ],
+        "centroid": [
+          296.0,
+          350.3
+        ],
+        "area": 240,
+        "mean_hu": -864.07,
+        "hu_mean": -864.07,
+        "hu_max": -578.0,
+        "hu_min": -971.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 10214.88,
+    "triage_time_ms": 10214.844899999662,
+    "slice_hu_mean": -12.191675186157227,
+    "slice_hu_std": 184.65040588378906,
+    "stats": {
+      "mean": -12.191675186157227,
+      "std": 184.65040588378906,
+      "median": 40.0,
+      "mad": 81.0,
+      "p005": -1004.0,
+      "p01": -998.0,
+      "p99": 272.0,
+      "p995": 317.3650000000016,
+      "iqr": 191.0,
+      "p25": -91.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 98,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.12376389450984884910704181557443681",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 40,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 40,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:28.936236+00:00",
+    "findings": [
+      {
+        "bbox": [
+          339,
+          286,
+          23,
+          23
+        ],
+        "centroid": [
+          297.2,
+          350.1
+        ],
+        "area": 319,
+        "mean_hu": -871.9,
+        "hu_mean": -871.9,
+        "hu_max": -569.0,
+        "hu_min": -972.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 10310.1,
+    "triage_time_ms": 10310.072899999795,
+    "slice_hu_mean": -14.067705154418945,
+    "slice_hu_std": 188.9926300048828,
+    "stats": {
+      "mean": -14.067705154418945,
+      "std": 188.9926300048828,
+      "median": 40.0,
+      "mad": 81.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p99": 274.5,
+      "p995": 327.5,
+      "iqr": 191.0,
+      "p25": -91.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 99,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.60864739222880575339367274829171124",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 31,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 31,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.034377+00:00",
+    "findings": [
+      {
+        "bbox": [
+          337,
+          285,
+          26,
+          26
+        ],
+        "centroid": [
+          298.1,
+          349.9
+        ],
+        "area": 384,
+        "mean_hu": -884.1,
+        "hu_mean": -884.1,
+        "hu_max": -578.0,
+        "hu_min": -976.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 10408.19,
+    "triage_time_ms": 10408.161800000016,
+    "slice_hu_mean": -14.601274490356445,
+    "slice_hu_std": 189.11813354492188,
+    "stats": {
+      "mean": -14.601274490356445,
+      "std": 189.11813354492188,
+      "median": 38.0,
+      "mad": 82.0,
+      "p005": -1005.0,
+      "p01": -999.0,
+      "p99": 248.0,
+      "p995": 300.0,
+      "iqr": 192.0,
+      "p25": -92.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 100,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.99764558434918017225889462695610416",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.130518+00:00",
+    "findings": [],
+    "processing_time_ms": 10504.36,
+    "triage_time_ms": 10504.344099999798,
+    "slice_hu_mean": -10.507862091064453,
+    "slice_hu_std": 181.94871520996094,
+    "stats": {
+      "mean": -10.507862091064453,
+      "std": 181.94871520996094,
+      "median": 40.0,
+      "mad": 80.0,
+      "p005": -1004.0,
+      "p01": -998.0,
+      "p99": 224.0,
+      "p995": 257.0,
+      "iqr": 192.0,
+      "p25": -92.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 101,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.26388344930964622317051231048701040",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.225249+00:00",
+    "findings": [],
+    "processing_time_ms": 10599.09,
+    "triage_time_ms": 10599.0780000011,
+    "slice_hu_mean": -9.724922180175781,
+    "slice_hu_std": 179.71646118164062,
+    "stats": {
+      "mean": -9.724922180175781,
+      "std": 179.71646118164062,
+      "median": 41.0,
+      "mad": 80.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 221.27999999999884,
+      "p995": 249.13999999999942,
+      "iqr": 192.0,
+      "p25": -92.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 102,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.47642183872852656260528152748546421",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.323083+00:00",
+    "findings": [],
+    "processing_time_ms": 10696.83,
+    "triage_time_ms": 10696.810400000686,
+    "slice_hu_mean": -9.120600700378418,
+    "slice_hu_std": 178.76376342773438,
+    "stats": {
+      "mean": -9.120600700378418,
+      "std": 178.76376342773438,
+      "median": 40.0,
+      "mad": 81.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 230.0,
+      "p995": 270.1150000000016,
+      "iqr": 191.0,
+      "p25": -91.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 103,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.75366288030945326897501212208830216",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.423616+00:00",
+    "findings": [],
+    "processing_time_ms": 10797.41,
+    "triage_time_ms": 10797.390300000188,
+    "slice_hu_mean": -9.548337936401367,
+    "slice_hu_std": 180.79010009765625,
+    "stats": {
+      "mean": -9.548337936401367,
+      "std": 180.79010009765625,
+      "median": 39.0,
+      "mad": 84.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 249.0,
+      "p995": 309.0,
+      "iqr": 192.0,
+      "p25": -92.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 104,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.76169635003647824267359566449410313",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.523257+00:00",
+    "findings": [],
+    "processing_time_ms": 10897.1,
+    "triage_time_ms": 10897.090800001024,
+    "slice_hu_mean": -9.867918014526367,
+    "slice_hu_std": 181.12530517578125,
+    "stats": {
+      "mean": -9.867918014526367,
+      "std": 181.12530517578125,
+      "median": 38.0,
+      "mad": 85.0,
+      "p005": -1005.0,
+      "p01": -999.69,
+      "p99": 268.0,
+      "p995": 307.0,
+      "iqr": 193.0,
+      "p25": -92.0,
+      "p75": 101.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 105,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.24649441642933603246010567808567327",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.619520+00:00",
+    "findings": [],
+    "processing_time_ms": 10993.36,
+    "triage_time_ms": 10993.347800000265,
+    "slice_hu_mean": -8.550734519958496,
+    "slice_hu_std": 178.36862182617188,
+    "stats": {
+      "mean": -8.550734519958496,
+      "std": 178.36862182617188,
+      "median": 38.0,
+      "mad": 86.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 270.0,
+      "p995": 300.27999999999884,
+      "iqr": 194.0,
+      "p25": -93.0,
+      "p75": 101.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 106,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.23216003808436901505928834695350977",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.717521+00:00",
+    "findings": [],
+    "processing_time_ms": 11091.35,
+    "triage_time_ms": 11091.332400001193,
+    "slice_hu_mean": -10.51412296295166,
+    "slice_hu_std": 180.73361206054688,
+    "stats": {
+      "mean": -10.51412296295166,
+      "std": 180.73361206054688,
+      "median": 37.0,
+      "mad": 87.0,
+      "p005": -1006.0,
+      "p01": -1000.0,
+      "p99": 269.0,
+      "p995": 301.0,
+      "iqr": 194.0,
+      "p25": -93.0,
+      "p75": 101.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 107,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.29143973066372701598642364761696750",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 11,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 11,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.834792+00:00",
+    "findings": [
+      {
+        "bbox": [
+          366,
+          299,
+          8,
+          10
+        ],
+        "centroid": [
+          303.6,
+          369.4
+        ],
+        "area": 55,
+        "mean_hu": -781.33,
+        "hu_mean": -781.33,
+        "hu_max": -584.0,
+        "hu_min": -906.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11208.66,
+    "triage_time_ms": 11208.622199999809,
+    "slice_hu_mean": -11.731147766113281,
+    "slice_hu_std": 181.6176300048828,
+    "stats": {
+      "mean": -11.731147766113281,
+      "std": 181.6176300048828,
+      "median": 35.0,
+      "mad": 87.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 264.6899999999987,
+      "p995": 309.0,
+      "iqr": 195.0,
+      "p25": -94.0,
+      "p75": 101.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 108,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.51158970681987293723139473722441401",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 13,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 13,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:29.952975+00:00",
+    "findings": [
+      {
+        "bbox": [
+          365,
+          298,
+          10,
+          11
+        ],
+        "centroid": [
+          303.2,
+          369.7
+        ],
+        "area": 75,
+        "mean_hu": -843.69,
+        "hu_mean": -843.69,
+        "hu_max": -609.0,
+        "hu_min": -958.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11326.8,
+    "triage_time_ms": 11326.765200001319,
+    "slice_hu_mean": -12.937310218811035,
+    "slice_hu_std": 183.23760986328125,
+    "stats": {
+      "mean": -12.937310218811035,
+      "std": 183.23760986328125,
+      "median": 34.0,
+      "mad": 88.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 249.09000000000015,
+      "p995": 298.0,
+      "iqr": 195.0,
+      "p25": -95.0,
+      "p75": 100.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 109,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.34129455493600755302764773861295428",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 30,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 30,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.057629+00:00",
+    "findings": [
+      {
+        "bbox": [
+          365,
+          297,
+          10,
+          11
+        ],
+        "centroid": [
+          302.6,
+          370.1
+        ],
+        "area": 79,
+        "mean_hu": -859.39,
+        "hu_mean": -859.39,
+        "hu_max": -640.0,
+        "hu_min": -960.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          336,
+          315,
+          16,
+          10
+        ],
+        "centroid": [
+          319.6,
+          343.6
+        ],
+        "area": 101,
+        "mean_hu": -828.32,
+        "hu_mean": -828.32,
+        "hu_max": -590.0,
+        "hu_min": -946.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11431.49,
+    "triage_time_ms": 11431.446300000971,
+    "slice_hu_mean": -15.145564079284668,
+    "slice_hu_std": 184.90585327148438,
+    "stats": {
+      "mean": -15.145564079284668,
+      "std": 184.90585327148438,
+      "median": 32.0,
+      "mad": 90.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 246.90000000000146,
+      "p995": 291.4500000000007,
+      "iqr": 194.0,
+      "p25": -95.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 110,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.18029866720667438626854380113120126",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 18,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 18,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.164037+00:00",
+    "findings": [
+      {
+        "bbox": [
+          335,
+          313,
+          18,
+          12
+        ],
+        "centroid": [
+          318.7,
+          343.5
+        ],
+        "area": 140,
+        "mean_hu": -849.83,
+        "hu_mean": -849.83,
+        "hu_max": -585.0,
+        "hu_min": -966.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11537.9,
+    "triage_time_ms": 11537.864400001126,
+    "slice_hu_mean": -16.01268196105957,
+    "slice_hu_std": 185.13124084472656,
+    "stats": {
+      "mean": -16.01268196105957,
+      "std": 185.13124084472656,
+      "median": 31.0,
+      "mad": 91.0,
+      "p005": -1006.55,
+      "p01": -1001.0,
+      "p99": 236.0,
+      "p995": 270.0,
+      "iqr": 195.0,
+      "p25": -96.0,
+      "p75": 99.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 111,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.24663077278051829137906498086768672",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 25,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 25,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.268305+00:00",
+    "findings": [
+      {
+        "bbox": [
+          367,
+          295,
+          9,
+          11
+        ],
+        "centroid": [
+          300.4,
+          371.0
+        ],
+        "area": 71,
+        "mean_hu": -852.11,
+        "hu_mean": -852.11,
+        "hu_max": -599.0,
+        "hu_min": -963.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          363,
+          310,
+          9,
+          9
+        ],
+        "centroid": [
+          314.0,
+          366.9
+        ],
+        "area": 58,
+        "mean_hu": -791.17,
+        "hu_mean": -791.17,
+        "hu_max": -582.0,
+        "hu_min": -914.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11642.15,
+    "triage_time_ms": 11642.108400001234,
+    "slice_hu_mean": -16.940475463867188,
+    "slice_hu_std": 184.97254943847656,
+    "stats": {
+      "mean": -16.940475463867188,
+      "std": 184.97254943847656,
+      "median": 29.0,
+      "mad": 91.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 234.0,
+      "p995": 269.0,
+      "iqr": 194.0,
+      "p25": -96.0,
+      "p75": 98.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 112,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.97906028571314427656102792675396237",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 12,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 12,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.365328+00:00",
+    "findings": [
+      {
+        "bbox": [
+          367,
+          295,
+          9,
+          10
+        ],
+        "centroid": [
+          299.6,
+          371.2
+        ],
+        "area": 65,
+        "mean_hu": -856.31,
+        "hu_mean": -856.31,
+        "hu_max": -597.0,
+        "hu_min": -969.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11739.2,
+    "triage_time_ms": 11739.158000000316,
+    "slice_hu_mean": -16.591520309448242,
+    "slice_hu_std": 181.10218811035156,
+    "stats": {
+      "mean": -16.591520309448242,
+      "std": 181.10218811035156,
+      "median": 28.0,
+      "mad": 91.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 231.0,
+      "p995": 255.0,
+      "iqr": 194.0,
+      "p25": -97.0,
+      "p75": 97.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 113,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.86124841669583428287114552513228451",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 15,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 15,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.467206+00:00",
+    "findings": [
+      {
+        "bbox": [
+          367,
+          294,
+          8,
+          10
+        ],
+        "centroid": [
+          298.7,
+          371.1
+        ],
+        "area": 54,
+        "mean_hu": -862.24,
+        "hu_mean": -862.24,
+        "hu_max": -594.0,
+        "hu_min": -959.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          289,
+          297,
+          14,
+          8
+        ],
+        "centroid": [
+          300.4,
+          295.5
+        ],
+        "area": 40,
+        "mean_hu": -650.12,
+        "hu_mean": -650.12,
+        "hu_max": -584.0,
+        "hu_min": -774.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11841.05,
+    "triage_time_ms": 11841.016500000478,
+    "slice_hu_mean": -18.47771644592285,
+    "slice_hu_std": 182.61447143554688,
+    "stats": {
+      "mean": -18.47771644592285,
+      "std": 182.61447143554688,
+      "median": 25.0,
+      "mad": 92.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 228.0,
+      "p995": 250.0,
+      "iqr": 193.0,
+      "p25": -97.0,
+      "p75": 96.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 114,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.96786088179960201610541801227590970",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 20,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 20,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.564003+00:00",
+    "findings": [
+      {
+        "bbox": [
+          367,
+          294,
+          8,
+          9
+        ],
+        "centroid": [
+          297.9,
+          370.9
+        ],
+        "area": 48,
+        "mean_hu": -826.65,
+        "hu_mean": -826.65,
+        "hu_max": -598.0,
+        "hu_min": -950.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          289,
+          296,
+          18,
+          10
+        ],
+        "centroid": [
+          300.7,
+          296.9
+        ],
+        "area": 85,
+        "mean_hu": -667.81,
+        "hu_mean": -667.81,
+        "hu_max": -587.0,
+        "hu_min": -800.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 11937.85,
+    "triage_time_ms": 11937.815400000545,
+    "slice_hu_mean": -19.115617752075195,
+    "slice_hu_std": 180.98770141601562,
+    "stats": {
+      "mean": -19.115617752075195,
+      "std": 180.98770141601562,
+      "median": 24.0,
+      "mad": 92.0,
+      "p005": -1005.645,
+      "p01": -1000.29,
+      "p99": 219.0,
+      "p995": 243.64500000000044,
+      "iqr": 194.0,
+      "p25": -98.0,
+      "p75": 96.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 115,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.50678515635029708854661081345442613",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 20,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 20,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.658864+00:00",
+    "findings": [
+      {
+        "bbox": [
+          368,
+          294,
+          6,
+          8
+        ],
+        "centroid": [
+          297.4,
+          370.7
+        ],
+        "area": 34,
+        "mean_hu": -805.03,
+        "hu_mean": -805.03,
+        "hu_max": -592.0,
+        "hu_min": -930.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          290,
+          296,
+          18,
+          11
+        ],
+        "centroid": [
+          301.1,
+          298.8
+        ],
+        "area": 116,
+        "mean_hu": -717.7,
+        "hu_mean": -717.7,
+        "hu_max": -594.0,
+        "hu_min": -884.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12032.73,
+    "triage_time_ms": 12032.69309999996,
+    "slice_hu_mean": -20.6619873046875,
+    "slice_hu_std": 181.15774536132812,
+    "stats": {
+      "mean": -20.6619873046875,
+      "std": 181.15774536132812,
+      "median": 22.0,
+      "mad": 93.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 217.0,
+      "p995": 242.0,
+      "iqr": 193.0,
+      "p25": -98.0,
+      "p75": 95.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 116,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.24327089182115146095147191397075851",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 20,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 20,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.745078+00:00",
+    "findings": [
+      {
+        "bbox": [
+          290,
+          296,
+          20,
+          11
+        ],
+        "centroid": [
+          301.6,
+          300.0
+        ],
+        "area": 160,
+        "mean_hu": -714.07,
+        "hu_mean": -714.07,
+        "hu_max": -585.0,
+        "hu_min": -898.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12118.95,
+    "triage_time_ms": 12118.912500000079,
+    "slice_hu_mean": -22.10835838317871,
+    "slice_hu_std": 181.72959899902344,
+    "stats": {
+      "mean": -22.10835838317871,
+      "std": 181.72959899902344,
+      "median": 20.0,
+      "mad": 94.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 216.0,
+      "p995": 238.67499999999927,
+      "iqr": 193.0,
+      "p25": -99.0,
+      "p75": 94.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 117,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.44119507709029155437027361667057354",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 25,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 25,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.842693+00:00",
+    "findings": [
+      {
+        "bbox": [
+          282,
+          295,
+          30,
+          17
+        ],
+        "centroid": [
+          303.4,
+          300.3
+        ],
+        "area": 250,
+        "mean_hu": -714.47,
+        "hu_mean": -714.47,
+        "hu_max": -583.0,
+        "hu_min": -887.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12216.49,
+    "triage_time_ms": 12216.443600000275,
+    "slice_hu_mean": -24.718618392944336,
+    "slice_hu_std": 185.01083374023438,
+    "stats": {
+      "mean": -24.718618392944336,
+      "std": 185.01083374023438,
+      "median": 18.0,
+      "mad": 94.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 214.0,
+      "p995": 236.6850000000013,
+      "iqr": 193.0,
+      "p25": -99.0,
+      "p75": 94.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 118,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.42557606861257355943419124097802242",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 0,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 0,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:30.933413+00:00",
+    "findings": [],
+    "processing_time_ms": 12307.27,
+    "triage_time_ms": 12307.255300000179,
+    "slice_hu_mean": -22.758953094482422,
+    "slice_hu_std": 177.8509521484375,
+    "stats": {
+      "mean": -22.758953094482422,
+      "std": 177.8509521484375,
+      "median": 16.0,
+      "mad": 95.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 216.0,
+      "p995": 237.39500000000044,
+      "iqr": 193.0,
+      "p25": -100.0,
+      "p75": 93.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 119,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.26510415344010554793364968975208157",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 10,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 10,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.025101+00:00",
+    "findings": [
+      {
+        "bbox": [
+          222,
+          282,
+          13,
+          5
+        ],
+        "centroid": [
+          283.6,
+          227.1
+        ],
+        "area": 44,
+        "mean_hu": -715.14,
+        "hu_mean": -715.14,
+        "hu_max": -590.0,
+        "hu_min": -880.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12398.94,
+    "triage_time_ms": 12398.906300000817,
+    "slice_hu_mean": -24.336139678955078,
+    "slice_hu_std": 179.29542541503906,
+    "stats": {
+      "mean": -24.336139678955078,
+      "std": 179.29542541503906,
+      "median": 14.0,
+      "mad": 96.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 225.0,
+      "p995": 245.0,
+      "iqr": 192.0,
+      "p25": -100.0,
+      "p75": 92.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 120,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.74345231371516376263497708074365017",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 14,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 14,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.118282+00:00",
+    "findings": [
+      {
+        "bbox": [
+          222,
+          281,
+          14,
+          8
+        ],
+        "centroid": [
+          284.3,
+          228.2
+        ],
+        "area": 78,
+        "mean_hu": -784.58,
+        "hu_mean": -784.58,
+        "hu_max": -585.0,
+        "hu_min": -919.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12492.07,
+    "triage_time_ms": 12492.005699999936,
+    "slice_hu_mean": -26.52096939086914,
+    "slice_hu_std": 182.1964569091797,
+    "stats": {
+      "mean": -26.52096939086914,
+      "std": 182.1964569091797,
+      "median": 11.0,
+      "mad": 96.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 222.3299999999981,
+      "p995": 248.0,
+      "iqr": 191.0,
+      "p25": -100.0,
+      "p75": 91.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 121,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.58225590752938917860851908074741923",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 16,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 16,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.207332+00:00",
+    "findings": [
+      {
+        "bbox": [
+          222,
+          281,
+          15,
+          10
+        ],
+        "centroid": [
+          285.0,
+          228.7
+        ],
+        "area": 110,
+        "mean_hu": -831.05,
+        "hu_mean": -831.05,
+        "hu_max": -590.0,
+        "hu_min": -931.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12581.22,
+    "triage_time_ms": 12581.186800000069,
+    "slice_hu_mean": -27.82113265991211,
+    "slice_hu_std": 181.109130859375,
+    "stats": {
+      "mean": -27.82113265991211,
+      "std": 181.109130859375,
+      "median": 7.0,
+      "mad": 96.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 225.0,
+      "p995": 247.8100000000013,
+      "iqr": 191.0,
+      "p25": -100.0,
+      "p75": 91.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 122,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.8828356712501776637392831168989589",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 18,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 18,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.304889+00:00",
+    "findings": [
+      {
+        "bbox": [
+          222,
+          281,
+          16,
+          11
+        ],
+        "centroid": [
+          285.5,
+          229.4
+        ],
+        "area": 133,
+        "mean_hu": -852.54,
+        "hu_mean": -852.54,
+        "hu_max": -583.0,
+        "hu_min": -943.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12678.69,
+    "triage_time_ms": 12678.66150000009,
+    "slice_hu_mean": -29.358552932739258,
+    "slice_hu_std": 183.0664825439453,
+    "stats": {
+      "mean": -29.358552932739258,
+      "std": 183.0664825439453,
+      "median": 5.0,
+      "mad": 96.0,
+      "p005": -1004.885,
+      "p01": -999.0,
+      "p99": 230.0,
+      "p995": 254.0,
+      "iqr": 191.0,
+      "p25": -101.0,
+      "p75": 90.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 123,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.431600236830338574263189777975219",
+    "patient_id": "PANCREAS_0001",
+    "flagged": false,
+    "emergency_score": 19,
+    "emergency_action": "CONTINUE",
+    "score_details": [
+      {
+        "points": 19,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.402099+00:00",
+    "findings": [
+      {
+        "bbox": [
+          223,
+          281,
+          15,
+          12
+        ],
+        "centroid": [
+          286.1,
+          229.6
+        ],
+        "area": 147,
+        "mean_hu": -854.15,
+        "hu_mean": -854.15,
+        "hu_max": -590.0,
+        "hu_min": -952.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12775.95,
+    "triage_time_ms": 12775.926199999958,
+    "slice_hu_mean": -30.645763397216797,
+    "slice_hu_std": 183.07257080078125,
+    "stats": {
+      "mean": -30.645763397216797,
+      "std": 183.07257080078125,
+      "median": 3.0,
+      "mad": 97.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 235.0,
+      "p995": 268.8000000000029,
+      "iqr": 191.0,
+      "p25": -101.0,
+      "p75": 90.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 124,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.95754443090538622752620469155177710",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 29,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 29,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.497812+00:00",
+    "findings": [
+      {
+        "bbox": [
+          369,
+          277,
+          5,
+          9
+        ],
+        "centroid": [
+          281.1,
+          371.1
+        ],
+        "area": 39,
+        "mean_hu": -799.67,
+        "hu_mean": -799.67,
+        "hu_max": -590.0,
+        "hu_min": -932.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          223,
+          281,
+          14,
+          13
+        ],
+        "centroid": [
+          286.6,
+          229.6
+        ],
+        "area": 147,
+        "mean_hu": -862.18,
+        "hu_mean": -862.18,
+        "hu_max": -609.0,
+        "hu_min": -956.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12871.7,
+    "triage_time_ms": 12871.66040000011,
+    "slice_hu_mean": -31.984344482421875,
+    "slice_hu_std": 183.41111755371094,
+    "stats": {
+      "mean": -31.984344482421875,
+      "std": 183.41111755371094,
+      "median": -2.0,
+      "mad": 96.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 237.9399999999987,
+      "p995": 272.9400000000023,
+      "iqr": 191.0,
+      "p25": -102.0,
+      "p75": 89.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 125,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.74346913557966451464032781342587405",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 28,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 28,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.597324+00:00",
+    "findings": [
+      {
+        "bbox": [
+          369,
+          276,
+          6,
+          10
+        ],
+        "centroid": [
+          280.8,
+          371.3
+        ],
+        "area": 47,
+        "mean_hu": -844.98,
+        "hu_mean": -844.98,
+        "hu_max": -601.0,
+        "hu_min": -942.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          223,
+          281,
+          14,
+          13
+        ],
+        "centroid": [
+          286.6,
+          229.8
+        ],
+        "area": 133,
+        "mean_hu": -844.18,
+        "hu_mean": -844.18,
+        "hu_max": -582.0,
+        "hu_min": -940.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 12971.1,
+    "triage_time_ms": 12971.057400000063,
+    "slice_hu_mean": -32.83168411254883,
+    "slice_hu_std": 183.5596160888672,
+    "stats": {
+      "mean": -32.83168411254883,
+      "std": 183.5596160888672,
+      "median": -4.0,
+      "mad": 96.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 241.0,
+      "p995": 276.0550000000003,
+      "iqr": 190.0,
+      "p25": -102.0,
+      "p75": 88.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 126,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.70183670444246045435734594171684418",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 43,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 43,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.704458+00:00",
+    "findings": [
+      {
+        "bbox": [
+          369,
+          276,
+          7,
+          9
+        ],
+        "centroid": [
+          280.3,
+          371.7
+        ],
+        "area": 48,
+        "mean_hu": -834.56,
+        "hu_mean": -834.56,
+        "hu_max": -597.0,
+        "hu_min": -940.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          224,
+          282,
+          12,
+          11
+        ],
+        "centroid": [
+          286.4,
+          229.8
+        ],
+        "area": 99,
+        "mean_hu": -837.26,
+        "hu_mean": -837.26,
+        "hu_max": -596.0,
+        "hu_min": -941.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          365,
+          293,
+          8,
+          7
+        ],
+        "centroid": [
+          296.3,
+          367.9
+        ],
+        "area": 37,
+        "mean_hu": -743.54,
+        "hu_mean": -743.54,
+        "hu_max": -588.0,
+        "hu_min": -885.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          360,
+          304,
+          11,
+          10
+        ],
+        "centroid": [
+          308.2,
+          364.7
+        ],
+        "area": 65,
+        "mean_hu": -784.8,
+        "hu_mean": -784.8,
+        "hu_max": -592.0,
+        "hu_min": -930.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13078.34,
+    "triage_time_ms": 13078.296800000317,
+    "slice_hu_mean": -34.85953140258789,
+    "slice_hu_std": 186.0875701904297,
+    "stats": {
+      "mean": -34.85953140258789,
+      "std": 186.0875701904297,
+      "median": -6.0,
+      "mad": 96.0,
+      "p005": -1005.0,
+      "p01": -998.0,
+      "p99": 252.0,
+      "p995": 291.0,
+      "iqr": 192.0,
+      "p25": -104.0,
+      "p75": 88.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 127,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.74266371371646871768984193735588501",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 77,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 77,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.819237+00:00",
+    "findings": [
+      {
+        "bbox": [
+          369,
+          276,
+          7,
+          9
+        ],
+        "centroid": [
+          279.9,
+          372.0
+        ],
+        "area": 44,
+        "mean_hu": -818.7,
+        "hu_mean": -818.7,
+        "hu_max": -598.0,
+        "hu_min": -937.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          225,
+          282,
+          11,
+          9
+        ],
+        "centroid": [
+          285.6,
+          230.1
+        ],
+        "area": 66,
+        "mean_hu": -794.0,
+        "hu_mean": -794.0,
+        "hu_max": -585.0,
+        "hu_min": -919.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          365,
+          296,
+          7,
+          6
+        ],
+        "centroid": [
+          298.5,
+          368.1
+        ],
+        "area": 30,
+        "mean_hu": -738.0,
+        "hu_mean": -738.0,
+        "hu_max": -618.0,
+        "hu_min": -858.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          341,
+          299,
+          13,
+          14
+        ],
+        "centroid": [
+          306.4,
+          347.0
+        ],
+        "area": 121,
+        "mean_hu": -867.88,
+        "hu_mean": -867.88,
+        "hu_max": -584.0,
+        "hu_min": -980.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          333,
+          309,
+          19,
+          16
+        ],
+        "centroid": [
+          317.7,
+          341.4
+        ],
+        "area": 206,
+        "mean_hu": -873.66,
+        "hu_mean": -873.66,
+        "hu_max": -585.0,
+        "hu_min": -994.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13193.02,
+    "triage_time_ms": 13192.938400001367,
+    "slice_hu_mean": -38.44538879394531,
+    "slice_hu_std": 191.81982421875,
+    "stats": {
+      "mean": -38.44538879394531,
+      "std": 191.81982421875,
+      "median": -10.0,
+      "mad": 95.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 256.0,
+      "p995": 299.0,
+      "iqr": 191.0,
+      "p25": -104.0,
+      "p75": 87.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 128,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.53203663613978423394160408580050583",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 47,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 47,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:31.927087+00:00",
+    "findings": [
+      {
+        "bbox": [
+          370,
+          276,
+          6,
+          8
+        ],
+        "centroid": [
+          279.5,
+          372.4
+        ],
+        "area": 33,
+        "mean_hu": -788.27,
+        "hu_mean": -788.27,
+        "hu_max": -595.0,
+        "hu_min": -914.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          368,
+          286,
+          7,
+          10
+        ],
+        "centroid": [
+          290.4,
+          371.3
+        ],
+        "area": 46,
+        "mean_hu": -803.35,
+        "hu_mean": -803.35,
+        "hu_max": -583.0,
+        "hu_min": -922.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          341,
+          300,
+          14,
+          13
+        ],
+        "centroid": [
+          306.8,
+          347.3
+        ],
+        "area": 100,
+        "mean_hu": -854.0,
+        "hu_mean": -854.0,
+        "hu_max": -596.0,
+        "hu_min": -971.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          334,
+          312,
+          17,
+          12
+        ],
+        "centroid": [
+          318.2,
+          341.2
+        ],
+        "area": 138,
+        "mean_hu": -836.28,
+        "hu_mean": -836.28,
+        "hu_max": -590.0,
+        "hu_min": -975.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13300.95,
+    "triage_time_ms": 13300.91320000065,
+    "slice_hu_mean": -37.11714172363281,
+    "slice_hu_std": 187.96385192871094,
+    "stats": {
+      "mean": -37.11714172363281,
+      "std": 187.96385192871094,
+      "median": -10.0,
+      "mad": 95.0,
+      "p005": -1004.0,
+      "p01": -1000.0,
+      "p99": 266.0,
+      "p995": 304.15499999999884,
+      "iqr": 191.0,
+      "p25": -104.0,
+      "p75": 87.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 129,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.88326757879093141524205298613602012",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 35,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 35,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.038041+00:00",
+    "findings": [
+      {
+        "bbox": [
+          369,
+          286,
+          7,
+          11
+        ],
+        "centroid": [
+          290.8,
+          372.0
+        ],
+        "area": 60,
+        "mean_hu": -806.9,
+        "hu_mean": -806.9,
+        "hu_max": -586.0,
+        "hu_min": -941.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          341,
+          302,
+          15,
+          12
+        ],
+        "centroid": [
+          307.8,
+          347.8
+        ],
+        "area": 91,
+        "mean_hu": -816.8,
+        "hu_mean": -816.8,
+        "hu_max": -588.0,
+        "hu_min": -961.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          335,
+          315,
+          14,
+          8
+        ],
+        "centroid": [
+          318.8,
+          340.9
+        ],
+        "area": 72,
+        "mean_hu": -762.12,
+        "hu_mean": -762.12,
+        "hu_max": -593.0,
+        "hu_min": -915.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13411.91,
+    "triage_time_ms": 13411.868400000458,
+    "slice_hu_mean": -35.94126510620117,
+    "slice_hu_std": 185.31201171875,
+    "stats": {
+      "mean": -35.94126510620117,
+      "std": 185.31201171875,
+      "median": -10.0,
+      "mad": 95.0,
+      "p005": -1004.0,
+      "p01": -1000.0,
+      "p99": 267.0,
+      "p995": 303.0,
+      "iqr": 190.0,
+      "p25": -104.0,
+      "p75": 86.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 130,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.7753185702083141274577981645495511",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 23,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 23,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.139324+00:00",
+    "findings": [
+      {
+        "bbox": [
+          370,
+          286,
+          7,
+          13
+        ],
+        "centroid": [
+          291.7,
+          372.6
+        ],
+        "area": 62,
+        "mean_hu": -821.6,
+        "hu_mean": -821.6,
+        "hu_max": -586.0,
+        "hu_min": -951.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          340,
+          304,
+          17,
+          14
+        ],
+        "centroid": [
+          309.7,
+          348.3
+        ],
+        "area": 109,
+        "mean_hu": -810.39,
+        "hu_mean": -810.39,
+        "hu_max": -582.0,
+        "hu_min": -959.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13513.13,
+    "triage_time_ms": 13513.069100001303,
+    "slice_hu_mean": -35.21478271484375,
+    "slice_hu_std": 182.88719177246094,
+    "stats": {
+      "mean": -35.21478271484375,
+      "std": 182.88719177246094,
+      "median": -11.0,
+      "mad": 95.0,
+      "p005": -1004.0,
+      "p01": -1000.0,
+      "p99": 278.0,
+      "p995": 311.0,
+      "iqr": 190.0,
+      "p25": -104.0,
+      "p75": 86.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 131,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.40677827938254551366272780886321356",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 23,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 23,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.240267+00:00",
+    "findings": [
+      {
+        "bbox": [
+          369,
+          285,
+          8,
+          15
+        ],
+        "centroid": [
+          292.5,
+          372.8
+        ],
+        "area": 71,
+        "mean_hu": -830.11,
+        "hu_mean": -830.11,
+        "hu_max": -589.0,
+        "hu_min": -955.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          337,
+          303,
+          20,
+          16
+        ],
+        "centroid": [
+          310.6,
+          346.3
+        ],
+        "area": 173,
+        "mean_hu": -820.66,
+        "hu_mean": -820.66,
+        "hu_max": -579.0,
+        "hu_min": -975.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13614.13,
+    "triage_time_ms": 13614.091900000858,
+    "slice_hu_mean": -36.596797943115234,
+    "slice_hu_std": 185.76162719726562,
+    "stats": {
+      "mean": -36.596797943115234,
+      "std": 185.76162719726562,
+      "median": -12.0,
+      "mad": 94.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 286.0,
+      "p995": 319.0,
+      "iqr": 189.0,
+      "p25": -104.0,
+      "p75": 85.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 132,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.98142017876486680183200414962973331",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 31,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 31,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.341277+00:00",
+    "findings": [
+      {
+        "bbox": [
+          368,
+          285,
+          9,
+          16
+        ],
+        "centroid": [
+          293.0,
+          372.8
+        ],
+        "area": 77,
+        "mean_hu": -839.7,
+        "hu_mean": -839.7,
+        "hu_max": -590.0,
+        "hu_min": -956.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          336,
+          303,
+          20,
+          16
+        ],
+        "centroid": [
+          311.3,
+          344.8
+        ],
+        "area": 199,
+        "mean_hu": -866.34,
+        "hu_mean": -866.34,
+        "hu_max": -585.0,
+        "hu_min": -979.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13715.15,
+    "triage_time_ms": 13715.117300000202,
+    "slice_hu_mean": -36.979576110839844,
+    "slice_hu_std": 186.66632080078125,
+    "stats": {
+      "mean": -36.979576110839844,
+      "std": 186.66632080078125,
+      "median": -15.0,
+      "mad": 92.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 279.0,
+      "p995": 316.0699999999997,
+      "iqr": 190.0,
+      "p25": -104.0,
+      "p75": 86.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 133,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.38446274265453633492171947252221037",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 42,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 42,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.440661+00:00",
+    "findings": [
+      {
+        "bbox": [
+          367,
+          285,
+          10,
+          17
+        ],
+        "centroid": [
+          294.0,
+          372.6
+        ],
+        "area": 82,
+        "mean_hu": -833.52,
+        "hu_mean": -833.52,
+        "hu_max": -580.0,
+        "hu_min": -963.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          335,
+          303,
+          20,
+          16
+        ],
+        "centroid": [
+          311.5,
+          343.9
+        ],
+        "area": 210,
+        "mean_hu": -894.9,
+        "hu_mean": -894.9,
+        "hu_max": -598.0,
+        "hu_min": -980.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13814.53,
+    "triage_time_ms": 13814.498600000661,
+    "slice_hu_mean": -36.80815505981445,
+    "slice_hu_std": 187.36672973632812,
+    "stats": {
+      "mean": -36.80815505981445,
+      "std": 187.36672973632812,
+      "median": -18.0,
+      "mad": 90.0,
+      "p005": -1003.0,
+      "p01": -1000.0,
+      "p99": 265.0,
+      "p995": 308.0149999999994,
+      "iqr": 190.0,
+      "p25": -104.0,
+      "p75": 86.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 134,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.90108313628412362953456869778818702",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 43,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 43,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.538640+00:00",
+    "findings": [
+      {
+        "bbox": [
+          366,
+          285,
+          11,
+          17
+        ],
+        "centroid": [
+          294.8,
+          372.3
+        ],
+        "area": 77,
+        "mean_hu": -835.12,
+        "hu_mean": -835.12,
+        "hu_max": -595.0,
+        "hu_min": -955.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          335,
+          302,
+          19,
+          17
+        ],
+        "centroid": [
+          311.3,
+          343.4
+        ],
+        "area": 225,
+        "mean_hu": -893.6,
+        "hu_mean": -893.6,
+        "hu_max": -590.0,
+        "hu_min": -986.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 13912.52,
+    "triage_time_ms": 13912.485599999854,
+    "slice_hu_mean": -38.002994537353516,
+    "slice_hu_std": 187.7110137939453,
+    "stats": {
+      "mean": -38.002994537353516,
+      "std": 187.7110137939453,
+      "median": -21.0,
+      "mad": 88.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 272.0,
+      "p995": 331.0,
+      "iqr": 188.0,
+      "p25": -103.0,
+      "p75": 85.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 135,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.23329814429219410427811842825281614",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 41,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 41,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.635112+00:00",
+    "findings": [
+      {
+        "bbox": [
+          366,
+          286,
+          11,
+          17
+        ],
+        "centroid": [
+          295.9,
+          371.9
+        ],
+        "area": 67,
+        "mean_hu": -836.43,
+        "hu_mean": -836.43,
+        "hu_max": -578.0,
+        "hu_min": -958.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          335,
+          302,
+          19,
+          17
+        ],
+        "centroid": [
+          311.0,
+          343.0
+        ],
+        "area": 221,
+        "mean_hu": -904.7,
+        "hu_mean": -904.7,
+        "hu_max": -578.0,
+        "hu_min": -985.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14008.99,
+    "triage_time_ms": 14008.957400001236,
+    "slice_hu_mean": -37.66626739501953,
+    "slice_hu_std": 185.6323699951172,
+    "stats": {
+      "mean": -37.66626739501953,
+      "std": 185.6323699951172,
+      "median": -24.0,
+      "mad": 86.0,
+      "p005": -1004.0,
+      "p01": -1000.0,
+      "p99": 271.0,
+      "p995": 338.7900000000009,
+      "iqr": 187.0,
+      "p25": -103.0,
+      "p75": 84.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 136,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.52314191374413389571012503923096794",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 41,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 41,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.736703+00:00",
+    "findings": [
+      {
+        "bbox": [
+          365,
+          288,
+          12,
+          15
+        ],
+        "centroid": [
+          296.4,
+          371.6
+        ],
+        "area": 56,
+        "mean_hu": -828.27,
+        "hu_mean": -828.27,
+        "hu_max": -584.0,
+        "hu_min": -973.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          334,
+          302,
+          20,
+          16
+        ],
+        "centroid": [
+          310.5,
+          342.6
+        ],
+        "area": 221,
+        "mean_hu": -899.26,
+        "hu_mean": -899.26,
+        "hu_max": -568.0,
+        "hu_min": -984.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14110.58,
+    "triage_time_ms": 14110.537500000646,
+    "slice_hu_mean": -38.834075927734375,
+    "slice_hu_std": 187.22039794921875,
+    "stats": {
+      "mean": -38.834075927734375,
+      "std": 187.22039794921875,
+      "median": -26.0,
+      "mad": 85.0,
+      "p005": -1004.0,
+      "p01": -999.0,
+      "p99": 282.619999999999,
+      "p995": 342.0,
+      "iqr": 185.0,
+      "p25": -103.0,
+      "p75": 82.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 137,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.28875965987118260786687134517321684",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 40,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 40,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.833153+00:00",
+    "findings": [
+      {
+        "bbox": [
+          365,
+          290,
+          11,
+          12
+        ],
+        "centroid": [
+          297.0,
+          371.2
+        ],
+        "area": 44,
+        "mean_hu": -811.0,
+        "hu_mean": -811.0,
+        "hu_max": -583.0,
+        "hu_min": -964.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          334,
+          302,
+          20,
+          16
+        ],
+        "centroid": [
+          310.2,
+          342.3
+        ],
+        "area": 212,
+        "mean_hu": -892.09,
+        "hu_mean": -892.09,
+        "hu_max": -575.0,
+        "hu_min": -980.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14207.03,
+    "triage_time_ms": 14206.977100000586,
+    "slice_hu_mean": -39.65194320678711,
+    "slice_hu_std": 187.42098999023438,
+    "stats": {
+      "mean": -39.65194320678711,
+      "std": 187.42098999023438,
+      "median": -27.0,
+      "mad": 84.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 283.630000000001,
+      "p995": 329.0,
+      "iqr": 186.0,
+      "p25": -104.0,
+      "p75": 82.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 138,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.31150132108122529336754061356817786",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 39,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 39,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:32.933558+00:00",
+    "findings": [
+      {
+        "bbox": [
+          379,
+          258,
+          7,
+          10
+        ],
+        "centroid": [
+          262.9,
+          382.0
+        ],
+        "area": 49,
+        "mean_hu": -778.08,
+        "hu_mean": -778.08,
+        "hu_max": -578.0,
+        "hu_min": -916.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          366,
+          292,
+          10,
+          9
+        ],
+        "centroid": [
+          296.9,
+          371.1
+        ],
+        "area": 34,
+        "mean_hu": -793.5,
+        "hu_mean": -793.5,
+        "hu_max": -583.0,
+        "hu_min": -948.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          334,
+          302,
+          19,
+          15
+        ],
+        "centroid": [
+          309.9,
+          341.8
+        ],
+        "area": 191,
+        "mean_hu": -882.34,
+        "hu_mean": -882.34,
+        "hu_max": -582.0,
+        "hu_min": -977.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14307.44,
+    "triage_time_ms": 14307.401600000958,
+    "slice_hu_mean": -40.29407501220703,
+    "slice_hu_std": 189.04319763183594,
+    "stats": {
+      "mean": -40.29407501220703,
+      "std": 189.04319763183594,
+      "median": -28.0,
+      "mad": 83.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 284.5400000000009,
+      "p995": 312.0,
+      "iqr": 184.0,
+      "p25": -103.0,
+      "p75": 81.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 139,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.38464571378264598936739869193585570",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 33,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 33,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.034858+00:00",
+    "findings": [
+      {
+        "bbox": [
+          378,
+          256,
+          8,
+          13
+        ],
+        "centroid": [
+          262.8,
+          382.0
+        ],
+        "area": 71,
+        "mean_hu": -832.79,
+        "hu_mean": -832.79,
+        "hu_max": -568.0,
+        "hu_min": -951.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          335,
+          302,
+          17,
+          15
+        ],
+        "centroid": [
+          310.0,
+          341.4
+        ],
+        "area": 159,
+        "mean_hu": -867.82,
+        "hu_mean": -867.82,
+        "hu_max": -571.0,
+        "hu_min": -975.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14408.65,
+    "triage_time_ms": 14408.583500000532,
+    "slice_hu_mean": -40.70383834838867,
+    "slice_hu_std": 188.210693359375,
+    "stats": {
+      "mean": -40.70383834838867,
+      "std": 188.210693359375,
+      "median": -29.0,
+      "mad": 83.0,
+      "p005": -1006.0,
+      "p01": -1002.0,
+      "p99": 285.4500000000007,
+      "p995": 324.0,
+      "iqr": 183.0,
+      "p25": -104.0,
+      "p75": 79.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 140,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.27499350320925807500446405430898471",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 32,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 32,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.132805+00:00",
+    "findings": [
+      {
+        "bbox": [
+          377,
+          253,
+          10,
+          16
+        ],
+        "centroid": [
+          262.5,
+          382.1
+        ],
+        "area": 97,
+        "mean_hu": -848.4,
+        "hu_mean": -848.4,
+        "hu_max": -564.0,
+        "hu_min": -968.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          335,
+          304,
+          14,
+          12
+        ],
+        "centroid": [
+          310.1,
+          340.5
+        ],
+        "area": 118,
+        "mean_hu": -860.3,
+        "hu_mean": -860.3,
+        "hu_max": -560.0,
+        "hu_min": -973.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14506.67,
+    "triage_time_ms": 14506.636800000706,
+    "slice_hu_mean": -41.55042266845703,
+    "slice_hu_std": 188.73268127441406,
+    "stats": {
+      "mean": -41.55042266845703,
+      "std": 188.73268127441406,
+      "median": -32.0,
+      "mad": 81.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 302.0499999999993,
+      "p995": 344.0,
+      "iqr": 182.0,
+      "p25": -104.0,
+      "p75": 78.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 141,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.82143207292520771025094756040144262",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 50,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 50,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.257407+00:00",
+    "findings": [
+      {
+        "bbox": [
+          376,
+          243,
+          12,
+          26
+        ],
+        "centroid": [
+          259.4,
+          381.4
+        ],
+        "area": 149,
+        "mean_hu": -829.03,
+        "hu_mean": -829.03,
+        "hu_max": -557.0,
+        "hu_min": -970.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          195,
+          277,
+          10,
+          11
+        ],
+        "centroid": [
+          282.7,
+          199.2
+        ],
+        "area": 34,
+        "mean_hu": 373.35,
+        "hu_mean": 373.35,
+        "hu_max": 408.0,
+        "hu_min": 364.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          205,
+          282,
+          9,
+          13
+        ],
+        "centroid": [
+          287.5,
+          209.5
+        ],
+        "area": 43,
+        "mean_hu": 376.09,
+        "hu_mean": 376.09,
+        "hu_max": 400.0,
+        "hu_min": 364.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          339,
+          282,
+          6,
+          8
+        ],
+        "centroid": [
+          285.7,
+          341.2
+        ],
+        "area": 33,
+        "mean_hu": -736.64,
+        "hu_mean": -736.64,
+        "hu_max": -563.0,
+        "hu_min": -899.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          341,
+          297,
+          16,
+          12
+        ],
+        "centroid": [
+          303.9,
+          348.3
+        ],
+        "area": 65,
+        "mean_hu": -686.26,
+        "hu_mean": -686.26,
+        "hu_max": -558.0,
+        "hu_min": -905.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          335,
+          305,
+          12,
+          10
+        ],
+        "centroid": [
+          310.2,
+          340.2
+        ],
+        "area": 83,
+        "mean_hu": -816.2,
+        "hu_mean": -816.2,
+        "hu_max": -571.0,
+        "hu_min": -964.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14631.12,
+    "triage_time_ms": 14631.065999999919,
+    "slice_hu_mean": -42.69446563720703,
+    "slice_hu_std": 188.11199951171875,
+    "stats": {
+      "mean": -42.69446563720703,
+      "std": 188.11199951171875,
+      "median": -37.0,
+      "mad": 80.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 299.0,
+      "p995": 355.0,
+      "iqr": 181.0,
+      "p25": -104.0,
+      "p75": 77.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 142,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.66774978944216413524304553406707947",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 59,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 59,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.376976+00:00",
+    "findings": [
+      {
+        "bbox": [
+          251,
+          186,
+          21,
+          12
+        ],
+        "centroid": [
+          190.3,
+          259.6
+        ],
+        "area": 87,
+        "mean_hu": 384.15,
+        "hu_mean": 384.15,
+        "hu_max": 442.0,
+        "hu_min": 357.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          375,
+          242,
+          13,
+          27
+        ],
+        "centroid": [
+          258.4,
+          381.1
+        ],
+        "area": 188,
+        "mean_hu": -830.28,
+        "hu_mean": -830.28,
+        "hu_max": -556.0,
+        "hu_min": -975.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          194,
+          276,
+          21,
+          18
+        ],
+        "centroid": [
+          284.1,
+          204.0
+        ],
+        "area": 125,
+        "mean_hu": 370.94,
+        "hu_mean": 370.94,
+        "hu_max": 406.0,
+        "hu_min": 357.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          339,
+          282,
+          7,
+          7
+        ],
+        "centroid": [
+          285.0,
+          342.1
+        ],
+        "area": 34,
+        "mean_hu": -727.88,
+        "hu_mean": -727.88,
+        "hu_max": -557.0,
+        "hu_min": -891.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          338,
+          295,
+          19,
+          15
+        ],
+        "centroid": [
+          303.1,
+          346.2
+        ],
+        "area": 119,
+        "mean_hu": -792.9,
+        "hu_mean": -792.9,
+        "hu_max": -561.0,
+        "hu_min": -956.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          336,
+          307,
+          9,
+          7
+        ],
+        "centroid": [
+          310.4,
+          339.8
+        ],
+        "area": 45,
+        "mean_hu": -714.76,
+        "hu_mean": -714.76,
+        "hu_max": -556.0,
+        "hu_min": -864.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14750.86,
+    "triage_time_ms": 14750.80490000073,
+    "slice_hu_mean": -44.25825119018555,
+    "slice_hu_std": 189.94540405273438,
+    "stats": {
+      "mean": -44.25825119018555,
+      "std": 189.94540405273438,
+      "median": -39.0,
+      "mad": 79.0,
+      "p005": -1005.0,
+      "p01": -1000.0,
+      "p99": 305.0,
+      "p995": 354.0,
+      "iqr": 180.0,
+      "p25": -105.0,
+      "p75": 75.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 143,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.27837465050357140451233854089896800",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 46,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 46,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.493354+00:00",
+    "findings": [
+      {
+        "bbox": [
+          374,
+          250,
+          15,
+          19
+        ],
+        "centroid": [
+          259.9,
+          381.2
+        ],
+        "area": 194,
+        "mean_hu": -818.05,
+        "hu_mean": -818.05,
+        "hu_max": -550.0,
+        "hu_min": -971.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          193,
+          274,
+          20,
+          14
+        ],
+        "centroid": [
+          281.9,
+          201.7
+        ],
+        "area": 150,
+        "mean_hu": 362.41,
+        "hu_mean": 362.41,
+        "hu_max": 402.0,
+        "hu_min": 338.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          208,
+          286,
+          8,
+          7
+        ],
+        "centroid": [
+          289.2,
+          211.7
+        ],
+        "area": 33,
+        "mean_hu": 355.88,
+        "hu_mean": 355.88,
+        "hu_max": 374.0,
+        "hu_min": 338.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          338,
+          295,
+          19,
+          15
+        ],
+        "centroid": [
+          303.1,
+          345.3
+        ],
+        "area": 148,
+        "mean_hu": -847.17,
+        "hu_mean": -847.17,
+        "hu_max": -551.0,
+        "hu_min": -960.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14867.23,
+    "triage_time_ms": 14867.185799999788,
+    "slice_hu_mean": -45.82905960083008,
+    "slice_hu_std": 188.02647399902344,
+    "stats": {
+      "mean": -45.82905960083008,
+      "std": 188.02647399902344,
+      "median": -43.0,
+      "mad": 76.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 295.0,
+      "p995": 337.28499999999985,
+      "iqr": 175.0,
+      "p25": -105.0,
+      "p75": 70.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 144,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.26047410008562904256308586556575373",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 48,
+    "emergency_action": "WATCH",
+    "score_details": [
+      {
+        "points": 48,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.601233+00:00",
+    "findings": [
+      {
+        "bbox": [
+          372,
+          252,
+          17,
+          17
+        ],
+        "centroid": [
+          260.9,
+          380.5
+        ],
+        "area": 192,
+        "mean_hu": -825.22,
+        "hu_mean": -825.22,
+        "hu_max": -537.0,
+        "hu_min": -971.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          194,
+          275,
+          15,
+          14
+        ],
+        "centroid": [
+          281.6,
+          200.5
+        ],
+        "area": 143,
+        "mean_hu": 363.36,
+        "hu_mean": 363.36,
+        "hu_max": 397.0,
+        "hu_min": 330.0,
+        "confidence": 0.8,
+        "severity_score": 0.4,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          337,
+          294,
+          20,
+          17
+        ],
+        "centroid": [
+          303.3,
+          345.0
+        ],
+        "area": 166,
+        "mean_hu": -862.78,
+        "hu_mean": -862.78,
+        "hu_max": -543.0,
+        "hu_min": -976.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 14975.11,
+    "triage_time_ms": 14975.055500000963,
+    "slice_hu_mean": -47.414276123046875,
+    "slice_hu_std": 187.6563262939453,
+    "stats": {
+      "mean": -47.414276123046875,
+      "std": 187.6563262939453,
+      "median": -46.0,
+      "mad": 74.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 287.0,
+      "p995": 329.0,
+      "iqr": 172.25,
+      "p25": -106.0,
+      "p75": 66.25
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 145,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.60944871139673648612593597496145832",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 96,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 96,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.719243+00:00",
+    "findings": [
+      {
+        "bbox": [
+          370,
+          253,
+          19,
+          16
+        ],
+        "centroid": [
+          260.8,
+          379.7
+        ],
+        "area": 195,
+        "mean_hu": -831.52,
+        "hu_mean": -831.52,
+        "hu_max": -536.0,
+        "hu_min": -977.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          189,
+          270,
+          19,
+          19
+        ],
+        "centroid": [
+          280.3,
+          199.4
+        ],
+        "area": 172,
+        "mean_hu": 360.48,
+        "hu_mean": 360.48,
+        "hu_max": 408.0,
+        "hu_min": 327.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          341,
+          274,
+          8,
+          7
+        ],
+        "centroid": [
+          277.4,
+          345.0
+        ],
+        "area": 35,
+        "mean_hu": -699.86,
+        "hu_mean": -699.86,
+        "hu_max": -530.0,
+        "hu_min": -839.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          338,
+          294,
+          19,
+          17
+        ],
+        "centroid": [
+          303.3,
+          344.9
+        ],
+        "area": 168,
+        "mean_hu": -867.56,
+        "hu_mean": -867.56,
+        "hu_max": -534.0,
+        "hu_min": -968.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          291,
+          297,
+          26,
+          22
+        ],
+        "centroid": [
+          307.6,
+          304.2
+        ],
+        "area": 394,
+        "mean_hu": -856.43,
+        "hu_mean": -856.43,
+        "hu_max": -530.0,
+        "hu_min": -983.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 15093.12,
+    "triage_time_ms": 15093.076600000131,
+    "slice_hu_mean": -54.09954071044922,
+    "slice_hu_std": 197.26995849609375,
+    "stats": {
+      "mean": -54.09954071044922,
+      "std": 197.26995849609375,
+      "median": -51.0,
+      "mad": 72.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 274.4400000000023,
+      "p995": 326.3600000000006,
+      "iqr": 169.0,
+      "p25": -107.0,
+      "p75": 62.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 146,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.59349923945583371660863204041508500",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 89,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 89,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.834206+00:00",
+    "findings": [
+      {
+        "bbox": [
+          267,
+          183,
+          13,
+          8
+        ],
+        "centroid": [
+          186.1,
+          274.0
+        ],
+        "area": 32,
+        "mean_hu": 349.62,
+        "hu_mean": 349.62,
+        "hu_max": 412.0,
+        "hu_min": 318.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          368,
+          253,
+          21,
+          16
+        ],
+        "centroid": [
+          260.8,
+          379.3
+        ],
+        "area": 183,
+        "mean_hu": -840.87,
+        "hu_mean": -840.87,
+        "hu_max": -523.0,
+        "hu_min": -985.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          193,
+          270,
+          15,
+          20
+        ],
+        "centroid": [
+          279.6,
+          200.0
+        ],
+        "area": 168,
+        "mean_hu": 354.82,
+        "hu_mean": 354.82,
+        "hu_max": 402.0,
+        "hu_min": 319.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          341,
+          275,
+          10,
+          8
+        ],
+        "centroid": [
+          278.9,
+          345.3
+        ],
+        "area": 55,
+        "mean_hu": -758.27,
+        "hu_mean": -758.27,
+        "hu_max": -531.0,
+        "hu_min": -907.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          338,
+          295,
+          18,
+          15
+        ],
+        "centroid": [
+          303.0,
+          345.0
+        ],
+        "area": 159,
+        "mean_hu": -848.05,
+        "hu_mean": -848.05,
+        "hu_max": -528.0,
+        "hu_min": -965.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          292,
+          298,
+          25,
+          20
+        ],
+        "centroid": [
+          307.2,
+          304.6
+        ],
+        "area": 320,
+        "mean_hu": -829.21,
+        "hu_mean": -829.21,
+        "hu_max": -524.0,
+        "hu_min": -973.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 15208.08,
+    "triage_time_ms": 15208.036300000458,
+    "slice_hu_mean": -55.155399322509766,
+    "slice_hu_std": 194.7493438720703,
+    "stats": {
+      "mean": -55.155399322509766,
+      "std": 194.7493438720703,
+      "median": -53.0,
+      "mad": 71.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 269.0,
+      "p995": 317.0,
+      "iqr": 166.0,
+      "p25": -107.0,
+      "p75": 59.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 147,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.26354370155040540565252104459875167",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 99,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 99,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:33.957013+00:00",
+    "findings": [
+      {
+        "bbox": [
+          270,
+          183,
+          10,
+          9
+        ],
+        "centroid": [
+          187.1,
+          275.3
+        ],
+        "area": 31,
+        "mean_hu": 322.77,
+        "hu_mean": 322.77,
+        "hu_max": 366.0,
+        "hu_min": 299.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          356,
+          254,
+          33,
+          14
+        ],
+        "centroid": [
+          259.9,
+          375.9
+        ],
+        "area": 210,
+        "mean_hu": -810.31,
+        "hu_mean": -810.31,
+        "hu_max": -526.0,
+        "hu_min": -982.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          192,
+          267,
+          17,
+          23
+        ],
+        "centroid": [
+          277.8,
+          200.1
+        ],
+        "area": 186,
+        "mean_hu": 343.19,
+        "hu_mean": 343.19,
+        "hu_max": 384.0,
+        "hu_min": 299.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          341,
+          276,
+          11,
+          9
+        ],
+        "centroid": [
+          280.2,
+          345.7
+        ],
+        "area": 69,
+        "mean_hu": -778.94,
+        "hu_mean": -778.94,
+        "hu_max": -523.0,
+        "hu_min": -931.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          339,
+          297,
+          15,
+          13
+        ],
+        "centroid": [
+          303.2,
+          345.1
+        ],
+        "area": 133,
+        "mean_hu": -804.37,
+        "hu_mean": -804.37,
+        "hu_max": -525.0,
+        "hu_min": -956.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          295,
+          299,
+          20,
+          17
+        ],
+        "centroid": [
+          306.9,
+          305.1
+        ],
+        "area": 221,
+        "mean_hu": -792.03,
+        "hu_mean": -792.03,
+        "hu_max": -519.0,
+        "hu_min": -955.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 15330.88,
+    "triage_time_ms": 15330.835200000365,
+    "slice_hu_mean": -55.99421691894531,
+    "slice_hu_std": 191.63192749023438,
+    "stats": {
+      "mean": -55.99421691894531,
+      "std": 191.63192749023438,
+      "median": -54.0,
+      "mad": 70.0,
+      "p005": -1005.0,
+      "p01": -1001.73,
+      "p99": 256.0,
+      "p995": 298.3650000000016,
+      "iqr": 163.0,
+      "p25": -107.0,
+      "p75": 56.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 148,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.63301046795194735854197295835969289",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 70,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 70,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:34.079685+00:00",
+    "findings": [
+      {
+        "bbox": [
+          356,
+          254,
+          33,
+          14
+        ],
+        "centroid": [
+          260.2,
+          376.8
+        ],
+        "area": 187,
+        "mean_hu": -822.94,
+        "hu_mean": -822.94,
+        "hu_max": -516.0,
+        "hu_min": -978.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          192,
+          268,
+          17,
+          22
+        ],
+        "centroid": [
+          277.4,
+          200.0
+        ],
+        "area": 168,
+        "mean_hu": 337.9,
+        "hu_mean": 337.9,
+        "hu_max": 386.0,
+        "hu_min": 290.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          341,
+          277,
+          11,
+          10
+        ],
+        "centroid": [
+          281.6,
+          345.8
+        ],
+        "area": 75,
+        "mean_hu": -787.12,
+        "hu_mean": -787.12,
+        "hu_max": -535.0,
+        "hu_min": -936.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          340,
+          300,
+          13,
+          9
+        ],
+        "centroid": [
+          303.7,
+          345.1
+        ],
+        "area": 83,
+        "mean_hu": -705.77,
+        "hu_mean": -705.77,
+        "hu_max": -531.0,
+        "hu_min": -878.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          301,
+          301,
+          12,
+          13
+        ],
+        "centroid": [
+          306.8,
+          306.1
+        ],
+        "area": 115,
+        "mean_hu": -751.42,
+        "hu_mean": -751.42,
+        "hu_max": -520.0,
+        "hu_min": -910.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          226,
+          313,
+          14,
+          6
+        ],
+        "centroid": [
+          315.8,
+          232.5
+        ],
+        "area": 56,
+        "mean_hu": -607.3,
+        "hu_mean": -607.3,
+        "hu_max": -516.0,
+        "hu_min": -770.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 15453.53,
+    "triage_time_ms": 15453.467100000125,
+    "slice_hu_mean": -55.88825225830078,
+    "slice_hu_std": 186.78375244140625,
+    "stats": {
+      "mean": -55.88825225830078,
+      "std": 186.78375244140625,
+      "median": -56.0,
+      "mad": 69.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 251.0,
+      "p995": 288.0,
+      "iqr": 163.0,
+      "p25": -108.0,
+      "p75": 55.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 149,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.19591711325607903886343987817007836",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 55,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 55,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:34.203447+00:00",
+    "findings": [
+      {
+        "bbox": [
+          363,
+          253,
+          27,
+          15
+        ],
+        "centroid": [
+          260.6,
+          379.3
+        ],
+        "area": 159,
+        "mean_hu": -827.36,
+        "hu_mean": -827.36,
+        "hu_max": -519.0,
+        "hu_min": -973.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          189,
+          270,
+          19,
+          11
+        ],
+        "centroid": [
+          276.2,
+          198.6
+        ],
+        "area": 95,
+        "mean_hu": 321.17,
+        "hu_mean": 321.17,
+        "hu_max": 389.0,
+        "hu_min": 284.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          342,
+          278,
+          11,
+          11
+        ],
+        "centroid": [
+          283.1,
+          346.1
+        ],
+        "area": 75,
+        "mean_hu": -803.71,
+        "hu_mean": -803.71,
+        "hu_max": -519.0,
+        "hu_min": -953.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          196,
+          282,
+          9,
+          9
+        ],
+        "centroid": [
+          286.6,
+          201.0
+        ],
+        "area": 39,
+        "mean_hu": 328.64,
+        "hu_mean": 328.64,
+        "hu_max": 371.0,
+        "hu_min": 286.0,
+        "confidence": 0.6,
+        "severity_score": 0.3,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          303,
+          302,
+          7,
+          9
+        ],
+        "centroid": [
+          305.8,
+          306.3
+        ],
+        "area": 31,
+        "mean_hu": -568.23,
+        "hu_mean": -568.23,
+        "hu_max": -519.0,
+        "hu_min": -639.0,
+        "confidence": 0.6,
+        "severity_score": 0.42,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          224,
+          310,
+          20,
+          11
+        ],
+        "centroid": [
+          315.3,
+          233.6
+        ],
+        "area": 150,
+        "mean_hu": -740.29,
+        "hu_mean": -740.29,
+        "hu_max": -520.0,
+        "hu_min": -911.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 15577.32,
+    "triage_time_ms": 15577.269800000067,
+    "slice_hu_mean": -56.222381591796875,
+    "slice_hu_std": 184.41224670410156,
+    "stats": {
+      "mean": -56.222381591796875,
+      "std": 184.41224670410156,
+      "median": -57.0,
+      "mad": 68.0,
+      "p005": -1005.205,
+      "p01": -1001.0,
+      "p99": 243.0,
+      "p995": 278.2049999999981,
+      "iqr": 163.0,
+      "p25": -109.0,
+      "p75": 54.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 150,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.20818855544895835033325029678175059",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 70,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 70,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:34.318625+00:00",
+    "findings": [
+      {
+        "bbox": [
+          365,
+          254,
+          25,
+          14
+        ],
+        "centroid": [
+          260.8,
+          380.0
+        ],
+        "area": 141,
+        "mean_hu": -808.89,
+        "hu_mean": -808.89,
+        "hu_max": -522.0,
+        "hu_min": -969.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          339,
+          279,
+          24,
+          25
+        ],
+        "centroid": [
+          292.6,
+          347.7
+        ],
+        "area": 247,
+        "mean_hu": -709.5,
+        "hu_mean": -709.5,
+        "hu_max": -517.0,
+        "hu_min": -963.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          197,
+          284,
+          8,
+          6
+        ],
+        "centroid": [
+          287.0,
+          200.9
+        ],
+        "area": 31,
+        "mean_hu": 329.77,
+        "hu_mean": 329.77,
+        "hu_max": 362.0,
+        "hu_min": 290.0,
+        "confidence": 0.7,
+        "severity_score": 0.35,
+        "finding_type": "Statistical Outlier"
+      },
+      {
+        "bbox": [
+          212,
+          308,
+          6,
+          8
+        ],
+        "centroid": [
+          311.7,
+          214.2
+        ],
+        "area": 36,
+        "mean_hu": -670.56,
+        "hu_mean": -670.56,
+        "hu_max": -522.0,
+        "hu_min": -852.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          224,
+          309,
+          22,
+          13
+        ],
+        "centroid": [
+          314.8,
+          234.4
+        ],
+        "area": 209,
+        "mean_hu": -825.5,
+        "hu_mean": -825.5,
+        "hu_max": -518.0,
+        "hu_min": -942.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 15692.45,
+    "triage_time_ms": 15692.368400001214,
+    "slice_hu_mean": -59.08351135253906,
+    "slice_hu_std": 188.5729217529297,
+    "stats": {
+      "mean": -59.08351135253906,
+      "std": 188.5729217529297,
+      "median": -57.0,
+      "mad": 69.0,
+      "p005": -1005.0,
+      "p01": -1001.0,
+      "p99": 235.0,
+      "p995": 261.0,
+      "iqr": 163.0,
+      "p25": -109.0,
+      "p75": 54.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  },
+  {
+    "slice_id": 151,
+    "uid": "1.2.826.0.1.3680043.2.1125.1.46721100107736335425840051725617217",
+    "patient_id": "PANCREAS_0001",
+    "flagged": true,
+    "emergency_score": 88,
+    "emergency_action": "URGENT REVIEW",
+    "score_details": [
+      {
+        "points": 88,
+        "description": "Dynamic severity mapping"
+      }
+    ],
+    "timestamp": "2026-07-28T11:00:34.431541+00:00",
+    "findings": [
+      {
+        "bbox": [
+          366,
+          254,
+          24,
+          13
+        ],
+        "centroid": [
+          261.0,
+          381.0
+        ],
+        "area": 116,
+        "mean_hu": -799.03,
+        "hu_mean": -799.03,
+        "hu_max": -515.0,
+        "hu_min": -962.0,
+        "confidence": 0.7,
+        "severity_score": 0.49,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          338,
+          280,
+          25,
+          25
+        ],
+        "centroid": [
+          294.3,
+          348.6
+        ],
+        "area": 347,
+        "mean_hu": -827.56,
+        "hu_mean": -827.56,
+        "hu_max": -525.0,
+        "hu_min": -967.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          209,
+          307,
+          10,
+          10
+        ],
+        "centroid": [
+          311.4,
+          214.1
+        ],
+        "area": 64,
+        "mean_hu": -772.03,
+        "hu_mean": -772.03,
+        "hu_max": -520.0,
+        "hu_min": -936.0,
+        "confidence": 0.8,
+        "severity_score": 0.56,
+        "finding_type": "Pleural Air / Pneumothorax"
+      },
+      {
+        "bbox": [
+          224,
+          307,
+          23,
+          15
+        ],
+        "centroid": [
+          314.2,
+          235.0
+        ],
+        "area": 252,
+        "mean_hu": -861.23,
+        "hu_mean": -861.23,
+        "hu_max": -520.0,
+        "hu_min": -966.0,
+        "confidence": 0.9,
+        "severity_score": 0.63,
+        "finding_type": "Pleural Air / Pneumothorax"
+      }
+    ],
+    "processing_time_ms": 15805.39,
+    "triage_time_ms": 15805.344700000205,
+    "slice_hu_mean": -61.173301696777344,
+    "slice_hu_std": 192.8194580078125,
+    "stats": {
+      "mean": -61.173301696777344,
+      "std": 192.8194580078125,
+      "median": -58.0,
+      "mad": 68.0,
+      "p005": -1006.0,
+      "p01": -1001.0,
+      "p99": 232.0,
+      "p995": 261.0,
+      "iqr": 162.0,
+      "p25": -109.0,
+      "p75": 53.0
+    },
+    "detected_region": "generic",
+    "window_center_default": null,
+    "window_width_default": null
+  }
+]

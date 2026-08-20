@@ -1,5 +1,6 @@
 """
 Django views for the PRISM radiology report frontend.
+Page views are now handled by the React SPA — Django only serves /api/* proxies.
 """
 
 from __future__ import annotations
@@ -8,13 +9,35 @@ import json
 import logging
 from pathlib import Path
 
-from django.http import JsonResponse
+from django.conf import settings
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from reports.api_client import PrismAPIError, get_api_client
 
 logger = logging.getLogger(__name__)
+
+# ── React SPA catch-all ───────────────────────────────────────────────
+
+REACT_INDEX = Path(settings.BASE_DIR) / "static" / "react-dist" / "index.html"
+
+
+def index_view(request):
+    """Serve the React SPA index.html for all non-API page routes."""
+    if REACT_INDEX.exists():
+        return FileResponse(open(REACT_INDEX, "rb"), content_type="text/html")
+    # Dev fallback — React Vite dev server should be running on :5173
+    return HttpResponse(
+        '<html><body style="background:#070b12;color:#00d4ff;font-family:monospace;padding:40px">'
+        '<h2>PRISM React Dev Mode</h2>'
+        '<p>Run <code>npm run dev</code> inside <code>prism-react/</code> and open '
+        '<a href="http://localhost:5173" style="color:#22c55e">http://localhost:5173</a></p>'
+        '</body></html>',
+        content_type="text/html",
+        status=200,
+    )
 
 SAMPLE_DATA_DIR = Path(__file__).resolve().parent.parent / "sample_data"
 
@@ -157,7 +180,7 @@ def reports_list(request):
     return render(request, "reports/reports_list.html", context)
 
 
-# ── JSON proxy endpoints (called from Alpine.js) ──────────────────────
+# ── JSON API proxy endpoints (called by React frontend) ─────────────────
 
 
 @require_http_methods(["GET"])
@@ -184,6 +207,7 @@ def api_get_report_proxy(request, study_id: str):
         return JsonResponse({"detail": str(exc)}, status=exc.status_code)
 
 
+@csrf_exempt
 @require_POST
 def api_generate_proxy(request):
     try:
@@ -198,6 +222,7 @@ def api_generate_proxy(request):
         return JsonResponse({"detail": str(exc)}, status=exc.status_code)
 
 
+@csrf_exempt
 @require_http_methods(["PUT", "POST"])
 def api_update_proxy(request, study_id: str):
     try:
@@ -206,16 +231,21 @@ def api_update_proxy(request, study_id: str):
         return JsonResponse({"detail": "Invalid JSON body."}, status=400)
 
     try:
-        result = get_api_client().update_report(
+        # Update the report (FastAPI returns {"success": true})
+        get_api_client().update_report(
             study_id,
             findings=payload.get("findings"),
             impression=payload.get("impression"),
         )
-        return JsonResponse(result)
+        # Re-fetch and return the full report so React gets the updated object
+        report = get_api_client().get_report(study_id)
+        return JsonResponse(report)
     except PrismAPIError as exc:
         return JsonResponse({"detail": str(exc)}, status=exc.status_code)
 
 
+
+@csrf_exempt
 @require_POST
 def api_sign_proxy(request):
     try:

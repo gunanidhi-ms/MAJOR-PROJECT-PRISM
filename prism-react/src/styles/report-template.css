@@ -1,0 +1,223 @@
+/* ── A4 Print / PDF Template Styles ── */
+@media print {
+  body { background: #fff !important; }
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+}
+
+.report-a4 {
+  width: 794px; /* A4 at 96dpi */
+  min-height: 1123px;
+  background: #ffffff;
+  color: #1a1a2e;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 0 60px rgba(0,0,0,0.3);
+}
+
+.report-a4-inner {
+  padding: 40px 48px;
+}
+
+/* Report header bar */
+.report-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #0d1f3e;
+  margin-bottom: 20px;
+}
+
+.report-centre-info h1 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0d1f3e;
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+}
+.report-centre-info p {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.report-meta-box {
+  text-align: right;
+}
+.report-meta-box .report-id {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0d1f3e;
+  font-family: 'JetBrains Mono', monospace;
+  background: #eef2ff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.report-meta-box p {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Study info strip */
+.study-info-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.study-info-cell {
+  padding: 10px 14px;
+  border-right: 1px solid #e2e8f0;
+}
+.study-info-cell:last-child { border-right: none; }
+.study-info-cell label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  display: block;
+  margin-bottom: 3px;
+}
+.study-info-cell span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Section headers */
+.report-section {
+  margin-bottom: 22px;
+}
+.report-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0d1f3e;
+  padding: 6px 12px;
+  background: #f1f5f9;
+  border-left: 4px solid #0ea5e9;
+  margin-bottom: 12px;
+  border-radius: 0 4px 4px 0;
+}
+.report-section-body {
+  font-size: 13px;
+  color: #1e293b;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  padding: 0 4px;
+  min-height: 48px;
+}
+
+/* Impression is highlighted */
+.report-impression .report-section-title {
+  border-left-color: #22c55e;
+}
+.report-impression .report-section-body {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+/* Signature block */
+.signature-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+.signature-left p {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+}
+.signature-image-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 16px;
+  background: #f8fafc;
+  text-align: center;
+  min-width: 200px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.signature-image-box img {
+  max-height: 64px;
+  max-width: 180px;
+}
+.signature-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+.signature-designation {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Report footer */
+.report-footer {
+  position: absolute;
+  bottom: 28px;
+  left: 48px;
+  right: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+.report-footer p {
+  font-size: 9px;
+  color: #94a3b8;
+}
+.report-ai-badge {
+  font-size: 9px;
+  font-weight: 700;
+  color: #0ea5e9;
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Validated stamp */
+.validated-stamp {
+  position: absolute;
+  top: 48px;
+  right: 48px;
+  width: 72px;
+  height: 72px;
+  border: 3px solid #22c55e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-12deg);
+  opacity: 0.7;
+}
+.validated-stamp span {
+  font-size: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #22c55e;
+  text-align: center;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
