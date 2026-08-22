@@ -12,7 +12,7 @@ Skip with: pytest -m "not integration"
 import os
 import pytest
 import numpy as np
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from phase2_segmentation.volume_builder import assemble_nifti
 from phase2_segmentation.segment_runner import run_totalsegmentator
@@ -301,3 +301,79 @@ class TestPerformanceCharacteristics:
         assert len(results) == 3
         for result in results.values():
             assert result.success
+
+
+@pytest.mark.integration
+class TestPackage7Integration:
+    """Integration tests covering Stage 4 and Stage 5 (Scoring & Handoff)."""
+
+    def test_full_phase2_pipeline_p7_outputs(self, sample_hu_volume, realistic_spacing, temp_work_dir):
+        """After run(), Phase2Result.findings_path exists and JSON is schema-valid."""
+        from schemas.candidate import Candidate
+        
+        with patch.dict('sys.modules', {'SimpleITK': MagicMock()}), \
+             patch('phase2_segmentation.lifecycle_manager.Phase2LifecycleManager._assemble') as mock_assemble, \
+             patch('phase2_segmentation.lifecycle_manager.Phase2LifecycleManager._segment') as mock_segment, \
+             patch('phase1_ingestion.finding_tracker.link_findings_across_slices', return_value=[]), \
+             patch('phase2_segmentation.seed_clusterer.cluster_phase1_seeds', return_value=[]), \
+             patch('phase2_segmentation.organ_sweep.sweep_organs', return_value=[]), \
+             patch('phase2_segmentation.candidate_merger.merge_candidates', return_value=[Candidate(phase1_confidence=0.8)]):
+             
+            mock_assemble.return_value = "temp.nii"
+            
+            def mock_segment_side_effect(nifti_path, seg_dir, modality):
+                os.makedirs(seg_dir, exist_ok=True)
+                with open(os.path.join(seg_dir, "temp_seg.nii"), "w") as f:
+                    f.write("dummy")
+                return (seg_dir, {"liver": {"volume_cc": 100.0, "trimmed_mean": 40.0}})
+                
+            mock_segment.side_effect = mock_segment_side_effect
+            
+            manager = Phase2LifecycleManager(work_dir=temp_work_dir)
+            findings_per_slice = [[Candidate(phase1_confidence=0.8)]]
+            
+            result = manager.run(sample_hu_volume, realistic_spacing, {}, findings_per_slice=findings_per_slice)
+            
+            assert result.success
+            assert result.findings_path != ""
+            assert os.path.exists(result.findings_path)
+            
+            import json
+            with open(result.findings_path, "r") as f:
+                data = json.load(f)
+            
+            assert "findings" in data
+            assert data["candidate_count"] == 1
+
+
+
+    def test_all_gate_values_are_valid_strings(self, sample_hu_volume, realistic_spacing, temp_work_dir):
+        """After Stage 5, every non-suppressed candidate has gate AUTO_CONFIRMED or MANUAL_REVIEW."""
+        from schemas.candidate import Candidate
+        
+        with patch.dict('sys.modules', {'SimpleITK': MagicMock()}), \
+             patch('phase2_segmentation.lifecycle_manager.Phase2LifecycleManager._assemble') as mock_assemble, \
+             patch('phase2_segmentation.lifecycle_manager.Phase2LifecycleManager._segment') as mock_segment, \
+             patch('phase1_ingestion.finding_tracker.link_findings_across_slices', return_value=[]), \
+             patch('phase2_segmentation.seed_clusterer.cluster_phase1_seeds', return_value=[]), \
+             patch('phase2_segmentation.organ_sweep.sweep_organs', return_value=[]), \
+             patch('phase2_segmentation.candidate_merger.merge_candidates', return_value=[Candidate(phase1_confidence=0.9)]):
+             
+            mock_assemble.return_value = "temp.nii"
+            
+            def mock_segment_side_effect(nifti_path, seg_dir, modality):
+                os.makedirs(seg_dir, exist_ok=True)
+                with open(os.path.join(seg_dir, "temp_seg.nii"), "w") as f:
+                    f.write("dummy")
+                return (seg_dir, {"liver": {"volume_cc": 100.0, "trimmed_mean": 40.0}})
+                
+            mock_segment.side_effect = mock_segment_side_effect
+            
+            manager = Phase2LifecycleManager(work_dir=temp_work_dir)
+            findings_per_slice = [[Candidate(phase1_confidence=0.9)]]
+            
+            result = manager.run(sample_hu_volume, realistic_spacing, {}, findings_per_slice=findings_per_slice)
+            
+            for c in result.candidates:
+                if not c.suppressed:
+                    assert c.gate in {"AUTO_CONFIRMED", "MANUAL_REVIEW"}

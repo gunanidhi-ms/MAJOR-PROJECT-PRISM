@@ -64,6 +64,27 @@ def _find_totalsegmentator_command() -> str:
     if ts_path:
         return ts_path
 
+    # Fallback: check Python user Scripts directory (pip install --user)
+    import site
+    user_scripts = os.path.join(site.getusersitepackages().replace("site-packages", "Scripts"))
+    for name in ("TotalSegmentator.exe", "TotalSegmentator", "totalsegmentator.exe", "totalsegmentator"):
+        candidate = os.path.join(user_scripts, name)
+        if os.path.isfile(candidate):
+            logger.info("Found TotalSegmentator in user Scripts: %s", candidate)
+            return candidate
+
+    # Fallback: check common Windows user Scripts paths
+    appdata_roaming = os.environ.get("APPDATA", "")
+    if appdata_roaming:
+        import platform
+        py_ver = f"Python{sys.version_info.major}{sys.version_info.minor}"
+        roaming_scripts = os.path.join(appdata_roaming, "Python", py_ver, "Scripts")
+        for name in ("TotalSegmentator.exe", "TotalSegmentator"):
+            candidate = os.path.join(roaming_scripts, name)
+            if os.path.isfile(candidate):
+                logger.info("Found TotalSegmentator in Roaming Scripts: %s", candidate)
+                return candidate
+
     # Fallback: try as a Python module
     # TotalSegmentator can be invoked as `python -m totalsegmentator`
     try:

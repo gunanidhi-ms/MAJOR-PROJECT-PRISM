@@ -88,7 +88,7 @@ export default function ReportsList() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  {['Study ID', 'Status', 'Source', 'Validated', 'Created', 'Updated', ''].map((h) => (
+                  {['Patient / Study', 'Status', 'Source', 'Validated', 'Created', 'Updated', ''].map((h) => (
                     <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, fontWeight: 600, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                       {h}
                     </th>
@@ -105,9 +105,14 @@ export default function ReportsList() {
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <td style={{ padding: '13px 16px' }}>
-                      <span style={{ fontSize: 13, fontWeight: 500, color: '#e2e8f0', fontFamily: "'JetBrains Mono', monospace" }}>
-                        {report.study_id}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0' }}>
+                          {report.patient_name || report.patient_id || 'Unknown Patient'}
+                        </span>
+                        <span style={{ fontSize: 11, color: '#475569', fontFamily: "'JetBrains Mono', monospace" }}>
+                          {report.study_id.substring(0, 20)}...
+                        </span>
+                      </div>
                     </td>
                     <td style={{ padding: '13px 16px' }}>
                       <Badge variant={statusToBadgeVariant(report.status)}>

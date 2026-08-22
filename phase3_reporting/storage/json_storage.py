@@ -57,8 +57,14 @@ class JSONReportStorage(ReportStorage):
         The file name format is ``{study_id}_{YYYYMMDD_HHMMSS}.json``,
         providing a human-readable audit trail.
         """
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
-        filename = f"{report.study_id}_{timestamp}.json"
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        p_id   = (report.patient_id   or "UNK").replace(" ", "_")[:16]
+        p_name = (report.patient_name or "Patient").replace(" ", "_").replace("^", "_")[:20]
+        # Use only the last 8 chars of the DICOM UID — long enough to be unique,
+        # short enough to keep the filename human-readable on disk.
+        uid_short = report.study_id[-8:] if len(report.study_id) > 8 else report.study_id
+
+        filename = f"{p_name}_{p_id}_{timestamp}_{uid_short}.json"
         filepath = self.reports_dir / filename
 
         payload = report.model_dump(mode="json")
@@ -73,11 +79,19 @@ class JSONReportStorage(ReportStorage):
         """
         Return the most recently saved report for *study_id*, or None.
         """
+        # Search for files containing the study_id
         matching = sorted(
-            self.reports_dir.glob(f"{study_id}_*.json"),
+            self.reports_dir.glob(f"*_{study_id}_*.json"),
             key=lambda p: p.stat().st_mtime,
             reverse=True,
         )
+        # Fallback to old format just in case
+        if not matching:
+            matching = sorted(
+                self.reports_dir.glob(f"{study_id}_*.json"),
+                key=lambda p: p.stat().st_mtime,
+                reverse=True,
+            )
         if not matching:
             logger.debug("No report found for study_id=%s", study_id)
             return None
@@ -113,9 +127,12 @@ class JSONReportStorage(ReportStorage):
         Returns True if at least one file was deleted, False otherwise.
         """
         count = 0
-        for p in list(self.reports_dir.glob(f"{study_id}_*.json")):
-            p.unlink()
-            count += 1
+        for p in list(self.reports_dir.glob(f"*_{study_id}_*.json")) + list(self.reports_dir.glob(f"{study_id}_*.json")):
+            try:
+                p.unlink()
+                count += 1
+            except FileNotFoundError:
+                pass
         return count > 0
 
     def update_report(self, report: Report) -> None:

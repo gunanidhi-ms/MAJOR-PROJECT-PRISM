@@ -15,7 +15,7 @@ export function useHealth() {
       prismApi.health()
         .then(setHealth)
         .catch(() => setHealth({ status: 'error', ollama_reachable: false }));
-    }, 30_000);
+    }, 60_000);
 
     return () => clearInterval(interval);
   }, []);

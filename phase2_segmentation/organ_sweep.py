@@ -78,15 +78,25 @@ def sweep_organs(
         if num_components == 0:
             continue
 
-        for comp_id in range(1, num_components + 1):
-            comp_mask = (labeled == comp_id)
-            voxel_count = int(np.sum(comp_mask))
+        slices = ndimage.find_objects(labeled)
+        for comp_id, comp_slice in enumerate(slices, start=1):
+            if comp_slice is None:
+                continue
+
+            sub_labeled = labeled[comp_slice]
+            sub_mask = (sub_labeled == comp_id)
+            voxel_count = int(np.sum(sub_mask))
             if voxel_count < min_component_voxels:
                 continue
 
-            candidates.append(_build_candidate(
-                comp_mask=comp_mask,
-                volume=volume,
+            sub_volume = volume[comp_slice]
+            z_slice, y_slice, x_slice = comp_slice
+            z_offset, y_offset, x_offset = z_slice.start, y_slice.start, x_slice.start
+
+            candidates.append(_build_candidate_sub(
+                sub_mask=sub_mask,
+                sub_volume=sub_volume,
+                offset=(z_offset, y_offset, x_offset),
                 label=label,
                 baseline=baseline,
                 spacing=(row_mm, col_mm, z_mm),
@@ -102,43 +112,60 @@ def sweep_organs(
 
 
 def _find_outlier_voxels(volume, organ_mask, baseline):
-    """Majority-vote (>=2 of 4) outlier detection within one organ."""
+    """Majority-vote (>=2 of 4) outlier detection within one organ.
+    
+    OPTIMISED: operates only on the masked organ voxels (1-D array),
+    then back-projects the result to a 3-D boolean mask.  This avoids
+    creating four full-volume arrays (54 M elements each) for every organ.
+    """
     trimmed_mean = baseline["trimmed_mean"]
-    trimmed_std = baseline["trimmed_std"]
-    median = baseline["median"]
-    mad = baseline["mad"]
-    p5, p95 = baseline["p5"], baseline["p95"]
-    q1, q3, iqr = baseline["q1"], baseline["q3"], baseline["iqr"]
+    trimmed_std  = baseline["trimmed_std"]
+    median       = baseline["median"]
+    mad          = baseline["mad"]
+    p5, p95      = baseline["p5"], baseline["p95"]
+    q1, q3, iqr  = baseline["q1"], baseline["q3"], baseline["iqr"]
 
-    votes = np.zeros(volume.shape, dtype=np.uint8)
+    # Extract only the voxels that belong to this organ — typically a few
+    # thousand elements instead of 54 million.
+    organ_voxels = volume[organ_mask]   # shape: (N,)
+    votes = np.zeros(organ_voxels.shape, dtype=np.uint8)
 
     if trimmed_std > 1e-6:
-        z = np.abs(volume - trimmed_mean) / trimmed_std
+        z = np.abs(organ_voxels - trimmed_mean) / trimmed_std
         votes += (z > Z_SCORE_THRESHOLD).astype(np.uint8)
 
     if mad > 1e-6:
-        mad_score = MAD_TO_SIGMA * np.abs(volume - median) / mad
+        mad_score = MAD_TO_SIGMA * np.abs(organ_voxels - median) / mad
         votes += (mad_score > MAD_SCORE_THRESHOLD).astype(np.uint8)
 
-    votes += ((volume < p5) | (volume > p95)).astype(np.uint8)
+    votes += ((organ_voxels < p5) | (organ_voxels > p95)).astype(np.uint8)
 
     if iqr > 1e-6:
         lower = q1 - IQR_FENCE_MULTIPLIER * iqr
         upper = q3 + IQR_FENCE_MULTIPLIER * iqr
-        votes += ((volume < lower) | (volume > upper)).astype(np.uint8)
+        votes += ((organ_voxels < lower) | (organ_voxels > upper)).astype(np.uint8)
 
-    return (votes >= 2) & organ_mask
+    # Back-project 1-D outlier flags into the 3-D volume space.
+    outlier_flat = (votes >= 2)
+    result = np.zeros(volume.shape, dtype=bool)
+    result[organ_mask] = outlier_flat
+    return result
 
 
-def _build_candidate(comp_mask, volume, label, baseline, spacing, voxel_volume_cc, min_persistent_slices):
+def _build_candidate_sub(sub_mask, sub_volume, offset, label, baseline, spacing, voxel_volume_cc, min_persistent_slices):
     row_mm, col_mm, z_mm = spacing
+    z_off, y_off, x_off = offset
 
-    z_idx, y_idx, x_idx = np.nonzero(comp_mask)
+    z_sub, y_sub, x_sub = np.nonzero(sub_mask)
+    z_idx = z_sub + z_off
+    y_idx = y_sub + y_off
+    x_idx = x_sub + x_off
+
     z_min, z_max = int(z_idx.min()), int(z_idx.max())
     y_min, y_max = int(y_idx.min()), int(y_idx.max())
     x_min, x_max = int(x_idx.min()), int(x_idx.max())
 
-    region_voxels = volume[comp_mask]
+    region_voxels = sub_volume[sub_mask]
     density = DensityHU(
         mean=round(float(np.mean(region_voxels)), 2),
         min=round(float(np.min(region_voxels)), 2),
@@ -146,7 +173,7 @@ def _build_candidate(comp_mask, volume, label, baseline, spacing, voxel_volume_c
         std=round(float(np.std(region_voxels)), 2),
     )
 
-    voxel_count = int(np.sum(comp_mask))
+    voxel_count = int(np.sum(sub_mask))
     long_axis_mm = max(
         (x_max - x_min + 1) * col_mm,
         (y_max - y_min + 1) * row_mm,

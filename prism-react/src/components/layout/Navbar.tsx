@@ -55,6 +55,7 @@ function usePageLabel() {
   if (pathname === '/') return { label: 'Dashboard', sub: 'Overview & Recent Reports' };
   if (pathname.startsWith('/generate')) return { label: 'AI Report Workstation', sub: 'Generate Draft Reports' };
   if (pathname.startsWith('/reports')) return { label: 'All Reports', sub: 'Browse & Filter' };
+  if (pathname.startsWith('/live')) return { label: 'Live Viewer', sub: 'CT Ingestion & Screening' };
   if (pathname.startsWith('/report/')) {
     const id = pathname.split('/report/')[1]?.replace(/\/$/, '') || '';
     return { label: id, sub: 'Report Editor' };
@@ -94,6 +95,16 @@ const NAV_ITEMS = [
       <svg style={{ width: 15, height: 15 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    ),
+  },
+  {
+    to: '/live',
+    label: 'Live Feed',
+    shortcut: 'L',
+    icon: (
+      <svg style={{ width: 15, height: 15 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5.002 5.002 0 01-1.414-3.536c0-1.38.56-2.632 1.414-3.536m7.072 0a5.002 5.002 0 011.414 3.536c0 1.38-.56 2.632-1.414 3.536M12 14a2 2 0 100-4 2 2 0 000 4z" />
       </svg>
     ),
   },

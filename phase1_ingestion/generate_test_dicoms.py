@@ -320,14 +320,14 @@ def generate_test_series(
         }
         manifest.append(entry)
 
-        status = f"  ✓ Slice {instance_num:3d}/{num_slices}"
+        status = f"  [+] Slice {instance_num:3d}/{num_slices}"
         if anomaly_type:
             status += f"  [{anomaly_type}]"
             if nodule_info:
                 status += f"  HU={nodule_info['hu_target']:.0f}, r={nodule_info['radius_px']}px"
         print(status)
 
-    print(f"\n✅ Generated {num_slices} DICOM slices in: {output_dir}")
+    print(f"\n[+] Generated {num_slices} DICOM slices in: {output_dir}")
     print(f"   Study UID:  {study_uid}")
     print(f"   Series UID: {series_uid}")
     print(f"   Anomalies:  {sum(1 for a in anomaly_schedule if a is not None)} / {num_slices}")

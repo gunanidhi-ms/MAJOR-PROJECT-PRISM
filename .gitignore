@@ -216,3 +216,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ── PRISM-specific generated / runtime files ──────────────────────────────────
+
+# Phase 2 temporary NIfTI + segmentation run directories
+phase2_work/run_*/
+
+# Phase 3 stored reports (runtime data, not source)
+phase3_reporting/storage/reports/*.json
+
+# Phase 3 logs
+phase3_reporting/logs/*.log
+
+# DICOM archive exports (large zip files from pipeline shutdown)
+phase1_ingestion/sample_dicoms/exports/*.zip
+
+# reports/ at project root (final generated reports)
+reports/*.json
+reports/*.pdf
+
+# Top-level .env (contains secrets / local ports)
+.env

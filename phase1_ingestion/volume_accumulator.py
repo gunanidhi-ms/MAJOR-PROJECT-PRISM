@@ -85,6 +85,10 @@ class VolumeAccumulator:
         self._series_instance_uid: str = ""
         self._study_instance_uid: str = ""
         self._modality: str = "CT"
+        self._patient_id: str = "UNKNOWN_PATIENT"
+        self._patient_name: str = "Unknown Patient"
+        self._patient_age: str = ""
+        self._patient_sex: str = ""
 
     def add(
         self,
@@ -111,6 +115,16 @@ class VolumeAccumulator:
                 - modality: str
         """
         with self._lock:
+            # Check if this series has already been processed and handed off to Phase 2
+            series_uid = spacing_meta.get("series_instance_uid", "")
+            if series_uid and series_uid in self._completed_series_uids:
+                logger.debug(
+                    "VolumeAccumulator: Series %s already completed — ignoring slice %d",
+                    series_uid,
+                    instance_number,
+                )
+                return
+
             if instance_number in self._slices:
                 logger.debug(
                     "VolumeAccumulator: duplicate instance %d — ignoring",
@@ -135,6 +149,10 @@ class VolumeAccumulator:
                     "study_instance_uid", ""
                 )
                 self._modality = spacing_meta.get("modality", "CT")
+                self._patient_id = spacing_meta.get("patient_id", "UNKNOWN_PATIENT")
+                self._patient_name = spacing_meta.get("patient_name", "Unknown Patient")
+                self._patient_age = spacing_meta.get("patient_age", "")
+                self._patient_sex = spacing_meta.get("patient_sex", "")
 
             logger.debug(
                 "VolumeAccumulator: added instance %d (z=%.2f, total=%d)",
@@ -168,9 +186,18 @@ class VolumeAccumulator:
         Call this ONLY from SliceBuffer.is_truly_idle() being True -
         never from any timer local to this class.
         """
+        import time
         with self._lock:
+            # Don't signal stall if there's nothing accumulated (already reset
+            # after Phase 2 fired, or no scan has started yet)
+            if len(self._slices) == 0:
+                return
             self._stream_stalled = True
-            logger.info("VolumeAccumulator: stream stall signaled by buffer")
+            now = time.monotonic()
+            last = getattr(self, '_last_stall_log', 0)
+            if now - last >= 30:
+                logger.info("VolumeAccumulator: stream stall signaled by buffer")
+                self._last_stall_log = now
 
     def is_ready(self) -> bool:
         """
@@ -305,6 +332,10 @@ class VolumeAccumulator:
                 "series_instance_uid": self._series_instance_uid,
                 "study_instance_uid": self._study_instance_uid,
                 "modality": self._modality,
+                "patient_id": self._patient_id,
+                "patient_name": self._patient_name,
+                "patient_age": self._patient_age,
+                "patient_sex": self._patient_sex,
             }
 
     def reset(self) -> None:
@@ -320,10 +351,16 @@ class VolumeAccumulator:
             self._association_released = False
             self._stream_stalled = False
             self._triggered = False
-            self._completed_series_uids.clear()
+            # BUG FIX: DO NOT clear self._completed_series_uids here!
+            # It must survive the reset to prevent late-arriving slices 
+            # from triggering Phase 2 again. It is cleared in reset_all().
             self._series_instance_uid = ""
             self._study_instance_uid = ""
             self._modality = "CT"
+            self._patient_id = "UNKNOWN_PATIENT"
+            self._patient_name = "Unknown Patient"
+            self._patient_age = ""
+            self._patient_sex = ""
             logger.info("VolumeAccumulator: reset for next series")
 
     def reset_all(self) -> None:

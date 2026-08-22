@@ -178,7 +178,12 @@ class DICOMListener:
             body_part = str(getattr(ds, "BodyPartExamined", ""))
             study_desc = str(getattr(ds, "StudyDescription", ""))
             series_desc = str(getattr(ds, "SeriesDescription", ""))
+            
+            # ── Extract Patient Metadata ──
             patient_id = str(getattr(ds, "PatientID", "UNKNOWN_PATIENT"))
+            patient_name = str(getattr(ds, "PatientName", "Unknown Patient"))
+            patient_age = str(getattr(ds, "PatientAge", ""))
+            patient_sex = str(getattr(ds, "PatientSex", ""))
 
             # ── Extract pixel array ──
             pixel_array = ds.pixel_array.copy()
@@ -218,6 +223,9 @@ class DICOMListener:
                     "pixel_array": pixel_array,
                     "sop_instance_uid": sop_uid,
                     "patient_id": patient_id,
+                    "patient_name": patient_name,
+                    "patient_age": patient_age,
+                    "patient_sex": patient_sex,
                     "filepath": filepath,
                     # ── Phase 2 tags (Package 1) ──
                     "series_instance_uid": series_instance_uid,

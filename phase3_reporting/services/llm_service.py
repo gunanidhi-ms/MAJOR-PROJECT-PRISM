@@ -48,6 +48,10 @@ class LLMService:
         HTTP timeout in seconds.
     """
 
+    _refinement_cache: dict[str, str] = {}
+    _consecutive_failures: int = 0
+    _circuit_open: bool = False
+
     def __init__(
         self,
         host: Optional[str] = None,
@@ -64,6 +68,8 @@ class LLMService:
     # ------------------------------------------------------------------ #
     #  Public API
     # ------------------------------------------------------------------ #
+    _consecutive_failures: int = 0
+    _circuit_open: bool = False
 
     async def refine(self, template_text: str) -> tuple[str, str]:
         """
@@ -81,22 +87,64 @@ class LLMService:
             success or ``"template"`` on fallback.
         """
         settings = get_settings()
-        if settings.skip_llm:
-            logger.info("LLM skipped (SKIP_LLM=true) – returning template text.")
+        if settings.skip_llm or self._circuit_open:
+            if self._circuit_open:
+                logger.info("LLM skipped (Circuit Breaker OPEN) – returning template text.")
+            else:
+                logger.info("LLM skipped (SKIP_LLM=true) – returning template text.")
             return template_text, "template"
+
+        if template_text in self._refinement_cache:
+            logger.info("LLM refinement served from cache.")
+            return self._refinement_cache[template_text], "llm"
 
         try:
             refined = await self._call_ollama(template_text)
+            
+            # Add to cache and keep max 1000 items
+            if len(self._refinement_cache) >= 1000:
+                self._refinement_cache.pop(next(iter(self._refinement_cache)))
+            self._refinement_cache[template_text] = refined
+            
+            self.__class__._consecutive_failures = 0
             logger.info("LLM refinement succeeded (%d chars).", len(refined))
             return refined, "llm"
-        except LLMUnavailableError as exc:
-            logger.warning("Ollama unavailable – falling back to template: %s", exc)
+        except Exception as exc:
+            self.__class__._consecutive_failures += 1
+            if self.__class__._consecutive_failures >= 2:
+                self.__class__._circuit_open = True
+                logger.warning("Circuit breaker OPEN - LLM disabled for this session. (Failures: %d)", self.__class__._consecutive_failures)
+            logger.warning("Ollama unavailable or failed – falling back to template: %s", exc)
             return template_text, "template"
-        except Exception as exc:  # noqa: BLE001
-            logger.error(
-                "Unexpected LLM error – falling back to template: %s", exc, exc_info=True
-            )
-            return template_text, "template"
+
+    async def warmup(self) -> None:
+        """
+        Pre-load the model into GPU memory by sending a tiny dummy prompt.
+
+        Called once at startup so the first real report doesn't incur the
+        cold-start penalty (can be 30-60s for mistral:7b on first load).
+        Falls back silently if Ollama is unavailable.
+        """
+        settings = get_settings()
+        if settings.skip_llm:
+            return
+        logger.info("Warming up Ollama model '%s'...", self.model)
+        url = f"{self.host}/api/chat"
+        payload = {
+            "model": self.model,
+            "stream": False,
+            "options": {"temperature": 0, "num_predict": 1},
+            "messages": [{"role": "user", "content": "Hi"}],
+        }
+        try:
+            async with httpx.AsyncClient(timeout=120) as client:
+                resp = await client.post(url, json=payload)
+                if resp.status_code == 200:
+                    logger.info("Ollama warmup complete — model '%s' is loaded.", self.model)
+                else:
+                    logger.warning("Ollama warmup returned HTTP %s: %s", resp.status_code, resp.text[:100])
+        except Exception as exc:
+            logger.warning("Ollama warmup failed (will retry on first report): %s", exc)
 
     async def health_check(self) -> bool:
         """

@@ -19,10 +19,11 @@ Do NOT modify the system prompt without a full review cycle.
 # ====================================================================== #
 
 SYSTEM_PROMPT: str = """
-You are a medical editor. Fix the grammar of the following radiology report.
+You are a medical editor. Fix the grammar and professional fluency of the following radiology report.
 
 Output ONLY the corrected text.
-Keep all medical terms, numbers, measurements, and locations exactly as provided.
+Keep all medical terms, numbers, measurements, volume values (e.g., cc values), and locations exactly as provided.
+Do NOT omit, round, or alter any numerical values or volume measurements.
 Do not add any preamble, explanation, or markdown formatting.
 """.strip()
 
@@ -50,8 +51,8 @@ def build_user_prompt(template_text: str) -> str:
     """
     return (
         "Please refine the following radiology findings text for grammar "
-        "and professional fluency only.  Do not change any numbers, "
-        "measurements, organ names, locations, or findings.\n\n"
+        "and professional fluency only. Do not change, remove, or round any numbers, "
+        "measurements, volume figures (e.g. cc values), organ names, locations, or findings.\n\n"
         "--- BEGIN FINDINGS ---\n"
         f"{template_text}\n"
         "--- END FINDINGS ---"

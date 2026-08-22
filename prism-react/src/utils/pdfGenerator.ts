@@ -32,7 +32,7 @@ export async function downloadReportPdf({
       import('html2canvas'),
     ]);
 
-    // Temporarily reveal element off-screen for capture
+    // Temporarily reveal element off-screen for capture (must be visible for html2canvas)
     const prev = {
       visibility: el.style.visibility,
       position:   el.style.position,
@@ -47,9 +47,10 @@ export async function downloadReportPdf({
     el.style.left       = '-9999px';
     el.style.zIndex     = '-1';
 
+    // Capture the FULL element (no height clipping) at 2× resolution
     const canvas = await html2canvas(el, {
-      scale: 2,              // 2× for crisp text
-      useCORS: true,         // allow cross-origin images (Unsplash)
+      scale: 2,
+      useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
       width: 794,
@@ -59,25 +60,43 @@ export async function downloadReportPdf({
     // Restore element
     Object.assign(el.style, prev);
 
-    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-
-    // A4: 210 × 297 mm
+    // A4: 210 × 297 mm  →  at 96 dpi = 794 × 1123 px
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-    const imgW  = pageW;
-    const imgH  = (canvas.height * pageW) / canvas.width;
+    const pageW_mm = pdf.internal.pageSize.getWidth();   // 210
+    const pageH_mm = pdf.internal.pageSize.getHeight();  // 297
 
-    // Multi-page support
-    let remaining = imgH;
-    let pageIdx   = 0;
+    // How tall is one A4 page in canvas pixels?
+    // canvas.width = 794 * 2 (scale=2) = 1588 px → maps to 210 mm
+    // So 1 mm = canvas.width / 210 canvas-px
+    const pxPerMm   = canvas.width / pageW_mm;
+    const pageH_px  = Math.floor(pageH_mm * pxPerMm); // height of one page in canvas px
+    const totalPages = Math.ceil(canvas.height / pageH_px);
 
-    while (remaining > 0) {
+    for (let pageIdx = 0; pageIdx < totalPages; pageIdx++) {
       if (pageIdx > 0) pdf.addPage();
-      pdf.addImage(imgData, 'JPEG', 0, -(pageIdx * pageH), imgW, imgH);
-      remaining -= pageH;
-      pageIdx++;
+
+      // Create a temporary canvas for just this page's slice
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width  = canvas.width;
+      pageCanvas.height = pageH_px;
+
+      const ctx = pageCanvas.getContext('2d')!;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+
+      // Draw the slice of the full canvas that belongs to this page
+      const srcY = pageIdx * pageH_px;
+      ctx.drawImage(
+        canvas,
+        0, srcY,                           // source x, y
+        canvas.width, pageH_px,           // source width, height
+        0, 0,                              // dest x, y
+        pageCanvas.width, pageH_px,        // dest width, height
+      );
+
+      const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.95);
+      pdf.addImage(pageImgData, 'JPEG', 0, 0, pageW_mm, pageH_mm);
     }
 
     pdf.save(filename);

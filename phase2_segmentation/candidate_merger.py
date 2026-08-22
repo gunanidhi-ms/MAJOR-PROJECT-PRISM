@@ -105,16 +105,38 @@ def merge_candidates(
     """
     candidates = _deduplicate_and_tag(path_a, path_b, iou_threshold)
     _backfill_organ_context(candidates, seg_arr, value_to_label, organ_stats, spacing)
-    _compute_shape_geometry(candidates, volume, spacing)
+
+    # ── Fast pre-filter: suppress obviously insignificant candidates BEFORE
+    # the expensive _compute_shape_geometry (binary_erosion per candidate).
+    # This cuts the morphometric workload from O(all) to O(significant) only.
+    # Thresholds mirror findings_adapter.py so suppression is consistent.
+    _PRE_FILTER_MIN_VOLUME_CC = 0.15   # anything smaller won't pass Phase 3 anyway
+    _PRE_FILTER_MIN_Z_SLICES  = 1      # must span at least 1 Z slice
+    pre_suppressed = 0
+    for c in candidates:
+        if c.suppressed:
+            continue
+        vol = c.shape.volume_cc if c.shape else 0.0
+        z_span = (len(c.slice_indices) if c.slice_indices else 1)
+        if vol < _PRE_FILTER_MIN_VOLUME_CC or z_span < _PRE_FILTER_MIN_Z_SLICES:
+            c.suppressed = True
+            c.suppression_reason = "pre_filter:too_small"
+            pre_suppressed += 1
+    if pre_suppressed:
+        logger.info("pre_filter: suppressed %d trivially small candidates before morphometrics", pre_suppressed)
+
+    # Only compute expensive morphometrics on candidates that are still active
+    candidates_active = [c for c in candidates if not c.suppressed]
+    _compute_shape_geometry(candidates_active, volume, spacing)
     clinical_filter(candidates, region)
 
     n_corroborated = sum(1 for c in candidates if c.corroborated)
     n_suppressed = sum(1 for c in candidates if c.suppressed)
     logger.info(
         "merge_candidates: %d path_a + %d path_b → %d unified "
-        "(%d corroborated, %d suppressed)",
+        "(%d corroborated, %d suppressed, %d active for morphometrics)",
         len(path_a), len(path_b), len(candidates),
-        n_corroborated, n_suppressed,
+        n_corroborated, n_suppressed, len(candidates_active),
     )
     return candidates
 

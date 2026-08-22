@@ -96,7 +96,10 @@ def simulate_ct_scan(
     study_dict: dict,
     host: str = "127.0.0.1",
     port: int = 11112,
-    delay_ms: int =  30
+    delay_ms: int =  30,
+    inject_name: str = "",
+    inject_age: str = "",
+    inject_sex: str = "",
 ):
     """
     Simulates a live CT scan for a specific patient.
@@ -107,6 +110,9 @@ def simulate_ct_scan(
     print(f"| (Continuous C-STORE Stream via Port 11112)")
     print(f"=======================================================")
     print(f"  Patient ID: {patient_id}")
+    if inject_name: print(f"  Injecting Name: {inject_name}")
+    if inject_age:  print(f"  Injecting Age:  {inject_age}")
+    if inject_sex:  print(f"  Injecting Sex:  {inject_sex}")
     print(f"  Target:     {host}:{port}")
     print(f"  Scan Speed: {delay_ms}ms per slice")
     print(f"=======================================================\n")
@@ -139,6 +145,15 @@ def simulate_ct_scan(
                     try:
                         # Full read including pixels for sending
                         ds = pydicom.dcmread(dcm_path, force=True)
+                        
+                        # INJECT custom patient metadata if provided
+                        if inject_name:
+                            ds.PatientName = inject_name
+                        if inject_age:
+                            ds.PatientAge = inject_age
+                        if inject_sex:
+                            ds.PatientSex = inject_sex
+                            
                         status = assoc.send_c_store(ds)
                         
                         if status and status.Status == 0x0000:
@@ -165,6 +180,9 @@ def main():
     parser.add_argument("--port", type=int, default=11112, help="SCP Port")
     parser.add_argument("--delay", type=int, default=100, help="Delay between slices in ms")
     parser.add_argument("--patient", type=str, default="", help="Specific Patient ID to scan")
+    parser.add_argument("--name", type=str, default="", help="Override Patient Name")
+    parser.add_argument("--age", type=str, default="", help="Override Patient Age (e.g. 45Y)")
+    parser.add_argument("--sex", type=str, default="", help="Override Patient Sex (M/F/O)")
     
     args = parser.parse_args()
     logging.basicConfig(level=logging.WARNING)
@@ -196,7 +214,10 @@ def main():
             study_dict=registry[patient_id],
             host=args.host,
             port=args.port,
-            delay_ms=args.delay
+            delay_ms=args.delay,
+            inject_name=args.name,
+            inject_age=args.age,
+            inject_sex=args.sex,
         )
 
 

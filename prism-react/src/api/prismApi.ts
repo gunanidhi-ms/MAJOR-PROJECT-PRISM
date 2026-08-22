@@ -13,6 +13,10 @@ export interface Report {
   validation_reason?: string;
   created_at: string;
   updated_at: string;
+  patient_id?: string;
+  patient_name?: string;
+  patient_age?: string;
+  patient_sex?: string;
 }
 
 export interface ReportsListResponse {
@@ -80,19 +84,19 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
 
 export const prismApi = {
   health(): Promise<HealthResponse> {
-    return request<HealthResponse>('/api/health/');
+    return request<HealthResponse>('/api/v1/health');
   },
 
   listReports(): Promise<ReportsListResponse> {
-    return request<ReportsListResponse>('/api/reports/');
+    return request<ReportsListResponse>('/api/v1/reports');
   },
 
   getReport(studyId: string): Promise<Report> {
-    return request<Report>(`/api/report/${encodeURIComponent(studyId)}/`);
+    return request<Report>(`/api/v1/report/${encodeURIComponent(studyId)}`);
   },
 
   generateReport(findings: Record<string, unknown>): Promise<GenerateResponse> {
-    return request<GenerateResponse>('/api/generate/', {
+    return request<GenerateResponse>('/api/v1/generate-report', {
       method: 'POST',
       body: JSON.stringify(findings),
     });
@@ -102,14 +106,14 @@ export const prismApi = {
     studyId: string,
     payload: { findings?: string; impression?: string }
   ): Promise<Report> {
-    return request<Report>(`/api/report/${encodeURIComponent(studyId)}/update/`, {
+    return request<Report>(`/api/v1/report/${encodeURIComponent(studyId)}`, {
       method: 'PUT',
       body: JSON.stringify(payload),
     });
   },
 
   signReport(studyId: string): Promise<{ status: string }> {
-    return request<{ status: string }>('/api/sign/', {
+    return request<{ status: string }>('/api/v1/sign-report', {
       method: 'POST',
       body: JSON.stringify({ study_id: studyId }),
     });

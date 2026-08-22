@@ -99,6 +99,9 @@ class StructuredFindings(BaseModel):
     organs: List[OrganFinding] = Field(..., min_length=1)
     study_date: Optional[str] = None
     patient_id: Optional[str] = None
+    patient_name: Optional[str] = None
+    patient_age: Optional[str] = None
+    patient_sex: Optional[str] = None
 
     model_config = {"extra": "allow"}
 
@@ -127,6 +130,10 @@ class Report(BaseModel):
     study_id: str
     modality: str
     protocol: Optional[str] = None
+    patient_id: Optional[str] = None
+    patient_name: Optional[str] = None
+    patient_age: Optional[str] = None
+    patient_sex: Optional[str] = None
     findings: str                      # full findings text
     impression: str = ""               # filled by radiologist
     validated: bool = True
@@ -177,6 +184,10 @@ class GetReportResponse(BaseModel):
     source: str
     created_at: datetime
     updated_at: datetime
+    patient_id: Optional[str] = None
+    patient_name: Optional[str] = None
+    patient_age: Optional[str] = None
+    patient_sex: Optional[str] = None
 
 
 class UpdateReportRequest(BaseModel):

@@ -43,6 +43,7 @@ export default function ReportDetail() {
   const [storedName, setStoredName]         = useState('');
   const [storedDesig, setStoredDesig]       = useState('');
   const [signedAt, setSignedAt]             = useState('');
+  const [pdfFilename, setPdfFilename]       = useState('');
 
   useEffect(() => {
     if (!report) return;
@@ -50,6 +51,10 @@ export default function ReportDetail() {
     const i = report.impression || '';
     setFindings(f); setImpression(i);
     setOrigFindings(f); setOrigImpression(i);
+    // Build a sensible default PDF filename from patient info
+    const dateSlug = new Date().toISOString().slice(0, 10);
+    const nameSlug = (report.patient_name || 'Patient').replace(/[^a-zA-Z0-9]/g, '_');
+    setPdfFilename(`${nameSlug}_CT_Report_${dateSlug}.pdf`);
   }, [report]);
 
   useEffect(() => {
@@ -89,15 +94,14 @@ export default function ReportDetail() {
   }, [sigApplied, sigDataUrl, dirty, studyId, findings, impression, radName, radDesig, showToast, navigate]);
 
   const handlePdf = useCallback(async () => {
-    const dateSlug = new Date().toISOString().slice(0, 10);
     await downloadReportPdf({
       elementId: TEMPLATE_ID,
-      filename: `PRISM_Report_${studyId}_${dateSlug}.pdf`,
+      filename: pdfFilename || 'PRISM_Report.pdf',
       onStart: () => setGeneratingPdf(true),
       onDone: () => { setGeneratingPdf(false); showToast('PDF downloaded!', 'success'); },
       onError: (e) => { setGeneratingPdf(false); showToast('PDF error: ' + e.message, 'error'); },
     });
-  }, [studyId, showToast]);
+  }, [pdfFilename, showToast]);
 
   const isSigned = report?.status === 'signed';
   const currentStep = isSigned ? 2 : 1;
@@ -110,6 +114,10 @@ export default function ReportDetail() {
     radiologistName: storedName || radName || undefined,
     radiologistDesignation: storedDesig || radDesig || undefined,
     signatureDataUrl: storedSig || sigDataUrl || undefined,
+    patientName: report.patient_name || undefined,
+    patientId: report.patient_id || undefined,
+    patientAge: report.patient_age || undefined,
+    patientSex: report.patient_sex || undefined,
   } : null;
 
   if (loading) {
@@ -194,7 +202,7 @@ export default function ReportDetail() {
             Created {report.created_at?.slice(0, 16)} · Updated {report.updated_at?.slice(0, 16)}
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <Button variant="ghost" size="sm" onClick={() => navigate('/reports')}>← Reports</Button>
           {!isSigned && (
             <>
@@ -204,12 +212,27 @@ export default function ReportDetail() {
               <Button variant="success" size="sm" onClick={() => setShowSignModal(true)}>✍ Sign Report</Button>
             </>
           )}
-          <Button variant="primary" size="sm" loading={generatingPdf} onClick={handlePdf} style={{ gap: 6 }}>
-            <svg style={{ width: 14, height: 14 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            {generatingPdf ? 'Generating…' : 'Download PDF'}
-          </Button>
+          {/* Editable filename + Download */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <input
+              type="text"
+              value={pdfFilename}
+              onChange={(e) => setPdfFilename(e.target.value)}
+              placeholder="filename.pdf"
+              title="Edit the PDF filename before downloading"
+              style={{
+                padding: '5px 10px', fontSize: 11, fontFamily: "'JetBrains Mono', monospace",
+                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: 6, color: '#94a3b8', outline: 'none', width: 220,
+              }}
+            />
+            <Button variant="primary" size="sm" loading={generatingPdf} onClick={handlePdf} style={{ gap: 6 }}>
+              <svg style={{ width: 14, height: 14 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {generatingPdf ? 'Generating…' : 'Download PDF'}
+            </Button>
+          </div>
         </div>
       </div>
 

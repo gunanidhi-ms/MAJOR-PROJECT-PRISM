@@ -7,6 +7,8 @@ const Dashboard    = lazy(() => import('./pages/Dashboard'));
 const Generate     = lazy(() => import('./pages/Generate'));
 const ReportsList  = lazy(() => import('./pages/ReportsList'));
 const ReportDetail = lazy(() => import('./pages/ReportDetail'));
+// @ts-ignore
+const LiveViewer   = lazy(() => import('./pages/LiveViewer'));
 
 
 function PageLoader() {
@@ -33,6 +35,7 @@ export default function App() {
             <Route path="/generate"         element={<Generate />} />
             <Route path="/reports"          element={<ReportsList />} />
             <Route path="/report/:studyId"  element={<ReportDetail />} />
+            <Route path="/live"             element={<LiveViewer />} />
             <Route path="*"                 element={<Dashboard />} />
           </Routes>
         </Suspense>

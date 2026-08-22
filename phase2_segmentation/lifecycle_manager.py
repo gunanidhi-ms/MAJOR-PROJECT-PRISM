@@ -28,7 +28,8 @@ import threading
 from pathlib import Path
 from typing import Tuple, Dict, Any, Optional
 from dataclasses import dataclass, field
-
+import urllib.request
+import json
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -57,6 +58,7 @@ class Phase2Result:
     region: str = "unknown"
     candidates: list = field(default_factory=list)
     candidates_path: str = ""
+    findings_path: str = ""
 
 
 class RAMWatchdog:
@@ -194,6 +196,22 @@ class Phase2LifecycleManager:
         - Structured result reporting
     """
 
+    def _emit_event(self, phase: str, status: str, estimated_time_sec: float = 0.0, study_id: str = ""):
+        """Helper to post progress events to the Phase 1 WebSocket server."""
+        try:
+            payload = json.dumps({
+                "type": "pipeline_event",
+                "phase": phase,
+                "status": status,
+                "estimated_time_sec": estimated_time_sec,
+                "study_id": study_id
+            }).encode('utf-8')
+            
+            req = urllib.request.Request("http://localhost:8001/api/events", data=payload, headers={'Content-Type': 'application/json'})
+            urllib.request.urlopen(req, timeout=1.0)
+        except Exception as e:
+            logger.debug(f"Failed to emit pipeline event '{status}': {e}")
+
     def __init__(
         self,
         work_dir: str = DEFAULT_WORK_DIR,
@@ -250,6 +268,14 @@ class Phase2LifecycleManager:
             spacing,
             modality,
             series_uid[:20],
+        )
+        
+        # Broadcast that Phase 2 has started
+        self._emit_event(
+            phase="segmentation", 
+            status="started", 
+            estimated_time_sec=45.0, 
+            study_id=series_uid
         )
 
         nifti_path = os.path.join(self._work_dir, "temp_volume.nii.gz")
@@ -389,6 +415,21 @@ class Phase2LifecycleManager:
                         time.perf_counter() - t_cand_start,
                         len(path_a), len(path_b), len(candidates),
                     )
+
+                    # ── Stage 5: Confidence Fusion, Scoring & Phase 3 Handoff ──
+                    from phase2_segmentation.scorer import score_candidates
+                    from phase2_segmentation.phase2_api import export_findings, trigger_phase3
+
+                    t_score_start = time.perf_counter()
+                    score_candidates(candidates, result.region)
+                    result.findings_path = export_findings(candidates, self._work_dir, series_meta or {}, result.region)
+                    trigger_phase3(candidates, series_meta or {})
+
+                    logger.info(
+                        "Stage 5 complete (scoring + handoff): %.2fs, %d findings exported",
+                        time.perf_counter() - t_score_start,
+                        sum(1 for c in candidates if not c.suppressed),
+                    )
                 else:
                     logger.warning(
                         "Stage 4 skipped — no findings_per_slice provided to run()"
@@ -438,6 +479,12 @@ class Phase2LifecycleManager:
             )
 
         finally:
+            # Broadcast Phase 2 completion
+            if result.success:
+                self._emit_event(phase="segmentation", status="completed", study_id=series_uid)
+            else:
+                self._emit_event(phase="segmentation", status="failed", study_id=series_uid)
+
             # ── Stop watchdog and record peak RAM ──
             result.peak_ram_gb = watchdog.stop()
             result.total_time_sec = time.perf_counter() - t_total_start

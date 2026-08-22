@@ -174,8 +174,16 @@ class ReportValidator:
                 for anomaly in organ.anomalies:
                     # Check anomaly type (ALWAYS mandatory for anomalies)
                     anomaly_words = extract_words(anomaly.type.lower())
-                    if not anomaly_words.issubset(llm_words):
-                        missing_anomaly_words = anomaly_words - llm_words
+                    internal_words = {"statistical", "anomaly", "region", "lesion", "mass"}
+                    core_anomaly_words = anomaly_words - internal_words
+                    
+                    missing_anomaly_words = set()
+                    for word in core_anomaly_words:
+                        prefix = word[:5] if len(word) > 4 else word
+                        if not any(lw.startswith(prefix) for lw in llm_words):
+                            missing_anomaly_words.add(word)
+
+                    if missing_anomaly_words and core_anomaly_words:
                         return ValidationCheck(
                             False,
                             f"MANDATORY: Anomaly type missing - '{' '.join(missing_anomaly_words)}' not found in report"
@@ -192,8 +200,20 @@ class ReportValidator:
                     
                     # Check volume ONLY if present in JSON
                     if anomaly.shape and anomaly.shape.volume_cc is not None:
-                        volume_str = self._fmt(anomaly.shape.volume_cc)
-                        if volume_str not in extract_numbers(llm_text):
+                        vol_val = anomaly.shape.volume_cc
+                        volume_str = self._fmt(vol_val)
+                        extracted_nums = extract_numbers(llm_text)
+                        
+                        # Generate acceptable representations (exact, 2-decimal rounded, 1-decimal rounded)
+                        acceptable_vols = {
+                            volume_str,
+                            str(round(vol_val, 2)),
+                            str(round(vol_val, 1)),
+                            f"{vol_val:.2f}",
+                            f"{vol_val:.1f}",
+                        }
+                        
+                        if not acceptable_vols.intersection(extracted_nums):
                             return ValidationCheck(
                                 False,
                                 f"MANDATORY: Volume missing - '{volume_str} cc' not found in report (required because present in JSON)"

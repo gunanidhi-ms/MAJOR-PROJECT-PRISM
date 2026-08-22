@@ -16,6 +16,8 @@ Endpoints
 from __future__ import annotations
 
 import logging
+import urllib.request
+import json
 from datetime import datetime, timezone
 from typing import Any, Dict
 
@@ -61,6 +63,23 @@ def get_report_storage() -> ReportStorage:
     return get_storage()
 
 
+def _emit_event(phase: str, status: str, estimated_time_sec: float = 0.0, study_id: str = ""):
+    """Helper to post progress events to the Phase 1 WebSocket server."""
+    try:
+        payload = json.dumps({
+            "type": "pipeline_event",
+            "phase": phase,
+            "status": status,
+            "estimated_time_sec": estimated_time_sec,
+            "study_id": study_id
+        }).encode('utf-8')
+        
+        req = urllib.request.Request("http://localhost:8001/api/events", data=payload, headers={'Content-Type': 'application/json'})
+        urllib.request.urlopen(req, timeout=1.0)
+    except Exception as e:
+        logger.debug(f"Failed to emit pipeline event '{status}': {e}")
+
+
 # ====================================================================== #
 #  POST /generate-report
 # ====================================================================== #
@@ -86,6 +105,8 @@ async def generate_report(
     storage: ReportStorage = Depends(get_report_storage),
 ) -> GenerateReportResponse:
     logger.info("POST /generate-report  study_id=%s", findings.study_id)
+    
+    _emit_event(phase="reporting", status="started", estimated_time_sec=15.0, study_id=findings.study_id)
 
     # ── Step 1: Template engine (deterministic, zero-hallucination) ── #
     try:
@@ -125,6 +146,10 @@ async def generate_report(
         study_id=findings.study_id,
         modality=findings.modality,
         protocol=findings.protocol,
+        patient_id=findings.patient_id,
+        patient_name=findings.patient_name,
+        patient_age=findings.patient_age,
+        patient_sex=findings.patient_sex,
         findings=final_text,
         impression="",
         validated=validation_result.validated,
@@ -139,10 +164,13 @@ async def generate_report(
         storage.save_report(report)
     except Exception as exc:
         logger.error("Storage save failed: %s", exc, exc_info=True)
+        _emit_event(phase="reporting", status="failed", study_id=findings.study_id)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to persist draft report: {exc}",
         ) from exc
+        
+    _emit_event(phase="reporting", status="completed", study_id=findings.study_id)
 
     return GenerateReportResponse(
         study_id=report.study_id,
@@ -188,6 +216,10 @@ async def get_report(
         source=report.source,
         created_at=report.created_at,
         updated_at=report.updated_at,
+        patient_id=report.patient_id,
+        patient_name=report.patient_name,
+        patient_age=report.patient_age,
+        patient_sex=report.patient_sex,
     )
 
 
@@ -324,6 +356,10 @@ async def list_reports(
                 "source": r.source,
                 "created_at": r.created_at.isoformat(),
                 "updated_at": r.updated_at.isoformat(),
+                "patient_id": r.patient_id or "",
+                "patient_name": r.patient_name or "",
+                "patient_age": r.patient_age or "",
+                "patient_sex": r.patient_sex or "",
             }
             for r in reports
         ],

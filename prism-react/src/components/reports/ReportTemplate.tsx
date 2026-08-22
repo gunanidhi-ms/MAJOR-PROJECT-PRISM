@@ -13,6 +13,10 @@ export interface ReportTemplateData {
   radiologistName?: string;
   radiologistDesignation?: string;
   signatureDataUrl?: string;
+  patientName?: string;
+  patientAge?: string;
+  patientSex?: string;
+  patientId?: string;
 }
 
 interface ReportTemplateProps {
@@ -104,16 +108,22 @@ export function ReportTemplate({ data, id = 'prism-report-template' }: ReportTem
         {/* ── STUDY INFO STRIP ── */}
         <div className="study-info-strip">
           <div className="study-info-cell">
-            <label>Study ID</label>
-            <span>{data.studyId}</span>
+            <label>Patient Name</label>
+            <span style={{ fontFamily: 'inherit', letterSpacing: 0 }}>{data.patientName || '—'}</span>
+          </div>
+          <div className="study-info-cell">
+            <label>Patient ID</label>
+            <span>{data.patientId || '—'}</span>
+          </div>
+          <div className="study-info-cell">
+            <label>Age / Sex</label>
+            <span style={{ fontFamily: 'inherit' }}>
+              {[data.patientAge, data.patientSex].filter(Boolean).join(' / ') || '—'}
+            </span>
           </div>
           <div className="study-info-cell">
             <label>Modality</label>
             <span>CT Scan</span>
-          </div>
-          <div className="study-info-cell">
-            <label>Protocol</label>
-            <span>CT KUB / Abdomen</span>
           </div>
           <div className="study-info-cell">
             <label>Report Generated</label>

@@ -34,6 +34,7 @@ import numpy as np
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import Response, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 try:
     from PIL import Image
@@ -251,6 +252,32 @@ async def get_stats():
     return JSONResponse(content=broadcaster.get_stats())
 
 
+class EventPayload(BaseModel):
+    type: str
+    phase: str
+    status: str
+    estimated_time_sec: float = 0.0
+    study_id: str = ""
+
+@app.post("/api/events")
+async def post_event(payload: EventPayload):
+    """
+    Webhook for Phase 2/3 to push progress events to the frontend.
+    """
+    event_dict = payload.dict()
+    # Tag it as a pipeline event so the frontend can differentiate it from DICOM slices
+    event_dict["is_pipeline_event"] = True
+    
+    # Broadcast to WebSocket clients
+    if broadcaster._loop and broadcaster._queue:
+        broadcaster._loop.call_soon_threadsafe(broadcaster._queue.put_nowait, event_dict)
+    else:
+        broadcaster._sync_queue.append(event_dict)
+        
+    return {"status": "ok", "broadcasted": True}
+
+
+
 @app.websocket("/ws/alerts")
 async def websocket_alerts(ws: WebSocket):
     """
@@ -387,6 +414,9 @@ class ScannerConfig(BaseModel):
     dataset_dir: str = r"C:\Users\gunan\Downloads\TCIA files"
     delay_ms: int = 30
     patient_id: str = ""
+    patient_name: str = ""
+    patient_age: str = ""
+    patient_sex: str = ""
 
 @app.post("/api/scanner/start")
 async def start_scanner(config: ScannerConfig):
@@ -422,6 +452,12 @@ async def start_scanner(config: ScannerConfig):
         
         if config.patient_id and config.patient_id.strip():
             cmd.extend(["--patient", config.patient_id.strip()])
+        if config.patient_name and config.patient_name.strip():
+            cmd.extend(["--name", config.patient_name.strip()])
+        if config.patient_age and config.patient_age.strip():
+            cmd.extend(["--age", config.patient_age.strip()])
+        if config.patient_sex and config.patient_sex.strip():
+            cmd.extend(["--sex", config.patient_sex.strip()])
         
         logger.info(f"Starting scanner with command: {' '.join(cmd)}")
         
@@ -430,7 +466,7 @@ async def start_scanner(config: ScannerConfig):
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            cwd=r"d:\MAJOR-PROJECT-PRISM"
+            cwd=r"e:\MAJOR-PROJECT-PRISM"
         )
         
         # Start background threads to drain stdout/stderr (prevents pipe blocking)

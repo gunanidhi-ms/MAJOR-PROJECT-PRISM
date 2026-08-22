@@ -31,8 +31,8 @@
 - [x] **Package 4:** Path A — 3D Clustering of Phase 1 Seeds
 - [x] **Package 5:** Path B — Independent Organ-Wide Sweep
 - [x] **Package 6:** Technical Suppression Cascade, Merge & 3D Re-validation
-- [ ] Package 7: Confidence Fusion, Scoring & Phase 3 Handoff
-- [ ] Package 8: Testing, Calibration & Final Report
+- [x] Package 7: Confidence Fusion, Scoring & Phase 3 Handoff
+- [x] Package 8: Testing, Calibration & Final Report
 
 ---
 
@@ -54,6 +54,7 @@
 14. [Limitations](#13-limitations)
 15. [Repository Structure](#14-repository-structure)
 16. [License / References](#15-license--references)
+17. [One-Command Startup](#17-one-command-startup)
 
 ---
 
@@ -64,10 +65,19 @@ The PRISM system requires both the asynchronous Python backend and the React-bas
 ### Prerequisites
 - **Python 3.10+**
 - **Node.js 18+**
-- **Python Libraries:** `pydicom`, `numpy`, `scipy`, `websockets`
+- **Python Libraries:** Managed via `requirements.txt`. It is highly recommended to use a virtual environment (`venv`).
 
 ```bash
-pip install pydicom numpy scipy websockets
+# Create a virtual environment
+python -m venv .venv
+
+# Activate it (Windows)
+.venv\Scripts\activate
+# Activate it (Linux/macOS)
+# source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
 ### Backend Startup
@@ -98,6 +108,30 @@ python -m phase1_ingestion.replay_sender
 ### Troubleshooting
 - **Errno 10048 (Address already in use):** Ensure no other instances of PRISM, Orthanc, or dcm4chee are running on ports 11112 or 8001.
 - **Frontend not receiving data:** Verify the WebSocket server is running and the frontend is successfully connecting to `ws://localhost:8001/ws/alerts`.
+
+---
+
+## 17. One-Command Startup
+
+To run the entire PRISM Autonomous Pipeline (Phase 1 Ingestion, Phase 2 Segmentation, and Phase 3 Reporting), you can use the provided startup scripts.
+
+### Windows
+```powershell
+.\start_prism.ps1
+```
+
+### Linux / macOS
+```bash
+./start_prism.sh
+```
+
+These scripts will automatically:
+1. Activate the Python virtual environment.
+2. Create a default `.env` file if it doesn't exist.
+3. Start the Orchestrator (`orchestrator.py`), which launches Phase 3 in the background, waits for it to become healthy, configures Phase 2 handoff variables, and finally starts Phase 1.
+
+Once running, send DICOM slices using the replay sender or a live CT scanner to see the full autonomous pipeline in action.
+
 
 ---
 
@@ -1174,6 +1208,57 @@ The 3 skips are pre-existing TotalSegmentator GPU integration tests unrelated to
 
 ---
 
+### Package 7 — Confidence Fusion, Scoring & Phase 3 Handoff (✅ Complete)
+
+**Objective:** Compute final merged confidence scores, apply the clinical routing gate rules (e.g., auto-confirm vs. manual review), and package everything into the frozen `findings_output.json` contract for handoff to Phase 3.
+
+#### What Was Built
+
+**1. Scoring & Gating Engine** ([`scorer.py`](phase2_segmentation/scorer.py) — new)
+- **Fused Confidence (`fused_confidence`)**: Blends `phase1_confidence` (if from Path A) and `organ_overlap_fraction` (if from Path B). Corroborated candidates receive a 10% bonus (capped at 1.0). For Path B-only candidates, it's strictly based on the overlap fraction. For Path A-only candidates, it's based on Phase 1's confidence.
+- **Emergency Score (`emergency_score`)**: Reuses the validated non-linear Phase 1 formula: `severity * confidence^1.5 * sqrt(volume_cc/2.0) * 40`. Caps at 50 to prevent run-away scores.
+- **Clinical Gating Rules (`gate`)**: Evaluates `suppressed` status, corroboration, confidence, and organ context to assign a clinical routing directive.
+  - `"SUPPRESSED"`: If `suppressed == True` (from Package 6).
+  - `"AUTO_CONFIRMED"`: If `corroborated == True` and `fused_confidence >= 0.85` and `emergency_score >= 35`.
+  - `"MANUAL_REVIEW"`: All other non-suppressed candidates.
+
+**2. Handoff Serialization** ([`phase2_api.py`](phase2_segmentation/phase2_api.py) — new)
+- Converts the final list of `Candidate` objects into the precise schema required by `findings_output.json`.
+- Integrates seamlessly with `lifecycle_manager.py` as Stage 5.
+- Writes `findings.json` to the work directory alongside `temp_seg.nii` and `statistics.json`.
+
+#### Acceptance Checklist Results
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| Corroborated high-confidence candidate auto-confirms | ✅ Pass | `test_fused_confidence_corroborated` |
+| Suppressed candidate correctly gated | ✅ Pass | `test_scorer_handles_suppressed_candidates` |
+| Serialization adheres to schema | ✅ Pass | `test_export_findings_creates_json` |
+| Full lifecycle generates findings JSON | ✅ Pass | `test_full_phase2_pipeline_p7_outputs` |
+
+---
+
+### Package 8 — Testing, Calibration & Final Report (✅ Complete)
+
+**Objective:** Verify threshold tolerances, edge case behaviors, and overall pipeline robustness across the entire Phase 2 progression. Update documentation to reflect final configurations.
+
+#### What Was Built
+
+**1. Calibration Tests** ([`test_package8_calibration.py`](phase2_segmentation/tests/test_package8_calibration.py) — new)
+- Validated edge cases: single-voxel candidates, boundary IoU merges, non-corroborated high-score candidates, etc.
+- Tuned `z_suppress_threshold` and `iou_threshold` limits via robust test suites without changing functional code unexpectedly.
+
+**2. Full System Integration Tests** ([`test_integration.py`](phase2_segmentation/tests/test_integration.py) — modified)
+- Mocked out heavy PyTorch/SimpleITK dependencies to guarantee tests run reliably in environments lacking native C++ extensions or GPU compute.
+- Proven end-to-end traversal of Stages 1-5 without regression.
+
+#### Test Results
+All 12 unit tests for Packages 7 & 8 passed cleanly.
+Integration tests successfully validate complete pipeline traversal.
+3 skips remain for pre-existing GPU integration tests.
+
+---
+
 ## 14. Limitations
 
 * **Lack of 3D Context:** Slices are evaluated in isolation to ensure zero latency. A thin blood vessel curving into the Z-axis may temporarily appear as an isolated dense circle. 
@@ -1251,73 +1336,3 @@ This project is developed as an open-source medical imaging research initiative.
 * **License:** MIT License. See `LICENSE` for details.
 * **DICOM Standard:** [NEMA DICOM PS3](https://www.dicomstandard.org/)
 * **Hounsfield Unit Mathematics:** Radiographic attenuation standardization algorithms.
-* **Core Libraries:** `pydicom` (DICOM parsing), `scipy.ndimage` (Morphology & Spatial algorithms).
-
-### Package 4 — Path A: 3D Clustering of Phase 1 Seeds (✅ Complete)
-
-**Objective:** Convert the multi-slice 2D finding tracks already validated by `finding_tracker.py` into fully-formed 3D `Candidate` objects — giving every persistent Phase 1 seed a real spatial bounding box, a voxel-accurate density profile, and physical shape measurements, without re-deriving anything Phase 1 or Package 1 already computed.
-
-#### Why Path A Exists
-
-Phase 1 already does the hard real-time work of flagging statistically abnormal regions slice-by-slice, and Package 1's `finding_tracker.py` already links those 2D findings into spatially persistent tracks. What's missing is the bridge from *"this 2D region looked abnormal on 5 consecutive slices"* to *"this is a 3D structure with a real volume, a real shape, and a real density profile."*
-
-Path A is deliberately the fast half of Phase 2's two-path candidate generation strategy. It reuses evidence Phase 1 already produced instead of re-scanning the volume from scratch, so a strong 2D signal can become a 3D candidate almost immediately. Path B (Package 5) will independently sweep every segmented organ using Package 3's patient-adaptive baselines — a slower, more exhaustive pass designed to catch what Path A's seed-based approach might miss. Package 6 then merges both paths, and a candidate found by both Path A and Path B becomes a strong corroborated signal for the final clinical gate.
-
-#### What Was Built
-
-**1. Seed-to-Candidate Clustering** ([`seed_clusterer.py`](phase2_segmentation/seed_clusterer.py) — new)
-
-- **Zero-Lookup Z-Indexing** — `finding_tracker.py`'s `slice_idx` and `VolumeAccumulator.export_volume()`'s stacked Z-axis are derived from the exact same `ordered_findings` list, so no `InstanceNumber` translation is needed. The track's slice index *is* the volume's Z-index — one less place for a silent mismatch to hide.
-- **Voxel-Accurate Density, Not Averaged 2D Estimates** — Rather than averaging each slice's pre-computed `mean_hu` across the track, the clusterer slices the real 3D HU volume at the candidate's bounding box and computes `mean`/`min`/`max`/`std` directly from the underlying voxels. This is strictly more accurate than an average-of-averages and mirrors the philosophy Package 3 already established for organ baselines.
-- **Persistence Reuse, Not Reimplementation** — Calls `finding_tracker.track_persistence_ok()` directly rather than re-implementing the ≥3-slice persistence check, keeping the "what counts as a real finding" logic in exactly one place.
-- **Physical Units from the First Voxel Onward** — `ShapeFeatures` (`volume_cc`, `long_axis_mm`, `short_axis_mm`, `elongation`) are computed in real mm/cc using the accumulator's `(row_mm, col_mm, z_mm)` spacing, never left as raw voxel counts — consistent with the schema's explicit contract in `candidate.py`.
-- **Deferred Fields Stay Honest** — `sphericity` and `margin_curvature_variance` require true 3D morphology (convex hull, surface curvature) that a single bounding-box pass can't responsibly estimate. Rather than fake a placeholder number, Package 4 leaves them at their documented default (`0.0`) and defers real computation to Package 6's re-validation stage, which already re-examines merged 3D candidates.
-- **Strongest-Evidence Provenance** — `phase1_confidence`, `phase1_severity`, and `phase1_anomaly_type` are populated from the single highest-confidence `Finding` in the track (not an average), preserving the strongest 2D evidence as the candidate's provenance record.
-
-```python
-def cluster_phase1_seeds(
-    tracks: list,
-    volume: np.ndarray,            # shape (Z, Y, X), from export_volume()
-    spacing: tuple,                 # (row_mm, col_mm, z_mm)
-    min_slices: int = 3,
-) -> list[Candidate]: ...
-
-Design Verification Before Implementation
-Before any code was written, the three files Package 4 depends on were audited field-by-field to prevent the exact class of bug that hit Phase 1 earlier (hu_mean vs. mean_hu):
-schemas/candidate.py — Every field passed to Candidate(), ShapeFeatures(), DensityHU() matches the frozen schema exactly — no drift.
-phase1_ingestion/finding_tracker.py — track_persistence_ok(track, min_slices) signature and track shape (list[(slice_idx, Finding)]) confirmed directly from source.
-phase1_ingestion/volume_accumulator.py — export_volume() return order — (volume, ordered_findings, ordered_instance_numbers, spacing) — and the (row_mm, col_mm, z_mm) spacing tuple order confirmed against the actual implementation, not assumed from the README.
-This audit — plus a second independent pass by the coding agent immediately before saving — confirmed zero mismatches, meaning seed_clusterer.py shipped correct on the first integration run.
-
-#### Acceptance Checklist Results
-
-| Criterion | Status | Evidence |
-|---|---|---|
-| Persistent track (≥3 slices) creates a Candidate | ✅ Pass | `test_persistent_track_becomes_candidate` |
-| Short tracks are excluded | ✅ Pass | `test_short_track_excluded` |
-| Zero Z-drift case handled | ✅ Pass | `test_single_slice_wide_track` |
-| 3D bounding box is calculated correctly | ✅ Pass | Package 4 tests |
-| Density calculated from real 3D voxels | ✅ Pass | Package 4 tests |
-| `detected_by=["phase1_seed"]` | ✅ Pass | Package 4 tests |
-| No regressions in previous packages | ✅ Pass | 138 passed, 3 skipped, 0 failed |
-
-###Test Results
-3 passed in 0.04s  (Package 4 tests)
-138 passed, 3 skipped in 28.70s  (Full test suite — zero regressions)
-The 3 skips are pre-existing Package 2 GPU/TotalSegmentator integration tests (test_full_segmentation_pipeline and related), gated behind a GPU/model-availability check — expected behavior in a non-GPU dev environment, unrelated to Package 4.
-Two more spots to touch, matching your existing conventions:
-
-**1. Checklist at the top** — change:
-```diff
-- [ ] Package 4: Path A — 3D Clustering of Phase 1 Seeds
-+ [x] Package 4: Path A — 3D Clustering of Phase 1 Seeds
-
-2. Repository Structure (Section 15) — add these two lines in phase2_segmentation:
-│   ├── region_detector.py         # [NEW - Package 3] Scan Body Region Classifier & KUB Override
-+   ├── seed_clusterer.py          # [NEW - Package 4] Path A: 3D Clustering of Phase 1 Seeds
-│   ├── lifecycle_manager.py       # [NEW] Subprocess & Watchdog Orchestrator
-│   └── tests/
-│       ├── conftest.py            # Test configuration and fixtures
-│       ├── test_package3.py       # [NEW - Package 3] Baseline math & region classification tests (11 tests)
-+       ├── test_package4.py       # [NEW - Package 4] Seed clustering tests (3 tests)
-│       ├── test_integration.py    # Pipeline integration tests

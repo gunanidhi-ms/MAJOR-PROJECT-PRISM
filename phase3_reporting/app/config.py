@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     ollama_host: str = "http://localhost:11434"
     ollama_model: str = "mistral:7b"
     ollama_temperature: float = 0.2   # kept low for determinism
-    ollama_timeout: int = 120         # seconds
+    ollama_timeout: int = 30         # seconds
 
     # ------------------------------------------------------------------ #
     # FastAPI
