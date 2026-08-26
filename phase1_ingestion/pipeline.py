@@ -37,6 +37,7 @@ from .triage_screen import screen_slice
 from .dicom_listener import DICOMListener
 from .ws_server import app, broadcaster, create_alert_payload
 from .volume_accumulator import VolumeAccumulator
+from .dicom_archive import DicomArchiveManager, init_archive_manager
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -78,6 +79,16 @@ class Phase1Pipeline:
             "total_processing_time_ms": 0.0,
         }
 
+        # ── Archive Manager for DICOM file lifecycle ──
+        incoming_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "sample_dicoms", "incoming"))
+        exports_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "exports"))
+        self.archive_manager = DicomArchiveManager(incoming_dir, exports_dir)
+        # Also set global for ws_server compatibility
+        init_archive_manager(incoming_dir, exports_dir)
+
+        # Track last seen StudyInstanceUID for patient change detection
+        self._last_study_instance_uid: str | None = None
+
     def _on_slice_received(self, slice_data: dict) -> None:
         """
         Callback from DICOM listener — enqueues each incoming slice
@@ -88,6 +99,34 @@ class Phase1Pipeline:
         """
         self._queue.put(slice_data)
         self._stats["slices_received"] += 1
+
+    def _check_patient_change(self, slice_data: dict) -> None:
+        """Checks if incoming slice belongs to a new patient/study and flushes/resets if so."""
+        current_study_uid = slice_data.get("study_instance_uid", "")
+        current_patient_id = slice_data.get("patient_id", "")
+        current_patient_name = slice_data.get("patient_name", "")
+        
+        if (current_study_uid and current_study_uid != self._last_study_instance_uid) or (
+            current_patient_id and current_patient_id != getattr(self, "_last_patient_id", None)
+        ):
+            if self._last_study_instance_uid is not None or getattr(self, "_last_patient_id", None) is not None:
+                logger.info(
+                    "Patient/Study changed: (%s, %s) -> (%s, %s). Triggering archive and reset.",
+                    getattr(self, "_last_patient_id", "None"),
+                    (self._last_study_instance_uid or "None")[:20],
+                    current_patient_id,
+                    current_study_uid[:20],
+                )
+                self.archive_manager.on_patient_change(current_study_uid)
+                self.accumulator.reset_all()
+                self.buffer.reset()
+                broadcaster.reset_for_new_patient(
+                    patient_id=current_patient_id,
+                    patient_name=current_patient_name,
+                    study_uid=current_study_uid,
+                )
+            self._last_study_instance_uid = current_study_uid
+            self._last_patient_id = current_patient_id
 
     def _worker_loop(self) -> None:
         """Worker loop running in a background thread to process queued slices asynchronously."""
@@ -100,6 +139,9 @@ class Phase1Pipeline:
             t_start = time.perf_counter()
             instance_number = slice_data["instance_number"]
             try:
+                # ── Step 0: Check patient transition before buffering ──
+                self._check_patient_change(slice_data)
+
                 # ── Step 1: Buffer the slice ──
                 self.buffer.add_slice(instance_number, slice_data)
 
@@ -123,7 +165,12 @@ class Phase1Pipeline:
     def _process_single_slice(
         self, instance_number: int, slice_data: dict, t_pipeline_start: float
     ) -> None:
-        """Process a single slice through HU → Triage → Alert pipeline."""
+        """Process a single slice through HU → Triage → Alert pipeline.
+        
+        Note: patient/study change detection is performed upstream in _worker_loop
+        BEFORE this slice is buffered. DO NOT call _check_patient_change here
+        again — that would reset the buffer mid-stream and lose slices.
+        """
 
         pixel_array = slice_data["pixel_array"]
         slope = slice_data["rescale_slope"]
@@ -169,6 +216,13 @@ class Phase1Pipeline:
             "series_instance_uid": slice_data.get("series_instance_uid", ""),
             "study_instance_uid": slice_data.get("study_instance_uid", ""),
             "modality": slice_data.get("modality", "CT"),
+            "patient_id": slice_data.get("patient_id", "UNKNOWN_PATIENT"),
+            "patient_name": slice_data.get("patient_name", "Unknown Patient"),
+            "patient_age": slice_data.get("patient_age", ""),
+            "patient_sex": slice_data.get("patient_sex", ""),
+            "body_part": slice_data.get("body_part", ""),
+            "study_description": slice_data.get("study_description", ""),
+            "series_description": slice_data.get("series_description", ""),
         }
         self.accumulator.add(
             instance_number,
@@ -187,6 +241,9 @@ class Phase1Pipeline:
             processing_time_ms=total_time_ms,
             window_center=slice_data.get("window_center"),
             window_width=slice_data.get("window_width"),
+            patient_name=slice_data.get("patient_name", ""),
+            study_instance_uid=slice_data.get("study_instance_uid", ""),
+            series_instance_uid=slice_data.get("series_instance_uid", ""),
         )
         broadcaster.push_alert(alert)
 
@@ -209,16 +266,34 @@ class Phase1Pipeline:
             f"{findings_str}"
         )
 
+
     def on_association_released(self) -> None:
         """
         Callback from DICOM listener on EVT_RELEASED.
-        
-        Sequencing logic:
+
+        This method is called from pynetdicom's EVT_RELEASED handler thread.
+        It MUST return quickly — any blocking on this thread delays pynetdicom
+        from handling subsequent connections.
+
+        Dispatches the heavy work (_queue.join + buffer flush + Phase 2 trigger)
+        to a short-lived daemon thread so the handler returns immediately.
+        """
+        threading.Thread(
+            target=self._do_association_released_work,
+            daemon=True,
+            name="assoc-release-worker",
+        ).start()
+
+    def _do_association_released_work(self) -> None:
+        """
+        Background worker for post-association cleanup.
+
+        Sequencing:
         1. Wait for all queued slices in the worker queue to be processed.
-        2. First completely drain any remaining slices from SliceBuffer.
-        3. Process those flushed slices through the exact same existing 2D triage/processing path (_process_single_slice).
-        4. Only after all buffered slices have been processed, call VolumeAccumulator.mark_association_released().
-        5. Then let the existing Phase 2 trigger logic run so the accumulated volume triggers Phase 2 once.
+        2. Drain any remaining slices from SliceBuffer.
+        3. Process flushed slices through the 2D triage path.
+        4. Call VolumeAccumulator.mark_association_released().
+        5. Check Phase 2 trigger.
         """
         logger.info("Pipeline: DICOM association released — waiting for worker queue to clear...")
         self._queue.join()
@@ -242,6 +317,7 @@ class Phase1Pipeline:
         )
         self.accumulator.mark_association_released()
         self._check_phase2_trigger()
+
 
     def run(self) -> None:
         """
@@ -279,6 +355,7 @@ class Phase1Pipeline:
             on_slice_received=self._on_slice_received,
             on_association_released=self.on_association_released,
             accumulator=self.accumulator,
+            archive_manager=self.archive_manager,
         )
         dicom_server = self.listener.start_background()
 
@@ -409,10 +486,8 @@ class Phase1Pipeline:
         
         # Archive and clear incoming directory on shutdown
         try:
-            from phase1_ingestion.ws_server import zip_incoming_dir, clear_incoming_dir
             print("[INFO] Archiving incoming slices...")
-            zip_incoming_dir("pipeline_shutdown")
-            clear_incoming_dir()
+            self.archive_manager.on_shutdown()
             print("[INFO] Incoming slices archived and cleared successfully.")
         except Exception as e:
             print(f"[ERROR] Failed to archive incoming slices: {e}")
@@ -420,6 +495,7 @@ class Phase1Pipeline:
 
 def main():
     """Entry point for the Phase 1 pipeline."""
+    global _pipeline_instance
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
@@ -430,6 +506,7 @@ def main():
     logging.getLogger("uvicorn").setLevel(logging.WARNING)
 
     pipeline = Phase1Pipeline()
+    _pipeline_instance = pipeline  # expose for ws_server access
 
     # Handle Ctrl+C gracefully
     def signal_handler(sig, frame):
@@ -440,6 +517,16 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     pipeline.run()
+
+
+# ── Module-level singleton so ws_server can reach the running pipeline ─────────
+
+_pipeline_instance: "Phase1Pipeline | None" = None
+
+
+def get_pipeline() -> "Phase1Pipeline | None":
+    """Return the running Phase1Pipeline instance, or None if not started yet."""
+    return _pipeline_instance
 
 
 if __name__ == "__main__":

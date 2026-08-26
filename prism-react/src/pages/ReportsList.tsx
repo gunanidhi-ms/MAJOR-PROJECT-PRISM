@@ -11,9 +11,14 @@ export default function ReportsList() {
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
     return data.reports.filter((r) => {
       const matchStatus = filter === 'all' || r.status === filter;
-      const matchSearch = !search || r.study_id.toLowerCase().includes(search.toLowerCase());
+      const matchSearch =
+        !q ||
+        r.study_id?.toLowerCase().includes(q) ||
+        r.patient_name?.toLowerCase().includes(q) ||
+        r.patient_id?.toLowerCase().includes(q);
       return matchStatus && matchSearch;
     });
   }, [data.reports, filter, search]);
@@ -43,7 +48,7 @@ export default function ReportsList() {
           </svg>
           <input
             type="text"
-            placeholder="Search by Study ID…"
+            placeholder="Search by Patient Name, ID, or Study ID…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
@@ -107,10 +112,10 @@ export default function ReportsList() {
                     <td style={{ padding: '13px 16px' }}>
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0' }}>
-                          {report.patient_name || report.patient_id || 'Unknown Patient'}
+                          {report.patient_name || 'Patient'}
                         </span>
-                        <span style={{ fontSize: 11, color: '#475569', fontFamily: "'JetBrains Mono', monospace" }}>
-                          {report.study_id.substring(0, 20)}...
+                        <span style={{ fontSize: 11, color: '#00d4ff', fontFamily: "'JetBrains Mono', monospace" }}>
+                          ID: {report.patient_id || report.study_id}
                         </span>
                       </div>
                     </td>
@@ -137,7 +142,7 @@ export default function ReportsList() {
                     </td>
                     <td style={{ padding: '13px 16px', textAlign: 'right' }}>
                       <Link
-                        to={`/report/${encodeURIComponent(report.study_id)}`}
+                        to={`/report/${encodeURIComponent(report.patient_id || report.study_id)}`}
                         style={{ fontSize: 12, fontWeight: 600, color: '#00d4ff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}
                       >
                         Open

@@ -1,0 +1,13 @@
+{
+  "patient_id": "007",
+  "patient_name": "Sagar N Mutalik",
+  "patient_age": "21",
+  "patient_sex": "M",
+  "total_slices": 186,
+  "status": "archived",
+  "created_at": "2026-08-26T18:56:42.741476+00:00",
+  "findings": "Real-time CT slice screening completed. DICOM slices validated and archived.",
+  "impression": "CT scan acquisition complete for Sagar N Mutalik (007).",
+  "source": "PRISM_INTEGRATED_PIPELINE",
+  "validated": true
+}

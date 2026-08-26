@@ -20,7 +20,7 @@ import os
 import logging
 import threading
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Optional
 
 import numpy as np
 
@@ -40,6 +40,16 @@ logger = logging.getLogger(__name__)
 
 # Default storage directory for incoming DICOM files
 INCOMING_DIR = os.path.join(os.path.dirname(__file__), "sample_dicoms", "incoming")
+
+
+# Optional archive manager (set by pipeline)
+_archive_manager: Optional[object] = None
+
+
+def set_archive_manager(manager: object) -> None:
+    """Set the global archive manager for this listener."""
+    global _archive_manager
+    _archive_manager = manager
 
 
 class DICOMListener:
@@ -63,6 +73,7 @@ class DICOMListener:
         save_to_disk: bool = True,
         incoming_dir: str = INCOMING_DIR,
         accumulator=None,
+        archive_manager=None,
     ):
         """
         Args:
@@ -73,6 +84,7 @@ class DICOMListener:
             save_to_disk: Whether to save incoming .dcm files.
             incoming_dir: Directory path for saving incoming files.
             accumulator: VolumeAccumulator instance.
+            archive_manager: DicomArchiveManager instance for auto-archiving.
         """
         self._port = port
         self._ae_title = ae_title
@@ -81,12 +93,16 @@ class DICOMListener:
         self._save_to_disk = save_to_disk
         self._incoming_dir = incoming_dir
         self._accumulator = accumulator
+        self._archive_manager = archive_manager
         self._ae: AE | None = None
         self._server = None
         self._thread: threading.Thread | None = None
         self._slice_count = 0
         self._active_associations = 0
         self._assoc_lock = threading.Lock()
+
+        if self._save_to_disk:
+            os.makedirs(self._incoming_dir, exist_ok=True)
 
         if self._save_to_disk:
             os.makedirs(self._incoming_dir, exist_ok=True)
@@ -207,6 +223,21 @@ class DICOMListener:
                 filepath = os.path.join(self._incoming_dir, filename)
                 ds.save_as(filepath)
                 logger.debug("Saved to: %s", filepath)
+
+                # ── Register with archive manager ──
+                if self._archive_manager and filepath:
+                    try:
+                        from pathlib import Path
+                        self._archive_manager.register_slice(
+                            study_instance_uid=study_instance_uid,
+                            patient_id=patient_id,
+                            patient_name=patient_name,
+                            slice_filepath=Path(filepath),
+                            patient_age=patient_age,
+                            patient_sex=patient_sex,
+                        )
+                    except Exception as e:
+                        logger.warning("Archive manager registration failed: %s", e)
 
             # ── Forward to processing pipeline ──
             if self._on_slice_received:

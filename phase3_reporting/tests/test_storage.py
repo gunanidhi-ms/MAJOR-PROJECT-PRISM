@@ -52,12 +52,12 @@ class TestSaveReport:
     def test_save_creates_file(self, tmp_storage, tmp_path):
         report = make_report()
         tmp_storage.save_report(report)
-        files = list(tmp_path.glob("TEST001_*.json"))
+        files = list(tmp_path.glob("*TEST001*.json"))
         assert len(files) == 1
 
     def test_saved_file_is_valid_json(self, tmp_storage, tmp_path):
         tmp_storage.save_report(make_report())
-        file = next(tmp_path.glob("TEST001_*.json"))
+        file = next(tmp_path.glob("*TEST001*.json"))
         data = json.loads(file.read_text(encoding="utf-8"))
         assert data["study_id"] == "TEST001"
 
@@ -66,7 +66,7 @@ class TestSaveReport:
         tmp_storage.save_report(make_report("STUDY_A"))
         time.sleep(0.01)
         tmp_storage.save_report(make_report("STUDY_A"))
-        files = list(tmp_path.glob("STUDY_A_*.json"))
+        files = list(tmp_path.glob("*STUDY_A*.json"))
         assert len(files) == 2
 
 

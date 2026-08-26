@@ -63,7 +63,7 @@ class LLMService:
         self.host = (host or cfg.ollama_host).rstrip("/")
         self.model = model or cfg.ollama_model
         self.temperature = temperature if temperature is not None else cfg.ollama_temperature
-        self.timeout = timeout or cfg.ollama_timeout
+        self.timeout = timeout if timeout is not None else cfg.ollama_timeout
 
     # ------------------------------------------------------------------ #
     #  Public API
@@ -128,6 +128,9 @@ class LLMService:
         settings = get_settings()
         if settings.skip_llm:
             return
+        if not await self.health_check():
+            logger.info("Ollama not reachable — skipping warmup (using template fallback).")
+            return
         logger.info("Warming up Ollama model '%s'...", self.model)
         url = f"{self.host}/api/chat"
         payload = {
@@ -137,7 +140,7 @@ class LLMService:
             "messages": [{"role": "user", "content": "Hi"}],
         }
         try:
-            async with httpx.AsyncClient(timeout=120) as client:
+            async with httpx.AsyncClient(timeout=min(self.timeout, 30.0)) as client:
                 resp = await client.post(url, json=payload)
                 if resp.status_code == 200:
                     logger.info("Ollama warmup complete — model '%s' is loaded.", self.model)
@@ -153,7 +156,7 @@ class LLMService:
         Used by the /health endpoint and startup checks.
         """
         try:
-            async with httpx.AsyncClient(timeout=5) as client:
+            async with httpx.AsyncClient(timeout=min(self.timeout, 5.0)) as client:
                 response = await client.get(f"{self.host}/api/tags")
                 return response.status_code == 200
         except Exception:  # noqa: BLE001
@@ -220,4 +223,3 @@ class LLMService:
             ) from exc
 
         return content.strip()
-    

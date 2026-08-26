@@ -66,7 +66,11 @@ class VolumeAccumulator:
                         never the trigger).
         """
         self._min_slices = min_slices
-        self._lock = threading.Lock()
+        # RLock (re-entrant lock) is required here because reset_all() acquires
+        # the lock and then calls reset() which also acquires the lock on the
+        # same thread. Using a plain threading.Lock() would cause a permanent
+        # deadlock whenever _check_patient_change fires (e.g. second patient).
+        self._lock = threading.RLock()
 
         # Storage: keyed by instance_number to prevent duplicates
         self._slices: dict[int, dict] = {}
@@ -364,7 +368,21 @@ class VolumeAccumulator:
             logger.info("VolumeAccumulator: reset for next series")
 
     def reset_all(self) -> None:
-        """Clear all accumulated data and reset completed series UID guards."""
+        """
+        Clear all accumulated data AND reset the completed-series UID guard.
+
+        This is the full reset used on patient transitions. It differs from
+        reset() in that it also clears _completed_series_uids, allowing the
+        same SeriesInstanceUID (e.g. same DICOM test dataset reused for a new
+        patient) to be processed again.
+
+        NOTE: Because RLock is used, calling reset() from within reset_all()
+        while holding the lock is safe — the same thread may re-acquire RLock.
+        """
         with self._lock:
+            # Reset all slice data and flags (reset() re-acquires RLock — safe)
             self.reset()
+            # Clear the series-UID deduplication guard so the same source files
+            # can be reused for a new patient without being silently dropped.
             self._completed_series_uids.clear()
+            logger.info("VolumeAccumulator: full reset (including series UID guard)")

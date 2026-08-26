@@ -76,6 +76,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -83,6 +84,25 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+}
+
+/* ── Global Layout Containers ──────────────────────────────────────────────── */
+.app-root-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-base);
+}
+
+.app-main-content {
+  flex: 1;
+  max-width: 1650px;
+  width: 95%;
+  margin: 0 auto;
+  padding: 24px clamp(12px, 1.8vw, 32px) 48px;
+  box-sizing: border-box;
 }
 
 /* Scrollbar */

@@ -121,7 +121,7 @@ def get_storage() -> ReportStorage:
     Extend this function when adding new backends (e.g. "mysql").
     """
     from app.config import get_settings
-    from storage.json_storage import JSONReportStorage
+    from .json_storage import JSONReportStorage
 
     settings = get_settings()
 

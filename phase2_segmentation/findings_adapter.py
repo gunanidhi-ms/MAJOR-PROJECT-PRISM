@@ -148,7 +148,7 @@ def to_structured_findings(
     if not organs:
         organs.append({
             "organ": "whole_body",
-            "status": "normal",
+            "status": "not_visualised",
         })
         logger.info(
             "findings_adapter: no significant findings after filtering "
@@ -157,7 +157,7 @@ def to_structured_findings(
         )
 
     structured_findings = {
-        "study_id": series_meta.get("study_instance_uid", "unknown_study"),
+        "study_id": series_meta.get("study_instance_uid") or series_meta.get("series_instance_uid", "unknown_study"),
         "modality": series_meta.get("modality", "CT"),
         "patient_id": series_meta.get("patient_id", "UNKNOWN_PATIENT"),
         "patient_name": series_meta.get("patient_name", "Unknown Patient"),

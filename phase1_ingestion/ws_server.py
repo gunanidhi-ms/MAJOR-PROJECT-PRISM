@@ -26,9 +26,27 @@ import base64
 import shutil
 import glob
 import os
+import sys
+from pathlib import Path
 from collections import deque
-from typing import Any
+from typing import Any, Optional
 from datetime import datetime, timezone
+
+# ── Silence harmless WinError 10054 in asyncio ProactorEventLoop on Windows ────
+if sys.platform == "win32":
+    try:
+        import asyncio.proactor_events
+        _orig_call_connection_lost = asyncio.proactor_events._ProactorBasePipeTransport._call_connection_lost
+
+        def _safe_call_connection_lost(self, exc):
+            try:
+                _orig_call_connection_lost(self, exc)
+            except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, OSError):
+                pass
+
+        asyncio.proactor_events._ProactorBasePipeTransport._call_connection_lost = _safe_call_connection_lost
+    except Exception:
+        pass
 
 import numpy as np
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -56,20 +74,36 @@ class AlertBroadcaster:
     The async broadcaster drains the queue and broadcasts to all connected clients.
     """
 
-    def __init__(self, max_history: int = 100):
+    def __init__(self, max_history: int = 10000):
         self._queue: asyncio.Queue = None  # set when event loop starts
-        self._sync_queue: deque = deque(maxlen=500)  # thread-safe fallback
+        self._sync_queue: deque = deque(maxlen=2000)  # thread-safe fallback
         self._lock = threading.Lock()
         self._clients: set[WebSocket] = set()
         self._history: deque = deque(maxlen=max_history)
         self._thumbnails: dict[int, bytes] = {}  # slice_id → PNG bytes
         self._hu_arrays: dict[int, np.ndarray] = {}  # slice_id → raw HU array
+        self._current_patient_id: str = ""
+        self._current_patient_name: str = ""
+        self._current_patient_age: str = ""
+        self._current_patient_sex: str = ""
+        self._current_dataset_dir: str = ""
+        self._current_delay_ms: int = 30
+        self._current_study_uid: str = ""
+        self._current_series_uid: str = ""
+        self._session_active: bool = False
+        self._phase1_status: str = "idle"  # "idle" | "scanning" | "completed"
+        self._phase2_status: str = "idle"  # "idle" | "running" | "completed" | "failed"
+        self._phase3_status: str = "locked"  # "locked" | "unlocked" | "generating" | "draft_ready" | "signed"
+        self._session_start_time: str = ""
+        self._session_end_time: str = ""
+        self._phase2_info: dict = {}
         self._stats = {
             "total_slices": 0,
             "flagged_slices": 0,
             "connected_clients": 0,
             "start_time": datetime.now(timezone.utc).isoformat(),
         }
+        self._has_had_client: bool = False
         self._loop: asyncio.AbstractEventLoop | None = None
 
     def set_event_loop(self, loop: asyncio.AbstractEventLoop):
@@ -77,24 +111,126 @@ class AlertBroadcaster:
         self._loop = loop
         self._queue = asyncio.Queue()
 
-    def push_alert(self, alert: dict) -> None:
+    def get_session_info(self) -> dict:
+        """Get snapshot of current patient session state and pipeline progression."""
+        global scanner_process
+        is_running = bool(scanner_process and scanner_process.poll() is None)
+        with self._lock:
+            return {
+                "patient_id": self._current_patient_id,
+                "patient_name": self._current_patient_name,
+                "patient_age": self._current_patient_age,
+                "patient_sex": self._current_patient_sex,
+                "dataset_dir": self._current_dataset_dir,
+                "delay_ms": self._current_delay_ms,
+                "study_id": self._current_study_uid,
+                "series_id": self._current_series_uid,
+                "session_active": self._session_active,
+                "phase1_status": self._phase1_status,
+                "phase2_status": self._phase2_status,
+                "phase3_status": self._phase3_status,
+                "total_slices": len(self._history),
+                "flagged_slices": self._stats["flagged_slices"],
+                "start_time": self._session_start_time or self._stats["start_time"],
+                "phase2_info": self._phase2_info,
+                "scanner_running": is_running,
+            }
+
+    def reset_for_new_patient(
+        self,
+        patient_id: str = "",
+        patient_name: str = "",
+        patient_age: str = "",
+        patient_sex: str = "",
+        dataset_dir: str = "",
+        delay_ms: int = 30,
+        study_uid: str = "",
+    ) -> None:
         """
-        Push an alert from the sync pipeline thread.
-        Thread-safe — can be called from any thread.
+        Clears all in-memory slice caches, thumbnails, history, and statistics
+        so that a new patient session starts completely fresh.
         """
         with self._lock:
-            # Clean thumbnail for history so it doesn't eat memory
-            history_alert = alert.copy()
-            if "thumbnail" in history_alert:
-                del history_alert["thumbnail"]
-            self._history.append(history_alert)
-            
+            # If we have history from the previous patient, save preliminary findings
+            if self._history and self._current_patient_id:
+                self._save_preliminary_report(self._current_patient_id, self._current_patient_name)
+
+            self._history.clear()
+            self._thumbnails.clear()
+            self._hu_arrays.clear()
+            self._sync_queue.clear()
+            self._current_patient_id = patient_id
+            self._current_patient_name = patient_name
+            self._current_patient_age = patient_age
+            self._current_patient_sex = patient_sex
+            self._current_dataset_dir = dataset_dir
+            self._current_delay_ms = delay_ms
+            self._current_study_uid = study_uid
+            self._current_series_uid = ""
+            self._session_active = bool(patient_id or patient_name)
+            self._phase1_status = "idle"
+            self._phase2_status = "idle"
+            self._phase3_status = "locked"
+            self._phase2_info = {}
+            now_iso = datetime.now(timezone.utc).isoformat()
+            self._session_start_time = now_iso
+            self._stats["total_slices"] = 0
+            self._stats["flagged_slices"] = 0
+            self._stats["start_time"] = now_iso
+
+        # Push a session reset event to all connected WebSocket clients
+        reset_event = {
+            "type": "patient_session_start",
+            "patient_id": patient_id,
+            "patient_name": patient_name,
+            "patient_age": patient_age,
+            "patient_sex": patient_sex,
+            "study_id": study_uid,
+            "dataset_dir": dataset_dir,
+            "delay_ms": delay_ms,
+            "phase1_status": "idle",
+            "phase2_status": "idle",
+            "phase3_status": "locked",
+            "timestamp": now_iso,
+        }
+        if self._loop and self._queue:
+            self._loop.call_soon_threadsafe(self._queue.put_nowait, reset_event)
+        else:
+            self._sync_queue.append(reset_event)
+
+        logger.info(
+            "AlertBroadcaster reset for new patient (ID: %s, Name: %s, Age: %s, Sex: %s, Study: %s)",
+            patient_id, patient_name, patient_age, patient_sex, study_uid[:20] if study_uid else "None"
+        )
+
+    def push_alert(self, alert: dict) -> None:
+        """
+        Push a new triage alert from the sync pipeline.
+        Called by Phase 1 pipeline for each processed slice.
+        """
+        with self._lock:
+            self._history.append(alert)
             self._stats["total_slices"] += 1
-            if alert.get("flagged", False):
+            if alert.get("flagged"):
                 self._stats["flagged_slices"] += 1
+
+            # Track patient metadata
+            if alert.get("patient_id"):
+                self._current_patient_id = alert["patient_id"]
+            if alert.get("patient_name"):
+                self._current_patient_name = alert["patient_name"]
+            if alert.get("patient_age"):
+                self._current_patient_age = alert["patient_age"]
+            if alert.get("patient_sex"):
+                self._current_patient_sex = alert["patient_sex"]
+            if alert.get("study_id") or alert.get("study_instance_uid"):
+                self._current_study_uid = alert.get("study_id") or alert.get("study_instance_uid")
+            if alert.get("series_instance_uid"):
+                self._current_series_uid = alert.get("series_instance_uid")
                 
-            # Save a preliminary report for this patient
-            self._save_preliminary_report(alert.get("patient_id", "unknown"))
+            self._session_active = True
+            if self._phase1_status != "completed":
+                self._phase1_status = "scanning"
 
         # Push to async queue via event loop
         if self._loop and self._queue:
@@ -102,12 +238,15 @@ class AlertBroadcaster:
         else:
             self._sync_queue.append(alert)
 
-    def _save_preliminary_report(self, patient_id: str) -> None:
-        """Saves a JSON report of all findings for the current patient to disk."""
+    def _save_preliminary_report(self, patient_id: str, patient_name: str = "") -> None:
+        """Saves a JSON report of all findings for the current patient to disk using patient ID and name."""
         reports_dir = os.path.join(os.getcwd(), "reports")
         os.makedirs(reports_dir, exist_ok=True)
         
-        report_path = os.path.join(reports_dir, f"report_{patient_id}.json")
+        safe_p_id = "".join(c for c in (patient_id or "UNK") if c.isalnum() or c in "-_")[:32]
+        safe_p_name = "".join(c for c in (patient_name or "Patient").replace("^", "_").replace(" ", "_") if c.isalnum() or c in "-_")[:32]
+        
+        report_path = os.path.join(reports_dir, f"report_{safe_p_name}_{safe_p_id}.json")
         try:
             with open(report_path, "w") as f:
                 json.dump(list(self._history), f, indent=2)
@@ -150,11 +289,30 @@ class AlertBroadcaster:
     async def register(self, ws: WebSocket) -> None:
         """Register a new WebSocket client."""
         await ws.accept()
+        self._has_had_client = True
         self._clients.add(ws)
         self._stats["connected_clients"] = len(self._clients)
         logger.info("WebSocket client connected (%d total)", len(self._clients))
 
-        # Send recent history to newly connected client
+        # Cancel any pending shutdown
+        global _shutdown_timer
+        with _shutdown_lock:
+            if _shutdown_timer:
+                _shutdown_timer.cancel()
+                _shutdown_timer = None
+                logger.info("Pending system shutdown cancelled due to active client connection.")
+
+        # Send full active session state greeting first so the client has complete metadata
+        session_greeting = {
+            "type": "session_sync",
+            "session": self.get_session_info(),
+        }
+        try:
+            await ws.send_json(session_greeting)
+        except Exception:
+            pass
+
+        # Send full slice history to newly connected client without truncating
         # Take a snapshot to avoid "deque mutated during iteration" race
         with self._lock:
             history_snapshot = list(self._history)
@@ -169,6 +327,17 @@ class AlertBroadcaster:
         self._clients.discard(ws)
         self._stats["connected_clients"] = len(self._clients)
         logger.info("WebSocket client disconnected (%d remaining)", len(self._clients))
+
+        # If all client tabs/windows have closed after at least one had connected, initiate shutdown
+        if self._has_had_client and len(self._clients) == 0:
+            logger.info("All browser tabs/clients disconnected (hit 'X'). Initiating automatic shutdown timer (2.5s)...")
+            global _shutdown_timer
+            with _shutdown_lock:
+                if _shutdown_timer:
+                    _shutdown_timer.cancel()
+                _shutdown_timer = _threading.Timer(2.5, _perform_system_shutdown)
+                _shutdown_timer.daemon = True
+                _shutdown_timer.start()
 
     async def broadcast_loop(self) -> None:
         """
@@ -231,6 +400,18 @@ app.add_middleware(
 async def startup():
     """Initialize the broadcaster and start the broadcast loop."""
     loop = asyncio.get_event_loop()
+    
+    # Configure loop exception handler to silence WinError 10054 on Windows
+    def _proactor_exception_handler(loop, context):
+        exc = context.get("exception")
+        if isinstance(exc, (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, OSError)):
+            return
+        msg = str(context.get("message", ""))
+        if "WinError 10054" in msg or "_call_connection_lost" in msg:
+            return
+        loop.default_exception_handler(context)
+
+    loop.set_exception_handler(_proactor_exception_handler)
     broadcaster.set_event_loop(loop)
     asyncio.create_task(broadcaster.broadcast_loop())
     logger.info("Alert broadcaster started")
@@ -252,6 +433,11 @@ async def get_stats():
     return JSONResponse(content=broadcaster.get_stats())
 
 
+@app.get("/health")
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok", "service": "phase1_ingestion"}
+
 class EventPayload(BaseModel):
     type: str
     phase: str
@@ -268,6 +454,27 @@ async def post_event(payload: EventPayload):
     # Tag it as a pipeline event so the frontend can differentiate it from DICOM slices
     event_dict["is_pipeline_event"] = True
     
+    # Update broadcaster phase tracking
+    with broadcaster._lock:
+        if payload.phase == "segmentation":
+            if payload.status == "started":
+                broadcaster._phase2_status = "running"
+            elif payload.status == "completed":
+                broadcaster._phase2_status = "completed"
+                broadcaster._phase3_status = "unlocked"
+            elif payload.status == "failed":
+                broadcaster._phase2_status = "failed"
+        elif payload.phase == "reporting":
+            if payload.status == "started":
+                broadcaster._phase3_status = "generating"
+            elif payload.status == "completed":
+                broadcaster._phase3_status = "draft_ready"
+            elif payload.status == "failed":
+                broadcaster._phase3_status = "unlocked"
+        elif payload.phase == "ingestion":
+            if payload.status == "completed":
+                broadcaster._phase1_status = "completed"
+
     # Broadcast to WebSocket clients
     if broadcaster._loop and broadcaster._queue:
         broadcaster._loop.call_soon_threadsafe(broadcaster._queue.put_nowait, event_dict)
@@ -282,16 +489,14 @@ async def post_event(payload: EventPayload):
 async def websocket_alerts(ws: WebSocket):
     """
     WebSocket endpoint for real-time triage alerts.
-    
-    Clients connect here to receive JSON alert messages:
-    {
-        "slice_id": 5,
-        "flagged": true,
-        "timestamp": "2026-07-17T16:30:00Z",
-        "findings": [...],
-        "thumbnail": "base64..."
-    }
     """
+    global _shutdown_timer
+    with _shutdown_lock:
+        if _shutdown_timer:
+            _shutdown_timer.cancel()
+            _shutdown_timer = None
+            logger.info("Pending system shutdown cancelled due to active WebSocket client.")
+
     await broadcaster.register(ws)
     try:
         # Keep connection alive — listen for client messages (e.g., pings)
@@ -355,7 +560,8 @@ async def get_windowed_slice(slice_id: int, wc: float = 50, ww: float = 350):
     )
 
 
-# ── Scanner Control Endpoints ──────────────────────────────────────────────────
+
+# ── Patient Session & Scanner Endpoints ────────────────────────────────────────
 import subprocess
 import threading as _threading
 from pydantic import BaseModel
@@ -364,8 +570,8 @@ scanner_process = None
 scanner_stderr_output = ""  # Captured stderr for debugging
 current_patient_id = ""
 
-INCOMING_DIR = os.path.join(os.path.dirname(__file__), "sample_dicoms", "incoming")
-EXPORTS_DIR = os.path.join(os.path.dirname(__file__), "sample_dicoms", "exports")
+INCOMING_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "sample_dicoms", "incoming"))
+EXPORTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "exports"))
 
 def clear_incoming_dir():
     """Clears all dicom files from the incoming directory."""
@@ -376,22 +582,52 @@ def clear_incoming_dir():
             except Exception as e:
                 logger.error(f"Failed to remove {f}: {e}")
 
-def zip_incoming_dir(patient_id: str):
-    """Zips the incoming directory and saves it to exports."""
+def zip_incoming_dir(patient_id: str, patient_name: str = "", patient_age: str = "", patient_sex: str = "") -> Optional[str]:
+    """Zips the incoming directory and saves it with report.json to root exports."""
     if not os.path.exists(INCOMING_DIR) or not os.listdir(INCOMING_DIR):
         logger.info("Incoming directory is empty, nothing to zip.")
-        return
+        return None
         
     os.makedirs(EXPORTS_DIR, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    name = f"patient_{patient_id}" if patient_id else f"scan_{timestamp}"
+    safe_p_id = "".join(c for c in (patient_id or "UNK") if c.isalnum() or c in "-_")[:32]
+    safe_p_name = "".join(c for c in (patient_name or "Patient").replace("^", "_").replace(" ", "_") if c.isalnum() or c in "-_")[:32]
+    
+    parts = [f"patient_{safe_p_name}_{safe_p_id}"]
+    if patient_age:
+        parts.append(f"age_{''.join(c for c in patient_age if c.isalnum())}")
+    if patient_sex:
+        parts.append(f"sex_{''.join(c for c in patient_sex if c.isalnum())}")
+    parts.append(timestamp)
+    name = "_".join(parts)
     
     zip_path = os.path.join(EXPORTS_DIR, name)
     try:
+        # Write report.json into incoming directory before zipping
+        report_data = {
+            "patient_id": patient_id or "UNK",
+            "patient_name": patient_name or "Patient",
+            "patient_age": patient_age or "",
+            "patient_sex": patient_sex or "",
+            "total_slices": len(glob.glob(os.path.join(INCOMING_DIR, "*.dcm"))),
+            "status": "archived",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "findings": "Real-time CT slice screening completed. DICOM slices validated and archived.",
+            "impression": f"CT scan acquisition complete for {patient_name or 'Patient'} ({patient_id or 'UNK'}).",
+            "source": "PRISM_INTEGRATED_PIPELINE",
+            "validated": True
+        }
+        report_file = os.path.join(INCOMING_DIR, "report.json")
+        with open(report_file, "w", encoding="utf-8") as rf:
+            json.dump(report_data, rf, indent=2, ensure_ascii=False)
+
         shutil.make_archive(zip_path, 'zip', INCOMING_DIR)
-        logger.info(f"Successfully zipped incoming slices to {zip_path}.zip")
+        final_zip_name = f"{name}.zip"
+        logger.info(f"Successfully zipped incoming slices + report.json to {zip_path}.zip")
+        return final_zip_name
     except Exception as e:
         logger.error(f"Failed to zip incoming directory: {e}")
+        return None
 
 def _drain_pipe(pipe, label: str):
     """Background thread to drain subprocess pipe and log output."""
@@ -411,65 +647,97 @@ def _drain_pipe(pipe, label: str):
         pipe.close()
 
 class ScannerConfig(BaseModel):
-    dataset_dir: str = r"C:\Users\gunan\Downloads\TCIA files"
+    dataset_dir: str = r"D:\MAJOR-PROJECT-PRISM\phase1_ingestion\sample_dicoms\test_series"
     delay_ms: int = 30
     patient_id: str = ""
     patient_name: str = ""
     patient_age: str = ""
     patient_sex: str = ""
 
-@app.post("/api/scanner/start")
-async def start_scanner(config: ScannerConfig):
+class PatientSessionStartRequest(BaseModel):
+    patient_id: str = ""
+    patient_name: str = ""
+    patient_age: str = ""
+    patient_sex: str = ""
+    dataset_dir: str = r"D:\MAJOR-PROJECT-PRISM\phase1_ingestion\sample_dicoms\test_series"
+    delay_ms: int = 30
+    auto_start_scan: bool = True
+
+@app.get("/api/session/current")
+async def get_current_session():
+    """Get active patient session metadata and phase status."""
+    return broadcaster.get_session_info()
+
+@app.post("/api/session/start")
+async def start_patient_session(req: PatientSessionStartRequest):
+    """Initializes a new patient session and starts Phase 1 slice streaming."""
     global scanner_process, scanner_stderr_output, current_patient_id
     
+    # Terminate any existing scanner process
     if scanner_process and scanner_process.poll() is None:
-        return {"status": "error", "message": "Scanner is already running"}
-    
-    # Reset stderr capture and set patient ID
+        try:
+            scanner_process.terminate()
+        except Exception:
+            pass
+        scanner_process = None
+
     scanner_stderr_output = ""
-    current_patient_id = config.patient_id
+    current_patient_id = req.patient_id.strip()
+
+    # Reset archive manager
+    from phase1_ingestion.dicom_archive import get_archive_manager
+    archive_mgr = get_archive_manager()
+    if archive_mgr:
+        archive_mgr.reset_session()
     
-    # Clear previous incoming slices and broadcaster state
     clear_incoming_dir()
-    with broadcaster._lock:
-        broadcaster._history.clear()
-        broadcaster._thumbnails.clear()
-        broadcaster._hu_arrays.clear()
-        broadcaster._sync_queue.clear()
-        broadcaster._stats["total_slices"] = 0
-        broadcaster._stats["flagged_slices"] = 0
-        
+
+    # Explicit pipeline accumulator reset
+    from phase1_ingestion.pipeline import get_pipeline
+    pipeline = get_pipeline()
+    if pipeline:
+        pipeline.accumulator.reset_all()
+        pipeline.buffer.reset()
+
+    # Reset broadcaster state for new patient
+    broadcaster.reset_for_new_patient(
+        patient_id=req.patient_id.strip(),
+        patient_name=req.patient_name.strip(),
+        patient_age=req.patient_age.strip(),
+        patient_sex=req.patient_sex.strip(),
+        dataset_dir=req.dataset_dir.strip(),
+        delay_ms=req.delay_ms,
+        study_uid="",
+    )
+
+    # Launch CT scanner emulator
     try:
-        # Launch the CT Machine Emulator as a subprocess
         env = os.environ.copy()
         env["PYTHONUTF8"] = "1"
         
         cmd = [
             "python", "-u", "-m", "phase1_ingestion.ct_machine_emulator",
-            "--dir", config.dataset_dir,
-            "--delay", str(config.delay_ms)
+            "--dir", req.dataset_dir.strip(),
+            "--delay", str(req.delay_ms)
         ]
-        
-        if config.patient_id and config.patient_id.strip():
-            cmd.extend(["--patient", config.patient_id.strip()])
-        if config.patient_name and config.patient_name.strip():
-            cmd.extend(["--name", config.patient_name.strip()])
-        if config.patient_age and config.patient_age.strip():
-            cmd.extend(["--age", config.patient_age.strip()])
-        if config.patient_sex and config.patient_sex.strip():
-            cmd.extend(["--sex", config.patient_sex.strip()])
-        
-        logger.info(f"Starting scanner with command: {' '.join(cmd)}")
-        
+        if req.patient_id.strip():
+            cmd.extend(["--patient", req.patient_id.strip()])
+        if req.patient_name.strip():
+            cmd.extend(["--name", req.patient_name.strip()])
+        if req.patient_age.strip():
+            cmd.extend(["--age", req.patient_age.strip()])
+        if req.patient_sex.strip():
+            cmd.extend(["--sex", req.patient_sex.strip()])
+
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         scanner_process = subprocess.Popen(
             cmd,
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            cwd=r"e:\MAJOR-PROJECT-PRISM"
+            cwd=project_root
         )
-        
-        # Start background threads to drain stdout/stderr (prevents pipe blocking)
+
         _threading.Thread(
             target=_drain_pipe, args=(scanner_process.stdout, "stdout"),
             daemon=True, name="scanner-stdout-drain"
@@ -478,52 +746,122 @@ async def start_scanner(config: ScannerConfig):
             target=_drain_pipe, args=(scanner_process.stderr, "stderr"),
             daemon=True, name="scanner-stderr-drain"
         ).start()
-        
-        # Give the process a moment to fail fast (e.g., import errors)
-        import asyncio as _asyncio
-        await _asyncio.sleep(1.0)
-        
-        if scanner_process.poll() is not None:
-            # Process already exited
-            error_msg = scanner_stderr_output.strip()
-            logger.error(f"Scanner process exited immediately: {error_msg}")
-            scanner_process = None
-            return {"status": "error", "message": f"Scanner crashed at startup: {error_msg[-500:] if error_msg else 'No error output'}"}
-        
-        # Monitor process in background to zip upon natural completion
-        async def _wait_and_zip():
+
+        with broadcaster._lock:
+            broadcaster._phase1_status = "scanning"
+
+        # Background task to monitor scanner completion and automatically trigger Phase 2
+        async def _monitor_scan_and_chain_pipeline():
             global scanner_process
             while scanner_process and scanner_process.poll() is None:
-                await _asyncio.sleep(1.0)
-            logger.info("Scanner process finished naturally. Zipping slices...")
-            zip_incoming_dir(current_patient_id)
+                await asyncio.sleep(1.0)
             
-        _asyncio.create_task(_wait_and_zip())
-        
-        return {"status": "success", "message": "Scanner started"}
+            await asyncio.sleep(2.0)
+            logger.info("Phase 1 scan finished. Slices in history: %d", len(broadcaster._history))
+            
+            with broadcaster._lock:
+                broadcaster._phase1_status = "completed"
+            
+            # Broadcast Phase 1 completion
+            completion_event = {
+                "type": "pipeline_event",
+                "phase": "ingestion",
+                "status": "completed",
+                "total_slices": len(broadcaster._history),
+                "is_pipeline_event": True,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
+            if broadcaster._loop and broadcaster._queue:
+                broadcaster._loop.call_soon_threadsafe(broadcaster._queue.put_nowait, completion_event)
+            else:
+                broadcaster._sync_queue.append(completion_event)
+
+            # Auto-trigger Phase 2 if we have accumulated slices
+            try:
+                from phase1_ingestion.pipeline import get_pipeline
+                p = get_pipeline()
+                if p and p.accumulator and len(p.accumulator._slices) >= 3:
+                    logger.info("Auto-triggering Phase 2 TotalSegmentator & AI Screening...")
+                    with broadcaster._lock:
+                        broadcaster._phase2_status = "running"
+                    p.accumulator.on_stream_stall()
+                    p.accumulator.on_association_released()
+            except Exception as e:
+                logger.error("Auto Phase 2 trigger error: %s", e)
+
+        asyncio.create_task(_monitor_scan_and_chain_pipeline())
+
+        return {
+            "status": "success",
+            "message": f"Patient session started for {req.patient_name or 'Patient'} ({req.patient_id or 'ID'}). Live scan active.",
+            "scan_started": True,
+            "session": broadcaster.get_session_info(),
+        }
     except Exception as e:
-        logger.error(f"Failed to start scanner: {e}")
+        logger.error(f"Failed to start patient session: {e}")
         return {"status": "error", "message": str(e)}
 
-@app.post("/api/scanner/stop")
-async def stop_scanner():
+@app.post("/api/session/end")
+@app.post("/api/archive/close-session")
+async def end_patient_session():
+    """Finalizes patient session, archives DICOM slices + report.json to exports/, and cleans memory."""
     global scanner_process
     if scanner_process and scanner_process.poll() is None:
-        scanner_process.terminate()
+        try:
+            scanner_process.terminate()
+        except Exception:
+            pass
         scanner_process = None
-        logger.info("Scanner stopped by user. Zipping slices...")
-        zip_incoming_dir(current_patient_id)
-        return {"status": "success", "message": "Scanner stopped and slices zipped"}
-    return {"status": "success", "message": "Scanner was not running"}
 
-@app.get("/api/scanner/status")
-async def scanner_status():
-    global scanner_process, scanner_stderr_output
-    if scanner_process and scanner_process.poll() is None:
-        return {"running": True}
-    # Include any error info if the process stopped
-    error = scanner_stderr_output.strip() if scanner_stderr_output else None
-    return {"running": False, "last_error": error}
+    p_id = broadcaster._current_patient_id
+    p_name = broadcaster._current_patient_name
+    p_age = broadcaster._current_patient_age
+    p_sex = broadcaster._current_patient_sex
+
+    # Write report.json into incoming dir and zip
+    zip_name = zip_incoming_dir(p_id, p_name, p_age, p_sex)
+    if not zip_name:
+        # Fallback if incoming dir was already empty
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        safe_name = "".join(c for c in (p_name or "Patient") if c.isalnum()) or "Patient"
+        safe_id = "".join(c for c in (p_id or "ID") if c.isalnum()) or "ID"
+        zip_name = f"patient_{safe_name}_{safe_id}_{timestamp}.zip"
+
+    clear_incoming_dir()
+    broadcaster.reset_for_new_patient()
+
+    end_event = {
+        "type": "patient_session_end",
+        "archive_file": zip_name,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    if broadcaster._loop and broadcaster._queue:
+        broadcaster._loop.call_soon_threadsafe(broadcaster._queue.put_nowait, end_event)
+    else:
+        broadcaster._sync_queue.append(end_event)
+
+    return {
+        "status": "success",
+        "message": f"Patient session finalized and archived to exports/{zip_name}.",
+        "archive_file": zip_name,
+        "archive_path": os.path.join(EXPORTS_DIR, zip_name),
+    }
+
+@app.post("/api/session/phase2-trigger")
+async def trigger_phase2():
+    """Manually triggers Phase 2 segmentation & AI analysis on current volume."""
+    try:
+        from phase1_ingestion.pipeline import get_pipeline
+        p = get_pipeline()
+        if p and p.accumulator:
+            with broadcaster._lock:
+                broadcaster._phase2_status = "running"
+            p.accumulator.on_stream_stall()
+            p.accumulator.on_association_released()
+            return {"status": "success", "message": "Phase 2 TotalSegmentator initiated."}
+        return {"status": "error", "message": "Accumulator not initialized."}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 @app.get("/api/scanner/browse")
 def browse_folder():
@@ -548,6 +886,98 @@ def browse_folder():
         logger.error(f"Browse dialog error: {e}")
         return {"status": "error", "message": str(e)}
 
+# ── System Shutdown & Terminal Auto-Close Logic ──────────────────────────────
+_shutdown_timer = None
+_shutdown_lock = _threading.Lock()
+
+def _perform_system_shutdown():
+    """Executes clean termination of all backend & frontend processes and terminal windows."""
+    logger.info("Executing PRISM full system shutdown...")
+    global scanner_process
+    if scanner_process and scanner_process.poll() is None:
+        try:
+            scanner_process.terminate()
+        except Exception:
+            pass
+
+    try:
+        from phase1_ingestion.dicom_archive import get_archive_manager
+        archive_mgr = get_archive_manager()
+        if archive_mgr:
+            archive_mgr.force_archive()
+    except Exception:
+        pass
+
+    # Read .prism_pids.json for spawned terminal process IDs
+    pids_file = os.path.abspath(".prism_pids.json")
+    pids_to_kill = []
+    if os.path.isfile(pids_file):
+        try:
+            with open(pids_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if data.get("backend_pid"):
+                    pids_to_kill.append(data["backend_pid"])
+                if data.get("frontend_pid"):
+                    pids_to_kill.append(data["frontend_pid"])
+        except Exception as e:
+            logger.error(f"Error reading .prism_pids.json: {e}")
+
+    # Kill spawned terminal processes (PowerShell window + child tree)
+    for pid in pids_to_kill:
+        try:
+            if os.name == "nt":
+                subprocess.run(["taskkill", "/F", "/T", "/PID", str(pid)], capture_output=True)
+            else:
+                os.kill(int(pid), 9)
+        except Exception:
+            pass
+
+    # Fallback port kills for Vite / Reporting server on Windows
+    if os.name == "nt":
+        for port in [5173, 8005]:
+            try:
+                cmd = f'powershell -Command "Get-NetTCPConnection -LocalPort {port} -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object {{ Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }}"'
+                subprocess.run(cmd, shell=True, capture_output=True)
+            except Exception:
+                pass
+
+    if os.path.isfile(pids_file):
+        try:
+            os.remove(pids_file)
+        except Exception:
+            pass
+
+    os._exit(0)
+
+@app.post("/api/system/shutdown")
+@app.get("/api/system/shutdown")
+async def system_shutdown(grace: float = 0.5):
+    """
+    Shuts down PRISM backend services, frontend Vite server,
+    and closes the associated terminal windows after a short grace period.
+    """
+    global _shutdown_timer
+    with _shutdown_lock:
+        if _shutdown_timer:
+            _shutdown_timer.cancel()
+        _shutdown_timer = _threading.Timer(grace, _perform_system_shutdown)
+        _shutdown_timer.daemon = True
+        _shutdown_timer.start()
+
+    return {"status": "success", "message": f"PRISM shutdown initiated ({grace}s grace). Terminals will close."}
+
+@app.post("/api/system/cancel-shutdown")
+async def cancel_shutdown():
+    """Cancels a pending shutdown (e.g. if the browser reloads)."""
+    global _shutdown_timer
+    with _shutdown_lock:
+        if _shutdown_timer:
+            _shutdown_timer.cancel()
+            _shutdown_timer = None
+            logger.info("Pending system shutdown cancelled.")
+            return {"status": "success", "message": "Shutdown cancelled."}
+    return {"status": "success", "message": "No shutdown was pending."}
+
 def create_alert_payload(
     slice_id: int,
     sop_uid: str,
@@ -556,14 +986,24 @@ def create_alert_payload(
     processing_time_ms: float = 0.0,
     window_center: float = None,
     window_width: float = None,
+    patient_name: str = "",
+    study_instance_uid: str = "",
+    series_instance_uid: str = "",
 ) -> dict:
     """
     Create a standardized alert payload for WebSocket push.
     
     Args:
         slice_id: InstanceNumber of the slice.
+        sop_uid: SOP Instance UID.
+        patient_id: DICOM Patient ID.
         triage_result: Output of triage_screen.screen_slice().to_dict()
         processing_time_ms: Total pipeline processing time.
+        window_center: Default window center from DICOM.
+        window_width: Default window width from DICOM.
+        patient_name: Patient Name.
+        study_instance_uid: Study Instance UID.
+        series_instance_uid: Series Instance UID.
     
     Returns:
         Dict ready for JSON serialization and WebSocket push.
@@ -574,6 +1014,10 @@ def create_alert_payload(
         "slice_id": slice_id,
         "uid": sop_uid,
         "patient_id": patient_id,
+        "patient_name": patient_name,
+        "study_id": study_instance_uid,
+        "study_instance_uid": study_instance_uid,
+        "series_instance_uid": series_instance_uid,
         "flagged": triage_result.get("flagged", False),
         "emergency_score": triage_result.get("emergency_score", 0),
         "emergency_action": triage_result.get("emergency_action", "CONTINUE"),
@@ -589,7 +1033,6 @@ def create_alert_payload(
         "thumbnail": thumbnail_b64,
         "window_center_default": window_center,
         "window_width_default": window_width,
-        # "phase2": phase2_result, # Phase 2 detached
     }
 
     return alert

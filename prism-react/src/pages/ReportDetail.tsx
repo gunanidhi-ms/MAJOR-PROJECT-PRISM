@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useReport } from '../hooks/useReports';
 import { prismApi } from '../api/prismApi';
 import { Badge, statusToBadgeVariant, sourceToBadgeVariant } from '../components/ui/Badge';
@@ -23,6 +23,8 @@ export default function ReportDetail() {
   const navigate = useNavigate();
   const { report, loading, error, setReport } = useReport(studyId);
   const { toast, show: showToast, hide: hideToast } = useToast();
+  const location = useLocation();
+  const fromLive = (location.state as { fromLive?: boolean } | null)?.fromLive ?? false;
 
   const [findings, setFindings]         = useState('');
   const [impression, setImpression]     = useState('');
@@ -203,7 +205,8 @@ export default function ReportDetail() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/reports')}>← Reports</Button>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/live')}>← Live Viewer</Button>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/reports')}>Reports</Button>
           {!isSigned && (
             <>
               <Button variant="secondary" size="sm" loading={saving} disabled={!dirty} onClick={saveReport}>
@@ -239,6 +242,22 @@ export default function ReportDetail() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 24, alignItems: 'start' }}>
         {/* Editor column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {/* Pipeline complete banner — shown when navigated from live viewer */}
+          {fromLive && !isSigned && (
+            <div className="animate-fade-up" style={{
+              padding: '12px 16px', borderRadius: 10,
+              background: 'linear-gradient(135deg, rgba(0,212,255,0.07), rgba(34,197,94,0.06))',
+              border: '1px solid rgba(0,212,255,0.25)',
+              display: 'flex', alignItems: 'flex-start', gap: 12, fontSize: 13,
+            }}>
+              <span style={{ fontSize: 20 }}>🎉</span>
+              <div>
+                <p style={{ fontWeight: 700, color: '#00d4ff', marginBottom: 2 }}>Pipeline Complete!</p>
+                <p style={{ color: '#64748b', fontSize: 12 }}>Your CT scan has been processed through all 3 phases. Review the AI-generated draft below, edit if needed, then sign and download the PDF.</p>
+              </div>
+            </div>
+          )}
+
           {!isSigned && (
             <div className="animate-fade-up" style={{ padding: '10px 16px', borderRadius: 10, background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 12, color: '#f59e0b' }}>
               <span style={{ fontWeight: 700, flexShrink: 0 }}>DRAFT</span>

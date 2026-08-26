@@ -33,15 +33,135 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-# ── Constants ──────────────────────────────────────────────────────────────────
-
-TIMEOUT_SECONDS = 120  # Hard kill if TotalSegmentator hangs
-DEFAULT_OUT_DIR = os.path.join("phase2_work", "temp_seg")
+# ── Timeout defaults (overridden at runtime by compute_dynamic_timeout) ────────
+# These fallbacks are used only when hardware detection fails completely.
+_TIMEOUT_GPU_DEFAULT = 120   # seconds — GPU with enough VRAM
+_TIMEOUT_CPU_DEFAULT = 600   # seconds — CPU-only (no GPU detected)
 
 # TotalSegmentator flags per the specification.
 # NOTE: --radiomics excluded because pyradiomics fails to build on Python 3.12.
 # The TS CLI flag itself works but requires pyradiomics C extension at import time.
 TS_FLAGS = ["--fast", "--statistics", "--ml"]
+
+DEFAULT_OUT_DIR = os.path.join("phase2_work", "temp_seg")
+
+
+def compute_dynamic_timeout(nifti_path: Optional[str] = None) -> int:
+    """
+    Compute a hardware-adaptive subprocess timeout for TotalSegmentator.
+
+    Logic:
+      1. Detect GPU (CUDA / ROCm / MPS / DirectML).
+         GPU present  → base 120 s
+         CPU-only     → base 300 s
+      2. Scale by available system RAM:
+         RAM < 8 GB  → multiply by 3.0  (very constrained)
+         RAM < 16 GB → multiply by 2.0  (typical laptop)
+         RAM < 32 GB → multiply by 1.5  (standard desktop)
+         RAM >= 32 GB → multiply by 1.0  (workstation, no penalty)
+      3. Scale by NIfTI file size (proxy for volume size):
+         file > 200 MB → add  120 s
+         file > 100 MB → add   60 s
+         file > 50  MB → add   30 s
+      4. Cap at 1800 s (30 min) — protects against infinite hang.
+         Floor at 60 s.
+
+    Returns:
+        Timeout in whole seconds.
+    """
+    has_gpu = False
+    gpu_label = "CPU"
+
+    # ── GPU detection ───────────────────────────────────────────────────────
+    # 1. Try torch (most reliable — respects CUDA_VISIBLE_DEVICES etc.)
+    try:
+        import torch
+        if torch.cuda.is_available():
+            has_gpu = True
+            name = torch.cuda.get_device_name(0) if torch.cuda.device_count() > 0 else "CUDA"
+            vram_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3) if torch.cuda.device_count() > 0 else 0
+            gpu_label = f"CUDA ({name}, {vram_gb:.1f}GB VRAM)"
+        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+            has_gpu = True
+            gpu_label = "Apple MPS"
+    except ImportError:
+        pass
+
+    # 2. Fallback: check nvidia-smi (works even without torch)
+    if not has_gpu:
+        try:
+            r = subprocess.run(
+                ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if r.returncode == 0 and r.stdout.strip():
+                has_gpu = True
+                gpu_label = f"CUDA via nvidia-smi ({r.stdout.strip().splitlines()[0]})"
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+    # 3. Fallback: ROCm / AMD — check rocm-smi
+    if not has_gpu:
+        try:
+            r = subprocess.run(
+                ["rocm-smi", "--showproductname"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if r.returncode == 0 and r.stdout.strip():
+                has_gpu = True
+                gpu_label = "ROCm (AMD)"
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+    base_timeout = _TIMEOUT_GPU_DEFAULT if has_gpu else _TIMEOUT_CPU_DEFAULT
+
+    # ── RAM scaling ─────────────────────────────────────────────────────────
+    ram_multiplier = 1.0
+    ram_label = "unknown RAM"
+    try:
+        import psutil
+        available_gb = psutil.virtual_memory().available / (1024**3)
+        total_gb = psutil.virtual_memory().total / (1024**3)
+        ram_label = f"{available_gb:.1f}GB avail / {total_gb:.1f}GB total"
+        if available_gb < 4:
+            ram_multiplier = 4.0
+        elif available_gb < 8:
+            ram_multiplier = 3.0
+        elif available_gb < 16:
+            ram_multiplier = 2.0
+        elif available_gb < 32:
+            ram_multiplier = 1.5
+        else:
+            ram_multiplier = 1.0
+    except ImportError:
+        pass  # No psutil — keep default multiplier
+
+    timeout = int(base_timeout * ram_multiplier)
+
+    # ── Volume size bonus ────────────────────────────────────────────────────
+    size_bonus = 0
+    file_mb = 0.0
+    if nifti_path and os.path.isfile(nifti_path):
+        file_mb = os.path.getsize(nifti_path) / (1024 * 1024)
+        if file_mb > 200:
+            size_bonus = 180
+        elif file_mb > 100:
+            size_bonus = 90
+        elif file_mb > 50:
+            size_bonus = 45
+
+    timeout += size_bonus
+
+    # ── Clamp ───────────────────────────────────────────────────────────────
+    timeout = max(60, min(timeout, 1800))
+
+    logger.info(
+        "TotalSegmentator dynamic timeout: %ds  |  GPU=%s (%s)  |  RAM scale=%.1fx (%s)  |  "
+        "Volume=%.1f MB (+%ds bonus)",
+        timeout, has_gpu, gpu_label, ram_multiplier, ram_label, file_mb, size_bonus,
+    )
+
+    return timeout
 
 
 def _find_totalsegmentator_command() -> str:
@@ -68,20 +188,19 @@ def _find_totalsegmentator_command() -> str:
     import site
     user_scripts = os.path.join(site.getusersitepackages().replace("site-packages", "Scripts"))
     for name in ("TotalSegmentator.exe", "TotalSegmentator", "totalsegmentator.exe", "totalsegmentator"):
-        candidate = os.path.join(user_scripts, name)
-        if os.path.isfile(candidate):
+        candidate = shutil.which(os.path.join(user_scripts, name))
+        if candidate:
             logger.info("Found TotalSegmentator in user Scripts: %s", candidate)
             return candidate
 
     # Fallback: check common Windows user Scripts paths
     appdata_roaming = os.environ.get("APPDATA", "")
     if appdata_roaming:
-        import platform
         py_ver = f"Python{sys.version_info.major}{sys.version_info.minor}"
         roaming_scripts = os.path.join(appdata_roaming, "Python", py_ver, "Scripts")
         for name in ("TotalSegmentator.exe", "TotalSegmentator"):
-            candidate = os.path.join(roaming_scripts, name)
-            if os.path.isfile(candidate):
+            candidate = shutil.which(os.path.join(roaming_scripts, name))
+            if candidate:
                 logger.info("Found TotalSegmentator in Roaming Scripts: %s", candidate)
                 return candidate
 
@@ -300,7 +419,7 @@ def run_totalsegmentator(
     nifti_path: str,
     out_dir: str = DEFAULT_OUT_DIR,
     modality: str = "CT",
-    timeout: int = TIMEOUT_SECONDS,
+    timeout: Optional[int] = None,
 ) -> Tuple[str, Dict[str, Dict[str, Any]]]:
     """
     Run TotalSegmentator on a NIfTI volume as an isolated subprocess.
@@ -313,7 +432,10 @@ def run_totalsegmentator(
         nifti_path: Path to the input NIfTI volume (.nii or .nii.gz).
         out_dir: Directory for TotalSegmentator output. Created if needed.
         modality: "CT" or "MR" — routes to the correct segmentation task.
-        timeout: Hard timeout in seconds (default: 120s).
+        timeout: Hard timeout in seconds. If None (default), compute_dynamic_timeout()
+                 is called to auto-detect based on GPU presence, available RAM, and
+                 NIfTI file size.
+
 
     Returns:
         Tuple of:
@@ -341,6 +463,10 @@ def run_totalsegmentator(
     out_abs = os.path.abspath(out_dir)
     os.makedirs(out_abs, exist_ok=True)
 
+    # ── Resolve timeout (auto-detect if not explicitly set) ──
+    if timeout is None:
+        timeout = compute_dynamic_timeout(nifti_abs)
+
     # ── Build and run command ──
     cmd = _build_command(nifti_abs, out_abs, modality)
     t_start = time.perf_counter()
@@ -352,6 +478,7 @@ def run_totalsegmentator(
         modality,
         timeout,
     )
+
 
     try:
         result = subprocess.run(
@@ -366,8 +493,9 @@ def run_totalsegmentator(
     except subprocess.TimeoutExpired:
         elapsed = time.perf_counter() - t_start
         logger.error(
-            "TotalSegmentator TIMED OUT after %.1fs (limit: %ds). "
-            "The subprocess has been killed.",
+            "TotalSegmentator TIMED OUT after %.1fs (hardware-adaptive limit: %ds). "
+            "Consider running on a GPU, closing other applications to free RAM, "
+            "or reducing the volume size. The subprocess has been killed.",
             elapsed,
             timeout,
         )

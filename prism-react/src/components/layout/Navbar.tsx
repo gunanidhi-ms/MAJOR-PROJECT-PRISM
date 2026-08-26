@@ -115,6 +115,20 @@ export function Navbar() {
   const { health } = useHealth();
   const page = usePageLabel();
   const isOnline = !!health?.ollama_reachable;
+  const [showShutdownModal, setShowShutdownModal] = useState(false);
+  const [isShuttingDown, setIsShuttingDown] = useState(false);
+
+  const handleShutdown = async () => {
+    setIsShuttingDown(true);
+    try {
+      await fetch('http://localhost:8001/api/system/shutdown?grace=0.2', { method: 'POST' });
+    } catch (e) {
+      console.error(e);
+    }
+    setTimeout(() => {
+      window.close();
+    }, 600);
+  };
 
   return (
     <>
@@ -252,8 +266,115 @@ export function Navbar() {
 
           {/* Live clock */}
           <LiveClock />
+
+          {/* Shutdown button */}
+          <button
+            onClick={() => setShowShutdownModal(true)}
+            title="Shutdown PRISM & Close Terminal Windows"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              color: '#ef4444',
+              cursor: 'pointer',
+              transition: 'all 150ms ease',
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.25)';
+            }}
+          >
+            <svg style={{ width: 15, height: 15 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
         </div>
       </header>
+
+      {/* Shutdown Confirmation Modal */}
+      {showShutdownModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(5, 10, 25, 0.8)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 99999,
+        }}>
+          <div style={{
+            background: 'linear-gradient(180deg, #181828 0%, #0f101d 100%)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: 14,
+            padding: 24,
+            width: '90%',
+            maxWidth: 460,
+            boxShadow: '0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(239,68,68,0.15)',
+            color: '#e2e8f0',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(239,68,68,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
+                🛑
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: '#fff' }}>Shutdown PRISM System?</h3>
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: '#94a3b8' }}>Close Backend & Frontend Services</p>
+              </div>
+            </div>
+
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: '#cbd5e1', marginBottom: 20 }}>
+              Shall I shut down the PRISM system, archive any active patient data, and close all running backend and frontend terminal windows?
+            </p>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+              <button
+                onClick={() => setShowShutdownModal(false)}
+                disabled={isShuttingDown}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: 6,
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#94a3b8',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleShutdown}
+                disabled={isShuttingDown}
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: 6,
+                  background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                  border: 'none',
+                  color: '#fff',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 10px rgba(239,68,68,0.4)',
+                }}
+              >
+                {isShuttingDown ? 'Shutting down...' : '🛑 Yes, Shutdown & Close'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

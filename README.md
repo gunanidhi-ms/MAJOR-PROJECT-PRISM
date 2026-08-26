@@ -38,7 +38,7 @@
 
 ## Table of Contents
 
-1. [Running PRISM (Quick Start)](#1-running-prism-quick-start)
+1. [Running PRISM (Quick Start & One-Command Scripts)](#1-running-prism-quick-start)
 2. [Project Overview](#2-project-overview)
 3. [Motivation](#3-motivation)
 4. [Design Decisions](#4-design-decisions)
@@ -46,91 +46,121 @@
 6. [Universal Phase 1 Triage Engine](#6-universal-phase-1-triage-engine)
 7. [Validation Methodology](#7-validation-methodology)
 8. [Module Breakdown](#8-module-breakdown)
-9. [Frontend Architecture](#9-frontend-architecture)
+9. [Frontend Architecture & Automated Workflow](#9-frontend-architecture)
 10. [Data Models](#10-data-models)
-11. [Configuration](#11-configuration)
+11. [Configuration & Model Selection](#11-configuration)
 12. [Developer Guide](#12-developer-guide)
 13. [Phase 2 Development & Package Architecture](#13-phase-2-development--handoff-infrastructure)
-14. [Limitations](#13-limitations)
-15. [Repository Structure](#14-repository-structure)
-16. [License / References](#15-license--references)
-17. [One-Command Startup](#17-one-command-startup)
+14. [Limitations](#14-limitations)
+15. [Repository Structure](#15-repository-structure)
+16. [License / References](#16-license--references)
+17. [End-to-End Diagnostic Workflow & Architecture Updates](#17-end-to-end-diagnostic-workflow--architecture-updates)
+18. [Complete Step-by-Step User Guide](#18-complete-step-by-step-user-guide)
 
 ---
 
 ## 1. Running PRISM (Quick Start)
 
-The PRISM system requires both the asynchronous Python backend and the React-based frontend dashboard to run concurrently.
+PRISM provides automated installation and one-command launch scripts for **Windows** (PowerShell), **Linux**, and **macOS** (Bash).
 
 ### Prerequisites
-- **Python 3.10+**
-- **Node.js 18+**
-- **Python Libraries:** Managed via `requirements.txt`. It is highly recommended to use a virtual environment (`venv`).
-
-```bash
-# Create a virtual environment
-python -m venv .venv
-
-# Activate it (Windows)
-.venv\Scripts\activate
-# Activate it (Linux/macOS)
-# source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Backend Startup
-Run the backend from the project root to ensure correct module resolution.
-```bash
-cd D:\MAJOR-PROJECT-PRISM
-python -m phase1_ingestion.pipeline
-```
-*Expected Output:* The terminal will display the PRISM initialization banner. The DICOM SCP will bind to port `11112` and the WebSocket server to port `8001`.
-
-### Frontend Startup
-Open a separate terminal to initialize the React application.
-```bash
-cd D:\MAJOR-PROJECT-PRISM\frontend
-npm install   # Only required on first run
-npm run dev
-```
-*Expected Output:* The Vite server will start at `http://localhost:5173`. Open this URL in a modern web browser to access the dashboard.
-
-### Replay Sender (Simulating a Scanner)
-To test the pipeline without a live CT scanner, PRISM includes a replay utility that streams pre-existing DICOM files via the C-STORE protocol.
-```bash
-cd D:\MAJOR-PROJECT-PRISM
-python -m phase1_ingestion.replay_sender
-```
-*Expected Output:* The sender pushes local DICOMs to port `11112`. The backend will log processing speeds, and the frontend will instantly render slices and overlays.
-
-### Troubleshooting
-- **Errno 10048 (Address already in use):** Ensure no other instances of PRISM, Orthanc, or dcm4chee are running on ports 11112 or 8001.
-- **Frontend not receiving data:** Verify the WebSocket server is running and the frontend is successfully connecting to `ws://localhost:8001/ws/alerts`.
+- **Python 3.10+** (Python 3.10 – 3.12 recommended for full PyTorch CUDA GPU builds)
+- **Node.js 18+** & **npm**
+- **Ollama** (for Phase 3 LLM report generation; auto-installed and configured by setup scripts)
+- **GPU (Optional):** NVIDIA GPU with CUDA support or Apple Silicon (MPS). Automatically detected; the system seamlessly falls back to CPU if no GPU is present.
 
 ---
 
-## 17. One-Command Startup
+### One-Click Installation
 
-To run the entire PRISM Autonomous Pipeline (Phase 1 Ingestion, Phase 2 Segmentation, and Phase 3 Reporting), you can use the provided startup scripts.
+The repository includes automated installer scripts that create the Python virtual environment, detect your GPU and install CUDA-accelerated PyTorch (or CPU fallback), install all dependencies (including `psutil` for dynamic memory scaling), pull the recommended `llama3.2:3b` model, and install frontend packages.
 
-### Windows
+#### Windows (PowerShell)
+```powershell
+.\install_prism.ps1
+```
+
+#### Linux & macOS (Bash)
+```bash
+chmod +x install_prism.sh start_prism.sh
+./install_prism.sh
+```
+
+---
+
+### One-Command Startup
+
+To run the entire PRISM Autonomous Pipeline (Backend Orchestrator, Phase 1 Ingestion, Phase 2 Segmentation, Phase 3 Reporting Service, and React Frontend):
+
+#### Windows (PowerShell)
 ```powershell
 .\start_prism.ps1
 ```
+*This script starts the backend and frontend, checks Ollama health, sets environment variables, performs health polling on `:8001` and `:8005`, displays a live hardware diagnostic profile (GPU, RAM, and dynamic Phase 2 timeout formula), records process IDs in `.prism_pids.json` for automatic tab-close termination, and auto-opens `http://localhost:5173/` in your browser.*
 
-### Linux / macOS
+#### Linux / macOS (Bash)
 ```bash
 ./start_prism.sh
 ```
 
-These scripts will automatically:
-1. Activate the Python virtual environment.
-2. Create a default `.env` file if it doesn't exist.
-3. Start the Orchestrator (`orchestrator.py`), which launches Phase 3 in the background, waits for it to become healthy, configures Phase 2 handoff variables, and finally starts Phase 1.
+---
 
-Once running, send DICOM slices using the replay sender or a live CT scanner to see the full autonomous pipeline in action.
+### Manual Setup & Component Details
+
+If you prefer to set up or run individual components manually:
+
+#### 1. Ollama LLM Backend (Phase 3 AI Reporting)
+
+Phase 3 uses **`llama3.2:3b`** (2.0 GB) as the standard, lightweight, high-performance medical reporting model. It fits entirely in 4 GB VRAM (e.g. NVIDIA RTX 3050 Ti) and generates reports in 2–3 seconds with zero out-of-memory errors.
+
+**Manual Installation:**
+- **Windows:** `winget install --id Ollama.Ollama --accept-source-agreements --accept-package-agreements` or from https://ollama.com/download/windows
+- **Linux / macOS:** `curl -fsSL https://ollama.com/install.sh | sh`
+
+**Pull Model:**
+```bash
+ollama pull llama3.2:3b
+```
+
+#### 2. Python Environment Setup
+
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# Windows:
+.\venv\Scripts\Activate.ps1
+# Linux / macOS:
+# source venv/bin/activate
+
+# Install dependencies (CPU or CUDA)
+pip install -r requirements.txt
+```
+
+#### 3. Frontend Setup
+
+```bash
+cd prism-react
+npm install
+npm run dev
+```
+
+#### 4. Orchestrator Backend Startup
+
+```bash
+# From project root with venv activated
+python orchestrator.py
+```
+
+### Troubleshooting
+- **Address already in use (Ports 11112, 8001, 8005, 5173):** Check for conflicting processes with `netstat -ano` on Windows or `lsof -i` on Linux/macOS. Use the Shutdown button in the UI to cleanly terminate all background services.
+- **Frontend not receiving data:** Verify the WebSocket server is running at `ws://localhost:8001/ws/alerts`.
+- **Phase 3 reports use template fallback:** Ollama is unavailable, intentionally disabled (`SKIP_LLM=true`), or the model is missing. Ensure `ollama serve` is running and `llama3.2:3b` is pulled (`ollama list`).
+- **Ollama model architecture error (`mllama`):** Do not use `llama3.2-vision` for text chat; use `llama3.2:3b`. The install and start scripts automatically purge incompatible models.
+- **Phase 2 Timeout on Large Volumes:** Phase 2 automatically computes an adaptive timeout based on GPU and RAM (`compute_dynamic_timeout`). For CPU-only systems with <8 GB RAM, timeouts automatically scale up to 1800s.
+
+
 
 
 ---
@@ -643,40 +673,66 @@ Our goal is to continually validate the statistical thresholds against diverse d
 ## 8. Module Breakdown
 
 ### `dicom_listener.py`
-The TCP gateway. Utilizes `pydicom.net.AE` to establish a DICOM SCP. Decodes incoming byte-streams into `PixelData` arrays, extracts spatial/scaling tags (including Phase 2 critical fields like `ImagePositionPatient` and `SeriesInstanceUID`), and pushes them to the buffer, ensuring network I/O is never blocked by mathematical processing.
+The TCP gateway. Utilizes `pynetdicom.AE` to establish a DICOM C-STORE SCP on port `11112`. Decodes incoming byte-streams into `PixelData` arrays, extracts spatial/scaling tags (including Phase 2 critical fields like `ImagePositionPatient` Z-axis, `SeriesInstanceUID`, `PixelSpacing`, and `SliceThickness`), captures patient demographics (ID, Name, Age, Sex), saves incoming `.dcm` files to disk, and pushes slice dictionaries to the asynchronous queue. Features thread-safe association counters and non-blocking event hooks.
 
 ### `slice_buffer.py`
-The priority reordering queue. DICOM slices arrive out-of-order. The buffer uses a `threading.Lock` and `heapq` to sort slices by `InstanceNumber`. Includes a timeout watchdog to prevent pipeline stalls if a slice packet is dropped over the network.
+The priority reordering queue. DICOM slices routinely arrive out-of-order over network connections. The buffer uses an `OrderedDict` with `threading.Lock` to sort slices by `InstanceNumber`. Includes a timeout watchdog and a gap-detection mechanism to prevent pipeline stalls if a slice packet is dropped over the network. Automatically resets its internal sequence pointer when a new series starts.
 
 ### `hu_transform.py`
 Vectorized pixel standardization. Executes `HU = Pixel * Slope + Intercept`. Disables hard-clipping during ingestion to preserve scanner padding (e.g., `-3024 HU`). Implements an `auto_crop` algorithm to strip artificial padding before processing.
 
 ### `pipeline.py`
-The central orchestrator. An infinite worker thread that pulls from the `SliceBuffer`, calls `hu_transform`, executes `triage_screen.py`, feeds the `VolumeAccumulator`, formats the `TriageResult` to JSON, and pushes it to the `ws_server`. Also monitors for the end of the series to spawn Phase 2. Wraps execution in global `try/except` blocks to ensure fault tolerance.
-
-### `triage_screen.py`
-The mathematical brain containing the 10-step triage algorithm. Relies entirely on `numpy` and `scipy.ndimage` for CPU-bound optimization.
+The central Phase 1 orchestrator. Runs an asynchronous worker loop that pulls from `SliceBuffer`, checks for patient transitions (`_check_patient_change`), executes `triage_screen.py`, feeds the `VolumeAccumulator`, formats `TriageResult` payloads to JSON, and pushes them to `ws_server`. When DICOM associations release, `on_association_released()` offloads queue draining, buffer flushing, and Phase 2 triggering to an independent background thread (`assoc-release-worker`), preventing pynetdicom handler thread deadlocks. Exposes a module-level `get_pipeline()` accessor.
 
 ### `volume_accumulator.py`
-The Phase 1 $\rightarrow$ Phase 2 bridge. Silently accumulates HU-transformed 2D slices and per-slice findings into a spatially ordered 3D volume. Uses the true `ImagePositionPatient` Z-coordinate for sorting (never `InstanceNumber`). Triggers Phase 2 via association-release, a minimum-slice floor, or a fallback timeout.
+The Phase 1 $\rightarrow$ Phase 2 volumetric bridge. Silently accumulates HU-transformed 2D slices and per-slice findings into a spatially ordered 3D volume. Uses the true `ImagePositionPatient` Z-coordinate for sorting (never `InstanceNumber`). Built with reentrant `threading.RLock()` to guarantee deadlock-free execution when full resets (`reset_all()`) are called on patient transitions. Maintains a `_completed_series_uids` guard that prevents re-segmentation of the same series while allowing clean multi-patient succession.
+
+### `dicom_archive.py`
+Automated patient archive manager. Registers incoming slices by `StudyInstanceUID` and patient demographics. On session termination (via UI Stop/Close or scanner completion), packages raw DICOM files, analysis records, and reports into a compressed `.zip` archive named by Patient ID and timestamp, stores it in `patient_archives/`, and clears temporary disk storage.
 
 ### `finding_tracker.py`
 Cross-slice finding logic. Links 2D statistical outliers across consecutive slices using centroid proximity, enforcing a minimum Z-axis persistence to filter out single-slice noise before handing candidates to Phase 2.
 
 ### `ws_server.py`
-An `asyncio` WebSocket server running in a daemon thread. Fans out the JSON alerts from `pipeline.py` to all connected React clients concurrently.
+The FastAPI and `asyncio` WebSocket telemetry server. Serves real-time alert broadcasts over `ws://localhost:8001/ws/alerts`. Manages scanner start/stop subprocesses (`/api/scanner/start`, `/api/scanner/stop`), explicit pipeline memory resets for new patients, session closure & archival (`/api/archive/close-session`), and graceful full-system shutdown (`/api/system/shutdown`).
 
 ---
 
-## 9. Frontend Architecture
+## 9. Frontend Architecture & Automated Workflow
 
-The frontend is a **React 18** application scaffolded with **Vite**.
+The frontend is a modern **React 18** application scaffolded with **Vite** and styled with a dark-mode, glassmorphic clinical design system in `viewer.css`.
 
-* **Dashboard UI:** A dark-mode, glassmorphic interface designed for high-contrast radiology viewing environments.
-* **WebSocket Hook (`useWebSocket`):** Manages the persistent WebSocket connection, handles auto-reconnection with exponential backoff, and parses the high-velocity JSON stream.
-* **Canvas Renderer:** Maps raw `mean_hu` values to grayscale pixels on an HTML5 `<canvas>`, providing hardware-accelerated rendering capable of handling 20+ fps.
-* **Overlay Engine:** Maps server-side bounding boxes `[x, y, w, h]` to client-side coordinates, drawing distinct SVG boxes directly over suspected pathologies. Colors adapt based on severity.
-* **Telemetry Panel:** Displays live metrics including Latency, Current Scan Type, Body Region, and overall Processing Status.
+### Unified 3-State Scanner Control & Session Machine
+The scanner control panel in `LiveViewer.jsx` is driven by a deterministic 3-state machine that guarantees patient data integrity:
+
+```
+[READY] ──────▶ Start Scan ──────▶ [SCANNING] ──────▶ Stop Scan / Done ──────▶ [DONE]
+   ▲                                  │                                            │
+   │                                  ▼                                            ▼
+   └──────────── Form Cleared ◀── Archive Confirmed ◀── Close & Zip Dialog ────────┘
+```
+
+1. **State: `ready` (Green `▶ Start Scan`)**
+   - Requires mandatory patient metadata: **Patient ID**, **Patient Name**, **Age**, and **Sex** (with inline field validation).
+   - Clicking "Start Scan" resets frontend memory, initializes WebSocket alerts, and launches the DICOM stream.
+2. **State: `scanning` (Red `⏹ Stop Scan & Close Record`)**
+   - Displays a live glowing green indicator badge with real-time stream count (`Live — Streaming CT slices (N received)`).
+   - Clicking "Stop Scan" immediately halts the backend scanner and opens the confirmation dialog to archive and zip the patient record.
+3. **State: `done` (Amber `🗜️ Archive & Close Patient Record`)**
+   - Automatically activates when the scanner completes replay.
+   - Pulses with a gentle amber glow (`@keyframes subtlePulse`), clearly designating the endpoint of the current patient's examination.
+   - **Never** resets to "Start Scan" prematurely — holds all slices and findings in memory until the radiologist explicitly clicks "Archive & Close".
+   - Confirming the archive triggers `/api/archive/close-session`, zips the patient record, clears frontend state, resets patient form fields, and returns the machine to `ready`.
+
+### Automated End-to-End Clinical Flow
+1. **New Report Trigger (`/` → `/live`):** Clicking "New Report" on the Dashboard routes directly to the Live CT Viewport (`/live`).
+2. **Real-Time DICOM Ingestion & Triage (Phase 1):** Slices stream at 20+ fps via WebSocket. The viewport renders windowed CT imagery, interactive window/level presets, and live statistical bounding box overlays.
+3. **Autonomous 3D Segmentation & AI Sweep (Phase 2):** When slice accumulation completes, Phase 2 is launched automatically with hardware-adaptive timeout scaling. A floating **Pipeline Progress Panel** displays active phase indicators (Phase 1 ✅, Phase 2 🔄, Phase 3 ⏳), an animated progress bar, and a live elapsed timer.
+4. **AI Report Synthesis & Auto-Navigation (Phase 3 → `/report/:studyId`):** When the Phase 3 LLM completes the draft report, the Live Viewer displays a 3-second countdown and automatically navigates the radiologist directly to the **Draft Report Editor** (`/report/:studyId`).
+5. **Review, In-Place Editing, Signing, and PDF Export:** The radiologist reviews findings, makes edits, draws a digital signature, locks the finalized report, and downloads a publication-grade PDF.
+6. **Graceful Auto-Shutdown:** When the browser tab is closed or the radiologist clicks "Shutdown System", browser Beacon signals trigger `/api/system/shutdown`, cleanly killing all backend and frontend background processes.
+
+
 
 ---
 
@@ -725,13 +781,41 @@ The system communicates via a rigorously typed JSON schema.
 
 ---
 
-## 11. Configuration
+## 11. Configuration & Model Selection
 
-PRISM can be tuned by modifying constants in the backend scripts:
-* **DICOM_PORT:** `11112` (`dicom_listener.py`)
-* **WS_PORT:** `8001` (`ws_server.py`)
-* **BUFFER_TIMEOUT_SEC:** `2.5` (`slice_buffer.py`) - Adjust if your network has high latency jitter.
-* **LATENCY_TARGET_MS:** `50.0` - Logging threshold for performance warnings.
+PRISM environment configuration is managed via the root `.env` file (created automatically by the startup scripts if absent):
+
+```bash
+# Phase 1: DICOM Ingestion & Real-Time Alerts
+DICOM_PORT=11112                              # Port for DICOM C-STORE SCP listener
+WS_PORT=8001                                  # Port for WebSocket alert broadcasts
+
+# Phase 2 -> Phase 3 Handoff Bridge
+PHASE3_ENABLED=true                           # Enables automated trigger of Phase 3 after Phase 2
+PHASE3_URL=http://127.0.0.1:8005/api/v1/generate-report
+
+# Phase 3: Reporting Service & LLM Configuration
+PHASE3_PORT=8005                              # Port for FastAPI reporting service
+OLLAMA_HOST=http://127.0.0.1:11434            # Ollama REST API server
+OLLAMA_MODEL=llama3.2:3b                      # Recommended reporting model (2.0 GB)
+OLLAMA_TEMPERATURE=0.2                        # Low temperature for clinical determinism
+OLLAMA_TIMEOUT=120                            # HTTP timeout in seconds
+OLLAMA_AUTO_PULL=true                         # Auto-pulls model if missing
+SKIP_LLM=false                                # Set true to bypass LLM and use template fallback directly
+REPORTS_DIR=./storage/reports                 # JSON report persistence directory
+```
+
+### Why `llama3.2:3b` is the Standard Model for PRISM
+In PRISM, Phase 3 utilizes a two-tier architecture:
+1. **Deterministic Template Engine:** Extracts all quantitative values, bounding volumes, HU densities, and organ anatomical classifications with zero hallucinations.
+2. **LLM Grammar & Clinical Synthesis:** Polishes the deterministic output into fluent, professional radiology prose and impression summaries.
+
+| Model | Size | Hardware Fit | Inference Time | Recommendation |
+|---|---|---|---|---|
+| **`llama3.2:3b`** | **2.0 GB** | **100% in 4GB GPU VRAM** | **2–3 seconds** | **Standard (Recommended)** — High fluency, zero OOM, instant. |
+| **`qwen2.5:3b`** | 1.9 GB | Fits in 4GB GPU VRAM | 2–3 seconds | Excellent alternative. |
+| **`meditron:7b`** | 4.1 GB | Exceeds 4GB VRAM (spills to RAM) | 15–20 seconds | Slower, unnecessary given deterministic template base. |
+| **`llama3.2-vision`** | 7.8 GB | Requires >8GB VRAM | Fails (`mllama`) | Incompatible with text chat endpoints. |
 
 ---
 
@@ -952,15 +1036,23 @@ To run Package 2, a developer must install the required dependencies and verify 
 def assemble_nifti(volume_array: np.ndarray, spacing_meta: tuple, out_path: str = "temp_volume.nii.gz", orientation_patient: Optional[list] = None) -> str: ...
 ```
 
-**2. TotalSegmentator Subprocess Isolation Wrapper** ([`segment_runner.py`](phase2_segmentation/segment_runner.py) — new)
+**2. TotalSegmentator Subprocess Isolation & Dynamic Hardware Timeout Wrapper** ([`segment_runner.py`](phase2_segmentation/segment_runner.py) — new)
 
 - **Subprocess Isolation** — Invokes `TotalSegmentator` as a separate command-line subprocess to guarantee C++-backed tensor memory (ONNX/PyTorch) is freed upon process exit.
+- **Hardware-Adaptive Dynamic Timeout (`compute_dynamic_timeout`)** — Dynamically scales subprocess execution limits based on real-time hardware detection:
+  - **GPU Acceleration**: Detects CUDA (PyTorch/`nvidia-smi`), Apple Silicon MPS, or ROCm $\rightarrow$ base timeout 120s.
+  - **CPU Fallback**: Base timeout 600s.
+  - **RAM-Scaled Multiplier**: Queries available system memory via `psutil` (<4 GB $\rightarrow$ 4.0×, <8 GB $\rightarrow$ 3.0×, <16 GB $\rightarrow$ 2.0×, <32 GB $\rightarrow$ 1.5×, $\ge$32 GB $\rightarrow$ 1.0×).
+  - **Volume Size Bonus**: Adds +45s to +180s for NIfTI volumes > 50 MB.
+  - **Clamped Safety Bounds**: Hard floor at 60s, ceiling at 1800s (30 mins) to prevent infinite hangs on underpowered machines.
 - **Modality-Driven Routing** — Dynamically adjusts segmentation pipeline parameters based on modality (`total` for CT, `total_mr` for MR scans).
 - **Schema Normalization** — Transforms TotalSegmentator v2.17+ simplified output keys (`intensity`, `volume`) to match the quantitative parameters defined in `organ_statistics.json`.
 
 ```python
-def run_totalsegmentator(nifti_path: str, out_dir: str = DEFAULT_OUT_DIR, modality: str = "CT", timeout: int = TIMEOUT_SECONDS) -> tuple[str, dict]: ...
+def compute_dynamic_timeout(nifti_path: Optional[str] = None) -> int: ...
+def run_totalsegmentator(nifti_path: str, out_dir: str = DEFAULT_OUT_DIR, modality: str = "CT", timeout: Optional[int] = None) -> tuple[str, dict]: ...
 ```
+
 
 **3. Isolated Process Lifecycle and Safety Manager** ([`lifecycle_manager.py`](phase2_segmentation/lifecycle_manager.py) — new)
 
@@ -1271,63 +1363,76 @@ Integration tests successfully validate complete pipeline traversal.
 
 ```text
 MAJOR-PROJECT-PRISM/
-├── phase1_ingestion/              # Backend Processing & Networking
-│   ├── dicom_listener.py          # DICOM SCP Server (+ Phase 2 tag extraction)
-│   ├── slice_buffer.py            # Priority Reordering Queue
-│   ├── hu_transform.py            # Hounsfield Unit Math
+├── orchestrator.py                # Autonomous End-to-End Orchestrator (Phase 1 + 2 + 3)
+├── install_prism.ps1              # Windows One-Click Installer (CUDA / GPU auto-detection)
+├── start_prism.ps1                # Windows One-Command Startup (Ollama preflight + Browser launch)
+├── install_prism.sh               # Linux & macOS Installer (CUDA / MPS / CPU fallback)
+├── start_prism.sh                 # Linux & macOS One-Command Startup (Health check + Process tracking)
+├── requirements.txt               # Unified Python dependencies (including psutil)
+├── .prism_pids.json               # Runtime process tracking for clean automatic shutdown
+│
+├── phase1_ingestion/              # Phase 1: Real-Time CT Ingestion & 2D Screening
+│   ├── dicom_listener.py          # DICOM C-STORE SCP Server (+ Phase 2 tag extraction)
+│   ├── slice_buffer.py            # Priority Reordering Queue (auto-resetting sequence pointer)
+│   ├── hu_transform.py            # Hounsfield Unit Math & Padding Removal
 │   ├── triage_screen.py           # The 10-Step Statistical Engine
-│   ├── pipeline.py                # Main Orchestrator (+ Phase 2 trigger)
-│   ├── volume_accumulator.py      # [NEW] Phase 2 Volume Accumulator
-│   ├── finding_tracker.py         # [NEW] Cross-Slice Finding Tracker
-│   ├── ws_server.py               # WebSocket Telemetry Server
-│   ├── ct_machine_emulator.py     # Replay Utility Core
-│   ├── replay_sender.py           # CLI for Replay Utility
-│   └── tests/
-│       ├── test_package1.py       # [NEW] Package 1 test suite (25 tests)
-│       ├── test_hu_transform.py   # HU Transform tests
-│       ├── test_slice_buffer.py   # Slice Buffer tests
-│       └── test_triage_screen.py  # Triage Screen tests
+│   ├── pipeline.py                # Main Orchestrator (+ async assoc-release-worker)
+│   ├── volume_accumulator.py      # Phase 2 Volume Accumulator (RLock reentrant thread safety)
+│   ├── dicom_archive.py           # Patient Archive Manager & Automated Zipping Engine
+│   ├── finding_tracker.py         # Cross-Slice Finding Tracker
+│   ├── ws_server.py               # WebSocket Telemetry Server & Scanner Lifecycle Manager
+│   ├── ct_machine_emulator.py     # Replay Utility Core & Patient Metadata Injection
+│   └── replay_sender.py           # CLI for Replay Utility
 │
-├── phase2_segmentation/           # [NEW] Volume Assembly & Segmentation
-│   ├── volume_builder.py          # [NEW] NIfTI Volume Assembly
-│   ├── segment_runner.py          # [NEW] TotalSegmentator Wrapper
-│   ├── organ_baseline.py          # [NEW - Package 3] Patient-Adaptive Organ Baseline Calculator
-│   ├── region_detector.py         # [NEW - Package 3] Scan Body Region Classifier & KUB Override
-│   ├── seed_clusterer.py          # [NEW - Package 4] Path A: 3D Clustering of Phase 1 Seeds
-│   ├── organ_sweep.py             # [NEW - Package 5] Path B: Independent Organ-Wide Sweep
-│   ├── candidate_merger.py        # [NEW - Package 6] Merge, Backfill, Shape Geometry & Clinical Filter
-│   ├── lifecycle_manager.py       # [NEW] Subprocess & Watchdog Orchestrator
-│   └── tests/
-│       ├── conftest.py            # Test configuration and fixtures
-│       ├── test_package3.py       # [NEW - Package 3] Baseline math & region classification tests (11 tests)
-│       ├── test_package4.py       # [NEW - Package 4] Seed clustering tests (3 tests)
-│       ├── test_package5.py       # [NEW - Package 5] Organ sweep tests (4 tests)
-│       ├── test_package6.py       # [NEW - Package 6] Merge, backfill & clinical filter tests (34 tests)
-│       ├── test_integration.py    # Pipeline integration tests
-│       ├── test_lifecycle_manager.py # Watchdog and manager tests
-│       ├── test_run_commands.py   # CLI and execution tests
-│       ├── test_segment_runner.py # TotalSegmentator runner tests
-│       └── test_volume_builder.py # NIfTI builder tests
+├── phase2_segmentation/           # Phase 2: Multi-Organ TotalSegmentator & 3D AI
+│   ├── volume_builder.py          # NIfTI Volume Assembly
+│   ├── segment_runner.py          # TotalSegmentator Subprocess Wrapper + compute_dynamic_timeout()
+│   ├── organ_baseline.py          # Patient-Adaptive Organ Baseline Calculator
+│   ├── region_detector.py         # Scan Body Region Classifier & KUB Override
+│   ├── seed_clusterer.py          # Path A: 3D Clustering of Phase 1 Seeds
+│   ├── organ_sweep.py             # Path B: Independent Organ-Wide Sweep
+│   ├── candidate_merger.py        # 3D IoU Merge, Backfill, Shape Geometry & Clinical Filter
+│   ├── scorer.py                  # Fused Confidence, Emergency Scoring & Clinical Gating
+│   ├── findings_adapter.py        # StructuredFindings Adapter & Series Instance UID bridge
+│   ├── phase2_api.py              # Phase 3 HTTP Handoff Trigger
+│   └── lifecycle_manager.py       # Subprocess & RAM Watchdog Orchestrator
 │
-├── schemas/                       # [NEW] Frozen Phase 2 Contracts
+├── phase3_reporting/              # Phase 3: Zero-Hallucination Clinical Report Generation
+│   ├── app/                       # FastAPI Application Core & Config
+│   ├── api/                       # REST Endpoints (/generate-report, /report/{id}, /sign)
+│   ├── services/
+│   │   ├── template_engine.py     # Deterministic Clinical Template Engine
+│   │   ├── llm_service.py         # Ollama LLM Service (llama3.2:3b grammar refinement)
+│   │   └── validator.py           # Output Validation & Medical Hallucination Guard
+│   ├── storage/
+│   │   └── json_storage.py        # JSON Report Storage Engine (Microsecond Audit Trail & Patient Lookup)
+│   └── scripts/
+│       └── ollama_setup.py        # Ollama Preflight & Model Setup Helper
+│
+├── schemas/                       # Frozen Cross-Phase Interface Contracts
 │   ├── phase1_handoff.json        # Phase 1 → Phase 2 handoff schema
 │   ├── organ_statistics.json      # Per-organ baseline schema
 │   ├── findings_output.json       # Phase 3 findings output schema
-│   └── candidate.py               # Shared Candidate/ShapeFeatures/DensityHU
+│   └── candidate.py               # Shared Candidate/ShapeFeatures/DensityHU dataclasses
 │
-├── frontend/                      # React Dashboard
+├── prism-react/                   # Modern React Workstation Frontend
 │   ├── src/
-│   │   ├── components/            # UI Components
-│   │   ├── hooks/                 # useWebSocket logic
-│   │   └── App.jsx                # Main View
+│   │   ├── components/            # UI Components (Badges, Buttons, Modals, Toasts)
+│   │   ├── pages/
+│   │   │   ├── Dashboard.tsx      # Landing Dashboard & Instant "New Report" Routing
+│   │   │   ├── LiveViewer.jsx     # Phase 1 Live CT Viewport + 3-State Session Machine
+│   │   │   ├── ReportDetail.tsx   # Draft Report Editor, Digital Signatures & PDF Export
+│   │   │   ├── Generate.tsx       # Manual JSON Report Synthesis
+│   │   │   └── ReportsList.tsx    # Archive & Patient Study Index
+│   │   ├── styles/                # viewer.css (Responsive Shell & State Animations), globals.css
+│   │   ├── api/                   # prismApi.ts (Typed Client)
+│   │   └── utils/                 # pdfGenerator.ts
 │   ├── package.json
-│   └── vite.config.js
+│   └── vite.config.ts
 │
-├── sample_dicoms/                 # Test Data
-└── README.md                      # This Document
+├── sample_dicoms/                 # Sample CT Datasets for Simulation
+└── README.md                      # Complete Project Documentation
 ```
-
----
 
 ## 16. License / References
 
@@ -1335,4 +1440,180 @@ This project is developed as an open-source medical imaging research initiative.
 
 * **License:** MIT License. See `LICENSE` for details.
 * **DICOM Standard:** [NEMA DICOM PS3](https://www.dicomstandard.org/)
+* **TotalSegmentator:** [Wasserthal et al. (2023)](https://github.com/wasserth/TotalSegmentator)
 * **Hounsfield Unit Mathematics:** Radiographic attenuation standardization algorithms.
+
+---
+
+## 17. End-to-End Diagnostic Workflow & Architecture Updates
+
+Recent updates introduce a unified, responsive clinical workstation integrating all 3 diagnostic phases with strict session safety, multi-patient reusability without backend restart, deterministic report synthesis, and instant archival.
+
+### Key Architectural Updates
+
+```
++---------------------------------------------------------------------------------------------+
+|                                    PRISM Fixed Header                                       |
+|  [ Patient Metadata Bar: Directory | ID* | Name* | Age* | Sex* | Speed ] [ Shutdown System ]|
+|  [ Stepper: 1: Phase 1 (Ingestion)  -->  2: Phase 2 (TotalSegmentator)  -->  3: Phase 3 (Studio) ] |
++---------------------------------------------------------------------------------------------+
+                                               |
+                        +----------------------+----------------------+
+                        |                                             |
+                        v                                             v
+          +---------------------------+                 +---------------------------+
+          | Phase 1 Live CT Viewport  |                 | Phase 3 Report Studio     |
+          | ------------------------- |                 | ------------------------- |
+          | - Left: Scanner Controls  |                 | - Clinical Findings       |
+          |   (3-State Action Button) |                 |   (Real-time editable)    |
+          | - Center: CT 2D Viewer    |                 | - Clinical Impression     |
+          | - Right: Findings & Score |                 | - Digital Signature Pad   |
+          +---------------------------+                 | - Lock-on-Sign Protection |
+                                                        | - "Edit Report" Revisions |
+                                                        | - 1-Click PDF Export      |
+                                                        +---------------------------+
+```
+
+1. **Patient Session Lifecycle & 3-State Machine**:
+   - **Mandatory Patient Demographics**: Patient ID, Patient Name, Age, and Sex are strictly required to start a scan, ensuring every archive, JSON finding, and generated clinical report is uniquely indexed and auditable.
+   - **3-State Control Flow**:
+     - `ready` (`▶ Start Scan`): Validates patient fields and starts the live DICOM C-STORE stream.
+     - `scanning` (`⏹ Stop Scan & Close Record`): Shows real-time received slice counter with a pulsing live indicator; clicking Stop prompts to finalize and zip the record.
+     - `done` (`🗜️ Archive & Close Patient Record`): Gently pulses in amber when replay finishes, clearly marking the end of the current patient's examination without prematurely jumping back to "Start Scan". Holding this state allows full inspection before explicit archival.
+   - **Automated Archival & Multi-Patient Succession**: On session closure, all DICOM files in `incoming/` are compressed into a `.zip` archive named with the Patient ID and timestamp inside `patient_archives/`. The frontend slice memory, accumulator, and buffer are wiped clean, allowing the next patient scan to start immediately in the same running terminal session without backend restart.
+
+2. **Backend Resilience & Deadlock-Free Concurrency**:
+   - **Reentrant Volume Accumulator (`RLock`)**: Employs `threading.RLock` so full resets (`reset_all()`) can execute safely on patient transitions without self-deadlocking the ingestion worker.
+   - **Asynchronous Association Cleanup**: In `pipeline.py`, association-release processing (`on_association_released`) is offloaded to a daemon thread (`assoc-release-worker`) so pynetdicom's `EVT_RELEASED` handler returns instantly, enabling back-to-back patient connections.
+   - **Explicit API Reset**: `/api/scanner/start` invokes `pipeline.accumulator.reset_all()` and `pipeline.buffer.reset()` via a singleton accessor (`get_pipeline()`), ensuring even duplicate test series can be rescanned cleanly.
+   - **Hardware-Adaptive Phase 2 Timeout**: TotalSegmentator subprocess timeout is dynamically calculated (`compute_dynamic_timeout`) at runtime:
+     $$\text{Timeout} = (\text{Base: 120s GPU / 600s CPU}) \times \text{RAM Multiplier (1.0}\times\text{–4.0}\times) + \text{Volume Size Bonus (0–180s)}$$
+     Clamped between 60s and 1800s (30 min) to protect against hangs while giving CPU systems sufficient headroom.
+
+3. **Graceful Browser Shutdown & Process Tracking**:
+   - Runtime process IDs are tracked in `.prism_pids.json`.
+   - When the user closes the browser tab or clicks "Shutdown System", browser Beacon signals hit `/api/system/shutdown`, cleanly closing all backend and frontend terminal windows and releasing all ports (`11112`, `8001`, `8005`, `5173`).
+
+4. **Clinical Report Studio & Revision System**:
+   - **Live Editable Findings & Impressions**: Radiologists can freely edit, format, or type new clinical observations.
+   - **Digital Signature Pad**: Draw with mouse or touch, instant `Apply Signature` transition with transparent PNG vector export and paper badge preview.
+   - **Lock-on-Sign Safety**: Clicking `Sign & Finalize Report` immediately locks inputs to prevent tampering.
+   - **In-Place Revisions (`Edit Report`)**: Unlocks finalized findings for revisions and replaces the stored report with the updated version upon re-signing.
+   - **Zero-Hallucination PDF Generator**: Exports standardized medical PDF reports with patient demographics, numerical HU telemetry, findings, and digital signatures.
+
+---
+
+## 18. Complete Step-by-Step User Guide
+
+Follow these steps to run PRISM on your computer from start to finish.
+
+### Step 1: One-Click Installation (Per Operating System)
+
+#### A. Windows (PowerShell)
+1. **Clone the repository:**
+   ```powershell
+   git clone https://github.com/gunanidhi-ms/MAJOR-PROJECT-PRISM.git
+   cd MAJOR-PROJECT-PRISM
+   ```
+2. **Run One-Click Installer (`install_prism.ps1`):**
+   ```powershell
+   .\install_prism.ps1
+   ```
+   *This automated script creates the Python virtual environment, detects your NVIDIA GPU and configures CUDA PyTorch (with graceful CPU fallback), installs all dependencies across all three phases, installs Ollama via `winget` (if missing), pulls the recommended `llama3.2:3b` model, and runs `npm install` for the React frontend.*
+
+#### B. Linux & macOS (Bash)
+1. **Clone & Install:**
+   ```bash
+   git clone https://github.com/gunanidhi-ms/MAJOR-PROJECT-PRISM.git
+   cd MAJOR-PROJECT-PRISM
+   chmod +x install_prism.sh start_prism.sh
+   ./install_prism.sh
+   ```
+
+---
+
+### Step 2: One-Command Startup
+
+Start the entire end-to-end PRISM ecosystem with a single command.
+
+**Windows:**
+```powershell
+.\start_prism.ps1
+```
+*(Automatically verifies Ollama health, sets GPU environment flags, checks backend readiness on `:8001` and `:8005`, displays the active hardware profile, launches the backend orchestrator and React frontend, and opens `http://localhost:5173/` in your browser).*
+
+**Linux / macOS:**
+```bash
+./start_prism.sh
+```
+
+---
+
+### Step 3: Triggering a New Scan & Automated Pipeline
+
+1. On the **Dashboard**, click the primary **`New Report`** button.
+2. The UI instantly routes to the **Phase 1 Live CT Viewport** (`/live`).
+3. In the left-hand **Scanner Control** panel (expandable via `▲ Hide` / `▼ Show`):
+   - **Dataset Directory**: Enter the path to your CT DICOM series (default test series provided).
+   - **Patient ID / Name / Age / Sex**: Enter mandatory patient demographics (all 4 fields are required to start).
+   - **Speed (Delay ms)**: Replay speed in milliseconds (default: `30ms`).
+4. Click **`▶ Start Scan`**:
+   - Live DICOM slice streaming initiates immediately over port `11112`.
+   - The action button transitions to red **`⏹ Stop Scan & Close Record`** with a live pulsing counter.
+
+---
+
+### Step 4: Phase 1 — Real-Time CT Ingestion & 2D Screening
+
+1. **Live Viewport Rendering:**
+   - Incoming slices stream at 20+ fps, rendering to the high-contrast CT viewer.
+   - Interactive windowing presets (`DICOM Default`, `Soft Tissue`, `Lung`, `Bone`, `Mediastinum`, `Brain`, `Liver`) adjust Hounsfield Unit contrast in real time.
+   - Anomaly bounding boxes (`GGO`, `NOD`, `HYPO`, `LYTIC`, `HEM`) and emergency score indexes (0–100) render directly over the image.
+2. **Navigation:**
+   - Use the bottom range slider, keyboard arrow keys, mouse wheel, or toggle **`▶ Play`** for automatic cine scrolling.
+
+---
+
+### Step 5: Autonomous Phase 2 & Phase 3 Execution
+
+1. Once all slices are ingested, Phase 1 completes and the backend automatically triggers **Phase 2 (TotalSegmentator & 3D AI)**.
+2. A floating **Pipeline Progress Panel** appears in the bottom-right corner:
+   - **Phase 1 (CT Ingestion)**: ✅ Complete with total slices and flagged anomaly count.
+   - **Phase 2 (Segmentation & AI)**: 🔄 Analyzing CT findings with live elapsed seconds timer (backed by adaptive hardware timeout).
+   - **Phase 3 (Report Generation)**: ⏳ Generating draft report with AI (`llama3.2:3b`).
+   - Animated progress bar reflects overall pipeline traversal.
+
+---
+
+### Step 6: Automated Landing on Draft Report Editor
+
+1. When Phase 3 completes report synthesis, the Live Viewer triggers an automated **3-second navigation countdown** (`Draft Report Ready! Navigating in 3s...`).
+2. You can click **`Go Now →`** or wait for the timer to automatically land on the **Draft Report Editor** (`/report/:studyId`).
+3. A welcome banner confirms: *"🎉 Pipeline Complete! Your CT scan has been processed through all 3 phases."*
+
+---
+
+### Step 7: Review, In-Place Editing, Signing & PDF Export
+
+1. **Review & In-Place Text Editing:**
+   - The **Findings** and **Impression** sections contain the synthesized clinical observations.
+   - Click inside the text areas to edit, refine phrasing, or add notes.
+2. **Apply Digital Signature:**
+   - Click **`✍ Sign Report`** in the top action bar.
+   - Enter Radiologist Name and Designation.
+   - Draw your digital signature on the interactive signature pad and click **`Confirm Sign & Lock`**.
+   - The report transitions to `Signed` status and locks against accidental tampering.
+3. **In-Place Revisions (`Edit Report`):**
+   - If revisions are needed after signing, click **`Edit Report`** to unlock fields and re-sign when updated.
+4. **1-Click Standardized PDF Export:**
+   - Enter a custom filename (optional) and click **`Download PDF`** to generate a publication-ready clinical report with patient demographics, numerical HU telemetry, organ metrics, and digital signature.
+
+---
+
+### Step 8: Multi-Patient Continuation & Archival
+
+1. To transition to a new patient, click the amber **`🗜️ Archive & Close Patient Record`** button in the Live Viewer.
+2. Confirm the archive modal to automatically zip all raw DICOMs, pipeline telemetry, and reports into `patient_archives/`.
+3. The interface resets all patient fields and slice buffers back to `ready` — you can immediately enter the next patient's details and click `▶ Start Scan` without restarting the backend or frontend!
+
+

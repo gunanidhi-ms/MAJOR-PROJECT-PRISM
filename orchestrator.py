@@ -7,6 +7,25 @@ import httpx
 import logging
 from dotenv import load_dotenv
 
+os.environ["PYTHONUNBUFFERED"] = "1"
+
+# ── Silence harmless WinError 10054 in asyncio ProactorEventLoop on Windows ────
+if sys.platform == "win32":
+    try:
+        import asyncio
+        import asyncio.proactor_events
+        _orig_call_connection_lost = asyncio.proactor_events._ProactorBasePipeTransport._call_connection_lost
+
+        def _safe_call_connection_lost(self, exc):
+            try:
+                _orig_call_connection_lost(self, exc)
+            except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, OSError):
+                pass
+
+        asyncio.proactor_events._ProactorBasePipeTransport._call_connection_lost = _safe_call_connection_lost
+    except Exception:
+        pass
+
 # Load root .env if present
 load_dotenv()
 
@@ -14,13 +33,16 @@ load_dotenv()
 logging.basicConfig(
     level=logging.INFO,
     format='[%(asctime)s] ORCHESTRATOR | %(levelname)s | %(message)s',
-    datefmt='%H:%M:%S'
+    datefmt='%H:%M:%S',
+    stream=sys.stdout,
+    force=True
 )
 logger = logging.getLogger("orchestrator")
 
 def check_phase3_health(url: str, timeout: int = 60) -> bool:
     """Poll Phase 3 health endpoint until it returns 200 OK or times out."""
     logger.info(f"Waiting for Phase 3 to become healthy at {url}...")
+    sys.stdout.flush()
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
@@ -28,30 +50,32 @@ def check_phase3_health(url: str, timeout: int = 60) -> bool:
                 response = client.get(url)
                 if response.status_code == 200:
                     logger.info("Phase 3 is healthy and ready.")
+                    sys.stdout.flush()
                     return True
-        except httpx.RequestError:
+        except Exception:
             pass
         time.sleep(1.0)
     
     logger.error(f"Phase 3 failed to become healthy within {timeout} seconds.")
+    sys.stdout.flush()
     return False
 
 def stream_logs(process: subprocess.Popen, prefix: str):
     """Read logs from a subprocess and print them."""
     for line in iter(process.stdout.readline, b''):
         try:
-            print(f"[{prefix}] {line.decode('utf-8', errors='replace').rstrip()}")
+            print(f"[{prefix}] {line.decode('utf-8', errors='replace').rstrip()}", flush=True)
         except UnicodeEncodeError:
             # Fallback for Windows consoles (cp1252) that cannot print certain characters
             safe_str = line.decode('utf-8', errors='replace').encode('ascii', errors='replace').decode('ascii')
-            print(f"[{prefix}] {safe_str.rstrip()}")
+            print(f"[{prefix}] {safe_str.rstrip()}", flush=True)
 
 def main():
     logger.info("Starting PRISM Autonomous End-to-End Pipeline")
     
     # --- PHASE 3 ---
-    phase3_port = os.environ.get("PHASE3_PORT", "8000")
-    phase3_health_url = f"http://localhost:{phase3_port}/api/v1/health"
+    phase3_port = os.environ.get("PHASE3_PORT", "8005")
+    phase3_health_url = f"http://127.0.0.1:{phase3_port}/api/v1/health"
     
     logger.info("Starting Phase 3 (Reporting Service)...")
     
@@ -66,12 +90,13 @@ def main():
         phase3_python = sys.executable
         logger.warning("Phase 3 venv not found, using global Python: %s", phase3_python)
     
+    sub_env = {**os.environ, "PYTHONUNBUFFERED": "1"}
     phase3_process = subprocess.Popen(
-        [phase3_python, "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", phase3_port],
+        [phase3_python, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", phase3_port],
         cwd=phase3_dir,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        env={**os.environ}  # Pass environment down
+        env=sub_env
     )
     
     # Start log streamer thread
@@ -87,9 +112,10 @@ def main():
     # Phase 2 is triggered by Phase 1, so we just set the environment variables
     # to tell Phase 2 how to talk to Phase 3.
     os.environ["PHASE3_ENABLED"] = "true"
-    os.environ["PHASE3_URL"] = f"http://localhost:{phase3_port}/api/v1/generate-report"
+    os.environ["PHASE3_URL"] = f"http://127.0.0.1:{phase3_port}/api/v1/generate-report"
     
     logger.info("Starting Phase 1 (Ingestion & Real-Time Triage)...")
+    sys.stdout.flush()
     
     # Import Phase 1 here so we can run it in the main thread
     # Needs to be done after setting env vars so its imports see them if needed

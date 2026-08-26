@@ -1,13 +1,13 @@
 # PRISM – Phase 3: Autonomous Radiology Report Generator
 
-Phase 3 is the report generation module of the **PRISM** pipeline. It converts structured findings JSON into a professional draft radiology report using a deterministic template engine, optional LLM refinement (Ollama + Mistral), and a validation framework that verifies the generated report before it is returned.
+Phase 3 is the report generation module of the **PRISM** pipeline. It converts structured findings JSON into a professional draft radiology report using a deterministic template engine, optional Ollama refinement, and a validation framework that verifies the generated report before it is returned.
 
 ---
 
 # Features
 
 - Deterministic template-based report generation
-- Optional LLM refinement using Ollama (Mistral 7B)
+- Optional LLM refinement using a configurable Ollama model
 - Automatic fallback to template if the LLM is unavailable
 - Multi-stage validation of LLM output
 - REST API built with FastAPI
@@ -130,35 +130,23 @@ No changes are required for the default configuration.
 
 # Installing Ollama
 
-Download Ollama from:
+Ollama is a system-level dependency and cannot be installed by `pip`. Install it from [ollama.com/download](https://ollama.com/download), then confirm `ollama --version` works in a new terminal.
 
-https://ollama.com/download
+The default model is `llama3.2:3b`, but model and server location are environment settings—not hardcoded. Copy `.env.example` to `.env` and set:
 
-Verify installation:
+```ini
+OLLAMA_HOST=http://127.0.0.1:11434
+OLLAMA_MODEL=llama3.2:3b
+OLLAMA_AUTO_PULL=true
+```
+
+From the repository root, run the portable setup helper:
 
 ```bash
-ollama --version
+python phase3_reporting/scripts/ollama_setup.py
 ```
 
-Download the model used by this project:
-
-```bash
-ollama pull mistral:7b
-```
-
-Verify:
-
-```bash
-ollama list
-```
-
-The model should appear as:
-
-```text
-mistral:7b
-```
-
-If the Ollama desktop application is running, no additional setup is required.
+It starts a local Ollama server if needed and pulls the exact model in `OLLAMA_MODEL`. For a remote/managed server, set `OLLAMA_HOST` to its URL and set `OLLAMA_AUTO_PULL=false`; the remote administrator must provide the model. If the CLI is not on PATH, set `OLLAMA_COMMAND` to the executable path. You can always pull manually with `ollama pull <OLLAMA_MODEL>`.
 
 ---
 
@@ -177,7 +165,7 @@ PRISM Phase 3 – Radiology Report Generator
 
 Ollama host : http://localhost:11434
 
-Ollama model : mistral:7b
+Ollama model : llama3.2:3b
 
 Application startup complete
 ```
@@ -308,9 +296,11 @@ Configuration is stored in `.env`.
 Important variables:
 
 ```ini
-OLLAMA_HOST=http://localhost:11434
+OLLAMA_HOST=http://127.0.0.1:11434
 
-OLLAMA_MODEL=mistral:7b
+OLLAMA_MODEL=llama3.2:3b
+
+OLLAMA_AUTO_PULL=true
 
 SKIP_LLM=false
 

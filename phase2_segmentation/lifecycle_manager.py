@@ -20,6 +20,7 @@ Usage:
 """
 
 import os
+import sys
 import gc
 import time
 import shutil
@@ -31,6 +32,23 @@ from dataclasses import dataclass, field
 import urllib.request
 import json
 import numpy as np
+
+# ── Silence harmless WinError 10054 in asyncio ProactorEventLoop on Windows ────
+if sys.platform == "win32":
+    try:
+        import asyncio
+        import asyncio.proactor_events
+        _orig_call_connection_lost = asyncio.proactor_events._ProactorBasePipeTransport._call_connection_lost
+
+        def _safe_call_connection_lost(self, exc):
+            try:
+                _orig_call_connection_lost(self, exc)
+            except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, OSError):
+                pass
+
+        asyncio.proactor_events._ProactorBasePipeTransport._call_connection_lost = _safe_call_connection_lost
+    except Exception:
+        pass
 
 logger = logging.getLogger(__name__)
 

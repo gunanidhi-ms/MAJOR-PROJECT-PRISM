@@ -91,12 +91,30 @@ def build_patient_registry(dicom_dir: str) -> dict:
     return registry
 
 
+def format_dicom_age(age_str: str) -> str:
+    """Formats age string into DICOM standard 4-character VR AS (e.g. '21' -> '021Y', '45Y' -> '045Y')."""
+    if not age_str:
+        return ""
+    clean = age_str.strip().upper()
+    unit = "Y"
+    if clean.endswith(("Y", "M", "W", "D")):
+        unit = clean[-1]
+        digits = clean[:-1]
+    else:
+        digits = clean
+    try:
+        val = int(digits)
+        return f"{val:03d}{unit}"
+    except ValueError:
+        return clean[:4]
+
 def simulate_ct_scan(
     patient_id: str,
     study_dict: dict,
     host: str = "127.0.0.1",
     port: int = 11112,
-    delay_ms: int =  30,
+    delay_ms: int = 30,
+    inject_id: str = "",
     inject_name: str = "",
     inject_age: str = "",
     inject_sex: str = "",
@@ -105,16 +123,18 @@ def simulate_ct_scan(
     Simulates a live CT scan for a specific patient.
     Sends slices strictly in order of InstanceNumber.
     """
+    active_patient_id = inject_id if inject_id else patient_id
+    dicom_age = format_dicom_age(inject_age)
     print(f"\n=======================================================")
     print(f"[Live CT/MRI Scanner]")
     print(f"| (Continuous C-STORE Stream via Port 11112)")
     print(f"=======================================================")
-    print(f"  Patient ID: {patient_id}")
-    if inject_name: print(f"  Injecting Name: {inject_name}")
-    if inject_age:  print(f"  Injecting Age:  {inject_age}")
-    if inject_sex:  print(f"  Injecting Sex:  {inject_sex}")
-    print(f"  Target:     {host}:{port}")
-    print(f"  Scan Speed: {delay_ms}ms per slice")
+    print(f"  Patient ID:   {active_patient_id}")
+    if inject_name: print(f"  Patient Name: {inject_name}")
+    if inject_age:  print(f"  Patient Age:  {dicom_age}")
+    if inject_sex:  print(f"  Patient Sex:  {inject_sex}")
+    print(f"  Target:       {host}:{port}")
+    print(f"  Scan Speed:   {delay_ms}ms per slice")
     print(f"=======================================================\n")
     
     ae = AE(ae_title="CT_SCANNER")
@@ -146,11 +166,13 @@ def simulate_ct_scan(
                         # Full read including pixels for sending
                         ds = pydicom.dcmread(dcm_path, force=True)
                         
-                        # INJECT custom patient metadata if provided
+                        # INJECT custom patient metadata
+                        if inject_id:
+                            ds.PatientID = inject_id
                         if inject_name:
                             ds.PatientName = inject_name
-                        if inject_age:
-                            ds.PatientAge = inject_age
+                        if dicom_age:
+                            ds.PatientAge = dicom_age
                         if inject_sex:
                             ds.PatientSex = inject_sex
                             
@@ -170,7 +192,7 @@ def simulate_ct_scan(
                         
     finally:
         assoc.release()
-        print(f"\n[DONE] Scan complete. {total_sent} CT slices sent for patient {patient_id}.")
+        print(f"\n[DONE] Scan complete. {total_sent} CT slices sent for patient {active_patient_id}.")
 
 
 def main():
@@ -196,16 +218,9 @@ def main():
     patients = list(registry.keys())
     
     # 2. Select patients to scan
-    patients_to_scan = []
-    if args.patient:
-        if args.patient in registry:
-            patients_to_scan = [args.patient]
-        else:
-            print(f"[WARN] Patient '{args.patient}' not found in the directory.")
-            return
-    else:
-        patients_to_scan = patients
-        print(f"\nFound {len(patients)} patient(s) in the dataset. Proceeding with all of them.")
+    patients_to_scan = patients
+    if args.patient and args.patient in registry:
+        patients_to_scan = [args.patient]
         
     # 3. Run the scan
     for patient_id in patients_to_scan:
@@ -215,6 +230,7 @@ def main():
             host=args.host,
             port=args.port,
             delay_ms=args.delay,
+            inject_id=args.patient,
             inject_name=args.name,
             inject_age=args.age,
             inject_sex=args.sex,

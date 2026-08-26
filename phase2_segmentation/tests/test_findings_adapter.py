@@ -78,15 +78,18 @@ def test_to_structured_findings_basic():
     anomalies = organs[0]["anomalies"]
     assert len(anomalies) == 2
     
-    assert anomalies[0]["anomaly_id"] == "CAND-001"
-    assert anomalies[0]["type"] == "lesion"
-    assert anomalies[0]["location"] == "Liver"
-    assert anomalies[0]["confidence"] == 0.85
-    assert anomalies[0]["shape"]["volume_cc"] == 12.5
-    assert anomalies[0]["shape"]["margin"] == "well-defined"
-    assert anomalies[0]["density_hu"]["mean"] == 45.0
+    cand_map = {a["anomaly_id"]: a for a in anomalies}
+    assert "CAND-001" in cand_map
+    assert "CAND-002" in cand_map
     
-    assert anomalies[1]["type"] == "cyst"
+    assert cand_map["CAND-001"]["type"] == "lesion"
+    assert cand_map["CAND-001"]["location"] == "Liver"
+    assert cand_map["CAND-001"]["confidence"] == 0.85
+    assert cand_map["CAND-001"]["shape"]["volume_cc"] == 12.5
+    assert cand_map["CAND-001"]["shape"]["margin"] == "well-defined"
+    assert cand_map["CAND-001"]["density_hu"]["mean"] == 45.0
+    
+    assert cand_map["CAND-002"]["type"] == "cyst"
 
 def test_to_structured_findings_empty():
     series_meta = {

@@ -85,9 +85,14 @@ function RecentReportRow({ report, index }: { report: Report; index: number }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <span style={{ fontSize: 13, fontWeight: 500, color: '#e2e8f0', fontFamily: "'JetBrains Mono', monospace" }}>
-            {report.study_id}
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0' }}>
+              {report.patient_name || 'Patient'}
+            </span>
+            <span style={{ fontSize: 11, color: '#00d4ff', fontFamily: "'JetBrains Mono', monospace" }}>
+              ID: {report.patient_id || report.study_id}
+            </span>
+          </div>
         </div>
       </td>
       <td style={{ padding: '12px 16px' }}>
@@ -101,7 +106,7 @@ function RecentReportRow({ report, index }: { report: Report; index: number }) {
       </td>
       <td style={{ padding: '12px 16px', textAlign: 'right' }}>
         <Link
-          to={`/report/${encodeURIComponent(report.study_id)}`}
+          to={`/report/${encodeURIComponent(report.patient_id || report.study_id)}`}
           style={{ fontSize: 12, fontWeight: 600, color: '#00d4ff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}
         >
           Open
@@ -161,7 +166,7 @@ export default function Dashboard() {
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <Link
-              to="/generate"
+              to="/live"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '11px 22px', borderRadius: 10,
@@ -278,10 +283,10 @@ export default function Dashboard() {
               <p style={{ fontSize: 14, fontWeight: 500, color: '#475569', marginBottom: 6 }}>No reports yet</p>
               <p style={{ fontSize: 12, color: '#334155', marginBottom: 20 }}>Generate your first report from structured findings.</p>
               <Link
-                to="/generate"
+                to="/live"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 9, background: 'rgba(14,165,233,0.12)', border: '1px solid rgba(14,165,233,0.2)', color: '#0ea5e9', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
               >
-                Generate Report
+                New Report
               </Link>
             </div>
           )}

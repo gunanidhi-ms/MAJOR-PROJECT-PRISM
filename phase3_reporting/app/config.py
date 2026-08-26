@@ -38,10 +38,16 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------ #
     # Ollama / LLM
     # ------------------------------------------------------------------ #
-    ollama_host: str = "http://localhost:11434"
-    ollama_model: str = "mistral:7b"
+    # These defaults make a fresh local installation work, while every
+    # deployment can override them through OLLAMA_HOST / OLLAMA_MODEL.  Do
+    # not use file-system paths here: Ollama manages models per user.
+    ollama_host: str = "http://127.0.0.1:11434"
+    ollama_model: str = "llama3.2:3b"
     ollama_temperature: float = 0.2   # kept low for determinism
-    ollama_timeout: int = 30         # seconds
+    ollama_timeout: int = 120         # seconds
+    ollama_start_timeout: int = 30    # seconds to wait for a local server
+    ollama_auto_pull: bool = True     # used by the optional setup helper
+    ollama_command: str = "ollama"    # CLI name/path; override if not on PATH
 
     # ------------------------------------------------------------------ #
     # FastAPI

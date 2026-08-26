@@ -33,6 +33,9 @@ def export_findings(candidates: list, run_dir: str, series_meta: dict, region: s
     
     envelope = {
         "series_instance_uid": series_meta.get("series_instance_uid", "unknown"),
+        "study_instance_uid": series_meta.get("study_instance_uid", ""),
+        "patient_id": series_meta.get("patient_id", "UNKNOWN_PATIENT"),
+        "patient_name": series_meta.get("patient_name", "Unknown Patient"),
         "region": region,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "candidate_count": len(survivors),

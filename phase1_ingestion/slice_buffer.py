@@ -63,6 +63,17 @@ class SliceBuffer:
         with self._lock:
             return len(self._buffer) >= self._expected_count
 
+    def reset(self) -> None:
+        """Reset the buffer state completely for a new patient or series."""
+        with self._lock:
+            self._buffer.clear()
+            self._flushed_up_to = 0
+            self._next_expected = 1
+            self._first_buffered_time = None
+            self._last_insert_time = time.monotonic()
+            self._last_raw_arrival_time = None
+            logger.info("SliceBuffer reset for new series/patient.")
+
     def add_slice(self, instance_number: int, data: dict[str, Any]) -> None:
         """
         Add a slice to the buffer and re-sort by InstanceNumber.
@@ -82,6 +93,15 @@ class SliceBuffer:
 
         with self._lock:
             self._last_raw_arrival_time = time.monotonic()
+
+            # If a new series begins with instance_number <= _flushed_up_to (e.g. slice 1 arrives after previous session),
+            # automatically reset _flushed_up_to so slices can be popped immediately!
+            if instance_number <= self._flushed_up_to:
+                logger.info(
+                    "Detected new sequence starting at slice %d (previous flushed_up_to: %d). Resetting buffer pointer.",
+                    instance_number, self._flushed_up_to
+                )
+                self._flushed_up_to = instance_number - 1
 
             if instance_number in self._buffer:
                 logger.warning(

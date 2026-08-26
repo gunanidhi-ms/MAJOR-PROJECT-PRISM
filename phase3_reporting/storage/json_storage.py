@@ -25,7 +25,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from app.models import Report
-from storage.storage import ReportStorage
+from .storage import ReportStorage
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class JSONReportStorage(ReportStorage):
         The file name format is ``{study_id}_{YYYYMMDD_HHMMSS}.json``,
         providing a human-readable audit trail.
         """
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
         p_id   = (report.patient_id   or "UNK").replace(" ", "_")[:16]
         p_name = (report.patient_name or "Patient").replace(" ", "_").replace("^", "_")[:20]
         # Use only the last 8 chars of the DICOM UID — long enough to be unique,
@@ -77,28 +77,58 @@ class JSONReportStorage(ReportStorage):
 
     def get_report(self, study_id: str) -> Optional[Report]:
         """
-        Return the most recently saved report for *study_id*, or None.
+        Return the most recently saved report matching *study_id*
+        (Patient ID, Patient Name, Study UID, or filename stem).
         """
-        # Search for files containing the study_id
-        matching = sorted(
-            self.reports_dir.glob(f"*_{study_id}_*.json"),
+        if not study_id:
+            return None
+
+        clean_id = study_id.strip().lower()
+        uid_short = study_id[-8:] if len(study_id) > 8 else study_id
+
+        # Gather all candidate report JSON files sorted by newest first
+        candidates: List[Path] = sorted(
+            set(
+                list(self.reports_dir.glob(f"*{study_id}*.json"))
+                + list(self.reports_dir.glob(f"*_{uid_short}.json"))
+                + list(self.reports_dir.glob("*.json"))
+            ),
             key=lambda p: p.stat().st_mtime,
             reverse=True,
         )
-        # Fallback to old format just in case
-        if not matching:
-            matching = sorted(
-                self.reports_dir.glob(f"{study_id}_*.json"),
-                key=lambda p: p.stat().st_mtime,
-                reverse=True,
-            )
-        if not matching:
-            logger.debug("No report found for study_id=%s", study_id)
-            return None
 
-        latest = matching[0]
-        logger.debug("Loading report from %s", latest)
-        return self._load(latest)
+        for p in candidates:
+            report = self._load(p)
+            if not report:
+                continue
+
+            p_id = str(report.patient_id or "").strip().lower()
+            p_name = str(report.patient_name or "").strip().lower()
+            s_id = str(report.study_id or "").strip().lower()
+            stem = p.stem.lower()
+
+            # Match on Patient ID (exact or clean match)
+            if p_id and (p_id == clean_id or clean_id in p_id or p_id in clean_id):
+                logger.info("Found report for Patient ID '%s' in %s", study_id, p.name)
+                return report
+
+            # Match on Patient Name
+            if p_name and clean_id in p_name:
+                logger.info("Found report for Patient Name '%s' in %s", study_id, p.name)
+                return report
+
+            # Match on Study ID
+            if s_id and (s_id == clean_id or s_id.endswith(clean_id) or clean_id in s_id):
+                logger.info("Found report for Study ID '%s' in %s", study_id, p.name)
+                return report
+
+            # Match on filename stem
+            if clean_id in stem:
+                logger.info("Found report for filename '%s' in %s", study_id, p.name)
+                return report
+
+        logger.warning("No report found for identifier=%s in %s", study_id, self.reports_dir)
+        return None
 
     def list_reports(self) -> List[Report]:
         """
@@ -127,12 +157,15 @@ class JSONReportStorage(ReportStorage):
         Returns True if at least one file was deleted, False otherwise.
         """
         count = 0
-        for p in list(self.reports_dir.glob(f"*_{study_id}_*.json")) + list(self.reports_dir.glob(f"{study_id}_*.json")):
-            try:
-                p.unlink()
-                count += 1
-            except FileNotFoundError:
-                pass
+        all_files = list(self.reports_dir.glob("*.json"))
+        for p in all_files:
+            report = self._load(p)
+            if report and report.study_id == study_id:
+                try:
+                    p.unlink()
+                    count += 1
+                except FileNotFoundError:
+                    pass
         return count > 0
 
     def update_report(self, report: Report) -> None:

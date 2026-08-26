@@ -8,15 +8,9 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div className="app-root-layout">
       <Navbar />
-      <main style={{
-        flex: 1,
-        maxWidth: 1280,
-        margin: '0 auto',
-        width: '100%',
-        padding: '28px 24px 48px',
-      }}>
+      <main className="app-main-content">
         {children}
       </main>
       <Footer />

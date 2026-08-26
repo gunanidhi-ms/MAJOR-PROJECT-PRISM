@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
+import { PatientSessionProvider } from './context/PatientSessionContext';
 
 // Code-split every page — they load only when first visited
 const Dashboard    = lazy(() => import('./pages/Dashboard'));
@@ -26,20 +27,40 @@ function PageLoader() {
 }
 
 export default function App() {
+  useEffect(() => {
+    // 1. Cancel any pending shutdown on page load (e.g. after refresh)
+    fetch('http://localhost:8001/api/system/cancel-shutdown', { method: 'POST' }).catch(() => {});
+
+    // 2. Schedule shutdown when the tab/browser is closed (hit 'X')
+    const handleUnload = () => {
+      navigator.sendBeacon('http://localhost:8001/api/system/shutdown?grace=2.5');
+    };
+
+    window.addEventListener('pagehide', handleUnload);
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      window.removeEventListener('pagehide', handleUnload);
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, []);
+
   return (
-    <BrowserRouter>
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/"                 element={<Dashboard />} />
-            <Route path="/generate"         element={<Generate />} />
-            <Route path="/reports"          element={<ReportsList />} />
-            <Route path="/report/:studyId"  element={<ReportDetail />} />
-            <Route path="/live"             element={<LiveViewer />} />
-            <Route path="*"                 element={<Dashboard />} />
-          </Routes>
-        </Suspense>
-      </Layout>
-    </BrowserRouter>
+    <PatientSessionProvider>
+      <BrowserRouter>
+        <Layout>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/"                 element={<Dashboard />} />
+              <Route path="/generate"         element={<Generate />} />
+              <Route path="/reports"          element={<ReportsList />} />
+              <Route path="/report/:studyId"  element={<ReportDetail />} />
+              <Route path="/live"             element={<LiveViewer />} />
+              <Route path="*"                 element={<Dashboard />} />
+            </Routes>
+          </Suspense>
+        </Layout>
+      </BrowserRouter>
+    </PatientSessionProvider>
   );
 }

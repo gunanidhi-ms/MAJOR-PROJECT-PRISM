@@ -128,7 +128,7 @@ export default function Generate() {
       clearInterval(stageInterval);
       setPipelineActive(2);
       showToast('Report generated! Redirecting…', 'success');
-      setTimeout(() => navigate(`/report/${encodeURIComponent(result.study_id)}`), 800);
+      setTimeout(() => navigate(`/report/${encodeURIComponent(result.patient_id || result.study_id)}`), 800);
     } catch (err) {
       clearInterval(stageInterval);
       setPipelineActive(-1);
