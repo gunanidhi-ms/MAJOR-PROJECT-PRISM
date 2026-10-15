@@ -5,7 +5,6 @@ import { ReportTemplate } from '../components/reports/ReportTemplate'
 import { downloadReportPdf } from '../utils/pdfGenerator'
 import { prismApi } from '../api/prismApi'
 import { usePatientSession } from '../context/PatientSessionContext'
-import VolumetricViewer from '../components/VolumetricViewer'
 
 /**
  * LiveViewer — PRISM Integrated Live CT Viewer & Clinical Report Studio
@@ -876,10 +875,8 @@ export default function LiveViewer() {
           <div
             className={`pipeline-stage pipeline-stage--p2 ${
               isPhase2Running && !isPhase2Complete ? 'pipeline-stage--active' : isPhase2Complete ? 'pipeline-stage--completed' : ''
-            } ${isPhase2Complete ? 'pipeline-stage--clickable' : ''}`}
-            title={isPhase2Complete ? 'Click to view 3D Anatomical Reconstruction' : 'Phase 2 Multi-Organ TotalSegmentator & AI 3D Merger'}
-            onClick={() => isPhase2Complete && setActiveView(v => v === 'phase2' ? 'phase1' : 'phase2')}
-            style={isPhase2Complete ? { cursor: 'pointer' } : {}}
+            }`}
+            title="Phase 2 Multi-Organ TotalSegmentator & AI 3D Merger"
           >
             <div className="pipeline-stage__indicator">
               <span className="pipeline-stage__num">{isPhase2Complete ? '✓' : '2'}</span>
@@ -898,11 +895,6 @@ export default function LiveViewer() {
               <div className="pipeline-stage__metrics">
                 <span className="metric-pill">117 Organs</span>
                 <span className="metric-pill">3D Merger</span>
-                {isPhase2Complete && (
-                  <span className="metric-pill" style={{ background: 'rgba(255,34,68,0.12)', color: '#ff6680', border: '1px solid rgba(255,34,68,0.25)' }}>
-                    🔴 View 3D Anatomy
-                  </span>
-                )}
               </div>
             </div>
           </div>
@@ -950,25 +942,7 @@ export default function LiveViewer() {
 
       {/* ── Dynamic Phase Viewport (Directly below Stepper, fills 100% remaining height) ── */}
       <div className="phase-dynamic-viewport">
-        {activeView === 'phase2' ? (
-          /* ── PHASE 2: 3D ANATOMICAL RECONSTRUCTION ── */
-          <div style={{ width: '100%', height: '100%', padding: '12px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-              <button
-                onClick={() => setActiveView('phase1')}
-                style={{ background: 'rgba(0,180,216,0.1)', border: '1px solid rgba(0,212,255,0.2)', color: '#00d4ff', padding: '5px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}
-              >
-                ← Back to CT Slices
-              </button>
-              <span style={{ fontSize: 12, color: 'rgba(0,212,255,0.6)', fontFamily: 'monospace' }}>
-                Phase 2 Complete · {slices.length} slices · TotalSegmentator (nnU-Net) · Upright reconstructed anatomy · Click an organ to inspect
-              </span>
-            </div>
-            <div style={{ flex: 1, minHeight: 0 }}>
-              <VolumetricViewer isVisible={activeView === 'phase2'} />
-            </div>
-          </div>
-        ) : activeView === 'phase1' ? (
+        {activeView === 'phase1' ? (
           <div className="main-layout">
             {/* ── Left Sidebar: Received Slices Navigation Bar ── */}
             <aside className="slice-panel">
