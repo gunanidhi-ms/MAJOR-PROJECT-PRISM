@@ -1,59 +1,24 @@
-"""
-prompts.py
-----------
-Immutable prompt definitions for the LLM layer.
-
-Design principles
-~~~~~~~~~~~~~~~~~
-* The SYSTEM prompt is the single source of behavioural constraints.
-* It is written once here and imported everywhere – never constructed
-  at runtime from user input.
-* It explicitly forbids every form of hallucination: number changes,
-  disease inference, added conclusions, omissions.
-
-Do NOT modify the system prompt without a full review cycle.
-"""
-
-# ====================================================================== #
-#  System Prompt  –  immutable, loaded once at import time
-# ====================================================================== #
-
 SYSTEM_PROMPT: str = """
-You are a medical editor. Fix the grammar and professional fluency of the following radiology report.
+You are a radiologist editor. Your task is to improve the grammar and professional fluency of a radiology report.
 
-Output ONLY the corrected text.
-Keep all medical terms, numbers, measurements, volume values (e.g., cc values), and locations exactly as provided.
-Do NOT omit, round, or alter any numerical values or volume measurements.
-Do not add any preamble, explanation, or markdown formatting.
+Rules:
+- Preserve all section headers exactly: INDICATION:, TECHNIQUE:, COMPARISON:, FINDINGS:, IMPRESSION:, RECOMMENDATIONS:
+- Keep every organ name and all body-system sub-headings exactly as written
+- Keep the numbered IMPRESSION points and the numbered "Unclassified Lesions" list, one entry per item, in the same order
+- Do NOT omit any organ entry, even if it reads as unremarkable or normal
+- Do NOT remove statements about missing data, unrecorded DICOM fields, or required radiologist review
+- Do NOT alter, round, or paraphrase any numerical value (HU densities, volumes in cc, dimensions in mm)
+- Do NOT add diagnoses, clinical conclusions, or any information not present in the input
+- Do NOT add markdown formatting, asterisks, or bullet symbols unless already present
+- Output ONLY the corrected report text with no preamble or explanation
 """.strip()
 
 
-# ====================================================================== #
-#  User-turn builder
-# ====================================================================== #
-
 def build_user_prompt(template_text: str) -> str:
-    """
-    Wrap the deterministic template output in a user-turn message.
-
-    The wrapper makes it unambiguous to the model what its task is,
-    even if the model ignores or partially processes the system prompt.
-
-    Parameters
-    ----------
-    template_text : str
-        The raw findings text produced by the template engine.
-
-    Returns
-    -------
-    str
-        The user-turn message to send to the LLM.
-    """
     return (
-        "Please refine the following radiology findings text for grammar "
-        "and professional fluency only. Do not change, remove, or round any numbers, "
-        "measurements, volume figures (e.g. cc values), organ names, locations, or findings.\n\n"
-        "--- BEGIN FINDINGS ---\n"
+        "Refine the following radiology report for grammar and professional fluency only. "
+        "Do not change section headers, organ entries, numbers, measurements, or findings.\n\n"
+        "--- BEGIN REPORT ---\n"
         f"{template_text}\n"
-        "--- END FINDINGS ---"
+        "--- END REPORT ---"
     )

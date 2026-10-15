@@ -93,6 +93,12 @@ class VolumeAccumulator:
         self._patient_name: str = "Unknown Patient"
         self._patient_age: str = ""
         self._patient_sex: str = ""
+        self._clinical_meta: dict = {}
+        self._series_description: str = ""
+        self._study_description: str = ""
+        self._body_part: str = ""
+        self._slice_thickness: float = 0.0
+        self._volume_qc: dict = {}
 
     def add(
         self,
@@ -157,6 +163,16 @@ class VolumeAccumulator:
                 self._patient_name = spacing_meta.get("patient_name", "Unknown Patient")
                 self._patient_age = spacing_meta.get("patient_age", "")
                 self._patient_sex = spacing_meta.get("patient_sex", "")
+                self._series_description = spacing_meta.get("series_description", "") or ""
+                self._study_description = spacing_meta.get("study_description", "") or ""
+                self._body_part = spacing_meta.get("body_part", "") or ""
+                self._slice_thickness = float(spacing_meta.get("slice_thickness", 0.0) or 0.0)
+
+            # Merge clinical/technique tags: keep first non-empty value per key
+            # (some scanners only populate certain tags on certain slices).
+            for _k, _v in (spacing_meta.get("clinical_meta") or {}).items():
+                if _v and not self._clinical_meta.get(_k):
+                    self._clinical_meta[_k] = _v
 
             logger.debug(
                 "VolumeAccumulator: added instance %d (z=%.2f, total=%d)",
@@ -317,6 +333,12 @@ class VolumeAccumulator:
 
             spacing = (float(row_mm), float(col_mm), float(z_mm))
 
+            try:
+                self._volume_qc = self._compute_volume_qc(sorted_entries, spacing)
+            except Exception as qc_err:  # QC must never block the pipeline
+                logger.warning("VolumeAccumulator: QC computation failed: %s", qc_err)
+                self._volume_qc = {}
+
             logger.info(
                 "VolumeAccumulator: exported volume shape=%s, "
                 "spacing=(%.2f, %.2f, %.2f)mm, %d slices",
@@ -327,11 +349,53 @@ class VolumeAccumulator:
 
             return volume, ordered_findings, ordered_instance_numbers, spacing
 
+    @staticmethod
+    def _compute_volume_qc(sorted_entries: list, spacing: Tuple[float, float, float]) -> dict:
+        """
+        Series-integrity checks run at export time. Result is attached to the
+        handoff so Phase 2/3 can caveat measurements instead of trusting them
+        blindly (e.g. a 0.2 cc 'spleen' from a truncated or gapped series).
+        """
+        z = np.array([e["z_coordinate"] for e in sorted_entries], dtype=float)
+        n = len(z)
+        qc: dict = {"slice_count": n, "warnings": []}
+        if n >= 2:
+            diffs = np.diff(z)
+            median_gap = float(np.median(np.abs(diffs))) or float(spacing[2])
+            dup = int(np.sum(np.abs(diffs) < 1e-3))
+            gaps = int(np.sum(np.abs(diffs) > 1.5 * median_gap)) if median_gap > 0 else 0
+            qc.update({
+                "z_extent_mm": round(float(z[-1] - z[0]), 1),
+                "median_slice_gap_mm": round(median_gap, 3),
+                "duplicate_positions": dup,
+                "slice_gaps": gaps,
+            })
+            if dup:
+                qc["warnings"].append(f"{dup} duplicate slice position(s)")
+            if gaps:
+                qc["warnings"].append(f"{gaps} missing-slice gap(s) in the z-axis")
+        row_mm, col_mm, z_mm = spacing
+        if z_mm > 5.0:
+            qc["warnings"].append(f"thick slices ({z_mm:.1f} mm) limit small-lesion detection")
+        if row_mm > 0 and max(row_mm, col_mm) / max(min(row_mm, col_mm), 1e-6) > 1.05:
+            qc["warnings"].append("non-square in-plane pixel spacing")
+        iops = {tuple(round(v, 2) for v in e["spacing_meta"].get("image_orientation_patient", [])) for e in sorted_entries}
+        if len(iops) > 1:
+            qc["warnings"].append("inconsistent image orientation across slices")
+        std_iop = (1.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        first_iop = next(iter(iops)) if iops else std_iop
+        qc["standard_axial_orientation"] = bool(
+            len(first_iop) == 6 and all(abs(a - b) < 0.1 for a, b in zip(first_iop, std_iop))
+        )
+        qc["ok"] = not qc["warnings"]
+        return qc
+
     def get_series_metadata(self) -> dict:
         """
         Return series-level metadata for the Phase 2 handoff.
         """
         with self._lock:
+            cm = dict(self._clinical_meta)
             return {
                 "series_instance_uid": self._series_instance_uid,
                 "study_instance_uid": self._study_instance_uid,
@@ -340,6 +404,27 @@ class VolumeAccumulator:
                 "patient_name": self._patient_name,
                 "patient_age": self._patient_age,
                 "patient_sex": self._patient_sex,
+                # ── report-enrichment context (Phase 3 TECHNIQUE / INDICATION / COMPARISON) ──
+                "protocol": cm.get("protocol_name") or self._study_description or self._series_description,
+                "study_description": self._study_description,
+                "series_description": self._series_description,
+                "study_date": cm.get("study_date", ""),
+                "clinical_indication": cm.get("reason_for_study", ""),
+                "referring_physician": cm.get("referring_physician", ""),
+                "accession_number": cm.get("accession_number", ""),
+                "technique": {
+                    "manufacturer": cm.get("manufacturer", ""),
+                    "model": cm.get("manufacturer_model", ""),
+                    "institution": cm.get("institution", ""),
+                    "kvp": cm.get("kvp", ""),
+                    "convolution_kernel": cm.get("convolution_kernel", ""),
+                    "contrast_agent": cm.get("contrast_agent", ""),
+                    "contrast_route": cm.get("contrast_route", ""),
+                    "contrast_volume_ml": cm.get("contrast_volume_ml", ""),
+                    "patient_position": cm.get("patient_position", ""),
+                    "slice_thickness_mm": self._slice_thickness,
+                },
+                "volume_qc": dict(self._volume_qc),
             }
 
     def reset(self) -> None:
@@ -365,6 +450,12 @@ class VolumeAccumulator:
             self._patient_name = "Unknown Patient"
             self._patient_age = ""
             self._patient_sex = ""
+            self._clinical_meta = {}
+            self._series_description = ""
+            self._study_description = ""
+            self._body_part = ""
+            self._slice_thickness = 0.0
+            self._volume_qc = {}
             logger.info("VolumeAccumulator: reset for next series")
 
     def reset_all(self) -> None:

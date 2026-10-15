@@ -156,17 +156,20 @@ class TestSingleAnomaly:
         result = engine.generate(self._make_anomaly_finding())
         assert "18" in result.findings_text
 
-    def test_anomaly_confidence_in_text(self, engine):
+    def test_anomaly_confidence_not_printed(self, engine):
+        # Confidence is an internal metric; the template intentionally omits it
+        # to avoid giving clinicians a false sense of algorithmic certainty.
         result = engine.generate(self._make_anomaly_finding())
-        assert "94" in result.findings_text  # 0.94 → 94%
+        assert "94%" not in result.findings_text
 
     def test_anomaly_margin_in_text(self, engine):
         result = engine.generate(self._make_anomaly_finding())
         assert "well-defined" in result.findings_text.lower()
 
-    def test_anomaly_sphericity_in_text(self, engine):
+    def test_anomaly_sphericity_not_printed(self, engine):
+        # Sphericity is a shape metric used internally; not printed in clinical text.
         result = engine.generate(self._make_anomaly_finding())
-        assert "0.71" in result.findings_text
+        assert "0.71" not in result.findings_text
 
     def test_density_range_in_text(self, engine):
         result = engine.generate(self._make_anomaly_finding())

@@ -1,13 +1,3 @@
-"""
-triage_screen.py — Universal CT Slice Triage Screening
-
-Phase 1 is a triage engine, not a diagnostic engine. It identifies statistically 
-unusual density patterns while suppressing expected anatomy. It minimizes false positives 
-on normal CT studies and remains independent of organ segmentation, disease classification, 
-and deep learning. All detections represent candidate regions requiring further analysis 
-in later phases rather than definitive pathological findings.
-"""
-
 import time
 import logging
 import math
@@ -19,6 +9,8 @@ try:
     from scipy import ndimage
 except ImportError:
     raise ImportError("scipy is required: pip install scipy")
+
+from phase1_ingestion.triage_config import TRIAGE_CONFIG
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +63,12 @@ class TriageResult:
     emergency_score: int
     action: str
     
+    # Borderline findings (confidence 0.10–0.30):
+    # - NOT shown on the frontend (ws_server.py serialises findings only)
+    # - ARE passed into VolumeAccumulator so they reach finding_tracker →
+    #   seed_clusterer → Path A for corroboration against Path B candidates.
+    borderline_findings: List[Finding] = field(default_factory=list)
+
     processing_time_ms: float = 0.0
     num_raw_components: int = 0
     num_filtered_components: int = 0
@@ -98,7 +96,8 @@ class TriageResult:
             "stats": self.statistics,
             "slice_hu_mean": self.statistics.get("mean", 0.0),
             "slice_hu_std": self.statistics.get("std", 0.0),
-            "all_findings": [f.to_dict() for f in self.findings],
+            "displayed_findings": [f.to_dict() for f in self.findings],
+            "all_findings": [f.to_dict() for f in self.findings],  # deprecated alias
             "score_details": [{"points": self.emergency_score, "description": "Dynamic severity mapping"}],
             "emergency_action": self.action,
         }
@@ -124,14 +123,7 @@ def _step_0_quality_assessment(hu_array: np.ndarray) -> Tuple[bool, str]:
 # ─── Step 1: Body Mask Generation ────────────────────────────────────────────
 
 def _step_1_body_mask(hu_array: np.ndarray) -> np.ndarray:
-    """
-    Generate a robust body mask that includes all patient anatomy.
-    
-    Uses HU > -600 to create a solid body outline (excludes lung air),
-    then fills holes (to recapture lung cavities), keeps only the
-    largest connected component (the patient), and dilates outward
-    by 15 pixels to include subcutaneous fat.
-    """
+
     mask = hu_array > -600.0
     if not np.any(mask):
         return mask
@@ -148,7 +140,9 @@ def _step_1_body_mask(hu_array: np.ndarray) -> np.ndarray:
         largest = np.argmax(sizes)
         filled = (labeled == largest)
         
-    # Grow outward to include subcutaneous fat and skin border
+    # Grow outward to include subcutaneous fat and skin border.
+    # Background air components that leak in here are caught by the
+    # image-boundary bbox rejection in Step 7, not here.
     dist = ndimage.distance_transform_edt(~filled)
     filled = dist <= 15
     return filled
@@ -170,17 +164,36 @@ def _step_2A_scan_type(hu_array: np.ndarray, body_mask: np.ndarray) -> str:
 # ─── Step 2B: Body Region Identification ─────────────────────────────────────
 
 def _step_2B_body_region(hu_array: np.ndarray, body_mask: np.ndarray, dicom_hint: str = "") -> str:
-    """Identify anatomical body region from DICOM hints or HU histogram heuristics."""
+    """
+    Identify anatomical body region.
+
+    Priority 1 — DICOM hint (BodyPartExamined / SeriesDescription):
+      If the hint resolves to a known region, return immediately and skip the
+      histogram heuristic entirely.  DICOM metadata is structurally reliable;
+      the histogram fallback is not.
+
+    Priority 2 — HU histogram heuristics:
+      Used only when no DICOM hint is available or the hint is unrecognised.
+      These thresholds are deliberately kept but logged so the region_agreement
+      confusion matrix can drive empirical recalibration over time.
+    """
     hint = dicom_hint.upper().strip()
     if hint:
-        if any(k in hint for k in ["HEAD", "BRAIN", "SKULL"]): return "head"
-        if any(k in hint for k in ["NECK", "CERVICAL", "C-SPINE"]): return "neck"
-        if any(k in hint for k in ["LUNG", "CHEST", "THORAX"]): return "chest"
-        if any(k in hint for k in ["ABDOMEN", "ABD", "PANCREAS", "LIVER"]): return "abdomen"
-        if any(k in hint for k in ["PELVIS"]): return "pelvis"
-        if any(k in hint for k in ["SPINE"]): return "spine"
-        if any(k in hint for k in ["EXTREMITY", "KNEE", "HIP"]): return "extremity"
+        resolved = _match_dicom_hint(hint)
+        if resolved != "unknown":
+            logger.debug(
+                "_step_2B: DICOM hint '%s' resolved to '%s' — histogram skipped",
+                dicom_hint, resolved,
+            )
+            return resolved
+        logger.debug(
+            "_step_2B: DICOM hint present ('%s') but unresolved — falling back to histogram",
+            dicom_hint,
+        )
+    else:
+        logger.debug("_step_2B: no DICOM hint — histogram heuristic will run")
 
+    # ── Histogram fallback ────────────────────────────────────────────────────
     body_pixels = hu_array[body_mask & (hu_array > -1024) & (hu_array < 3000)]
     if body_pixels.size < 100:
         return "unknown"
@@ -194,7 +207,6 @@ def _step_2B_body_region(hu_array: np.ndarray, body_mask: np.ndarray, dicom_hint
     bone_fraction = float(np.sum(sample > 300)) / sample.size
     air_fraction = float(np.sum(sample < -500)) / sample.size
     
-    # Body area relative to image — neck is small, chest/abdomen are large
     body_area = float(np.sum(body_mask))
     image_area = float(body_mask.shape[0] * body_mask.shape[1])
     body_fill = body_area / image_area
@@ -203,7 +215,6 @@ def _step_2B_body_region(hu_array: np.ndarray, body_mask: np.ndarray, dicom_hint
         return "chest"
     if std_hu < 150 and mean_hu > -50 and mean_hu < 60 and bone_fraction < 0.05:
         return "head"
-    # Neck: small body area, central airway, some bone, no lungs
     if body_fill < 0.35 and air_fraction > 0.01 and air_fraction < 0.15 and bone_fraction < 0.10:
         return "neck"
     if bone_fraction > 0.15 and soft_tissue_fraction < 0.4:
@@ -214,9 +225,156 @@ def _step_2B_body_region(hu_array: np.ndarray, body_mask: np.ndarray, dicom_hint
     return "unknown"
 
 
+def _match_dicom_hint(hint: str) -> str:
+    """
+    Map an upper-cased DICOM hint string to a known body region.
+    Returns 'unknown' if no match found.
+    """
+    if any(k in hint for k in ["HEAD", "BRAIN", "SKULL", "CRANIAL", "CEREBR"]):
+        return "head"
+    if any(k in hint for k in ["NECK", "CERVICAL", "C-SPINE", "CERVIC"]):
+        return "neck"
+    if any(k in hint for k in ["LUNG", "CHEST", "THORAX", "THORAC", "CARDIAC", "HEART"]):
+        return "chest"
+    if any(k in hint for k in ["ABDOMEN", "ABD", "PANCREAS", "LIVER", "HEPAT", "RENAL", "KIDNEY"]):
+        return "abdomen"
+    if any(k in hint for k in ["PELVIS", "PELVIC", "BLADDER", "PROSTATE"]):
+        return "pelvis"
+    if any(k in hint for k in ["SPINE", "LUMBAR", "THORACIC SPINE", "L-SPINE", "T-SPINE"]):
+        return "spine"
+    if any(k in hint for k in ["EXTREMITY", "KNEE", "HIP", "SHOULDER", "FEMUR", "HUMER"]):
+        return "extremity"
+    return "unknown"
+
+
 # ─── Step 3: Expected Normal Anatomy Suppression ─────────────────────────────
 
-def _step_3_anatomy_suppression(hu_array: np.ndarray, body_mask: np.ndarray, region: str) -> np.ndarray:
+def _compactness(comp_mask: np.ndarray) -> float:
+    """
+    Compute the solidity (compactness) of a binary 2D component.
+
+    Returns area / bounding_box_area.  Compact blobs (bowel gas, discrete
+    air pockets) score close to 1.0; sheet-like or irregular free air scores
+    much lower.
+    """
+    rows = np.any(comp_mask, axis=1)
+    cols = np.any(comp_mask, axis=0)
+    if not np.any(rows) or not np.any(cols):
+        return 0.0
+    rmin, rmax = np.where(rows)[0][[0, -1]]
+    cmin, cmax = np.where(cols)[0][[0, -1]]
+    bbox_area = (rmax - rmin + 1) * (cmax - cmin + 1)
+    if bbox_area == 0:
+        return 0.0
+    return float(np.sum(comp_mask)) / float(bbox_area)
+
+
+def _suppress_air_components(
+    hu_array: np.ndarray,
+    body_mask: np.ndarray,
+    dist: np.ndarray,
+    region: str,
+    config: dict,
+) -> np.ndarray:
+    """
+    Build a suppression mask for expected air structures within the body mask.
+
+    One parameterized function replaces the original five near-duplicate
+    per-region air-handling blocks.  Region determines which config thresholds
+    apply, not which code path runs.
+
+    Returns:
+        Boolean mask (same shape as body_mask) — True where air should be
+        suppressed from the search mask.
+
+    Region behaviour:
+        chest  — suppress large bilateral lung fields AND small airways
+                 (trachea/bronchi).  Medium air (2000-5000 px) is KEPT as
+                 potential pneumothorax.
+        abdomen/pelvis — suppress compact, moderate-density internal gas
+                 (bowel, rectum, bladder).  Large or low-density air is KEPT
+                 as potential free air (pneumoperitoneum).
+        neck   — suppress ALL internal air (trachea, pharynx, larynx are
+                 all expected anatomy here).
+        other  — suppress all air structures (generic / unknown regions).
+    """
+    air_mask = (hu_array < -200) & body_mask
+
+    # Abdomen/pelvis: restrict to internal air only (skip peripheral fat/air)
+    if region in ("abdomen", "pelvis"):
+        min_dist = config["abdomen_subq_fat_band_px"]
+        air_mask = air_mask & (dist > min_dist)
+
+    struct = ndimage.generate_binary_structure(2, 2)
+    labeled, n = ndimage.label(air_mask, structure=struct)
+    if n == 0:
+        return np.zeros(body_mask.shape, dtype=bool)
+
+    sizes = np.bincount(labeled.ravel())
+    sizes[0] = 0  # ignore background label
+
+    suppress = np.zeros(body_mask.shape, dtype=bool)
+
+    for label_id in range(1, n + 1):
+        sz = int(sizes[label_id])
+        if sz == 0:
+            continue
+        comp = (labeled == label_id)
+        comp_mean = float(np.mean(hu_array[comp]))
+
+        if region == "chest":
+            # Large air field with typical lung parenchyma density → suppress as normal lung
+            if sz > config["large_air_component_px"] and comp_mean > config["lung_density_hu"]:
+                suppress |= comp
+            # Small airway (trachea, bronchi) → always suppress
+            elif sz < config["small_airway_component_px"]:
+                suppress |= comp
+            # Large air at near-vacuum density → leaked background, NOT PTX
+            elif sz > config["large_air_component_px"] and comp_mean <= config["lung_density_hu"]:
+                suppress |= comp
+            # Medium air (2000-5000 px): potential pneumothorax — KEEP
+
+        elif region in ("abdomen", "pelvis"):
+            if sz < 50:
+                # Tiny noise pixel clusters → suppress
+                suppress |= comp
+                continue
+            solidity = _compactness(comp)
+            # Normal bowel/stomach/bladder gas: compact, moderate-sized, moderate density
+            # Pathological free air: very low density, often large, irregular shape
+            is_normal_gas = (
+                sz < config["abdomen_gas_max_px"]
+                and solidity > config["abdomen_gas_solidity_min"]
+                and comp_mean > config["abdomen_gas_hu_floor"]
+            )
+            # Also suppress large diffuse gas collections that are likely
+            # colonic haustra air or stomach gas, even if slightly below the
+            # HU floor (-700): normal colon gas regularly reaches -800 to
+            # -950 HU.  Only keep very-low-density components (< -950 HU)
+            # for potential pneumoperitoneum evaluation.
+            is_deep_colonic_gas = (
+                sz < config["abdomen_gas_max_px"] * 3
+                and solidity > config["abdomen_gas_solidity_min"]
+                and comp_mean > -950.0
+                and comp_mean <= config["abdomen_gas_hu_floor"]
+            )
+            if is_normal_gas or is_deep_colonic_gas:
+                suppress |= comp
+
+        else:
+            # Neck (trachea/pharynx/larynx all expected), spine, extremity, unknown:
+            # suppress all internal air structures as normal anatomy
+            suppress |= comp
+
+    return suppress
+
+
+def _step_3_anatomy_suppression(
+    hu_array: np.ndarray,
+    body_mask: np.ndarray,
+    region: str,
+    config: dict = None,
+) -> np.ndarray:
     """
     Build the Search Mask by removing expected normal anatomy.
     
@@ -228,154 +386,86 @@ def _step_3_anatomy_suppression(hu_array: np.ndarray, body_mask: np.ndarray, reg
       - Abdomen: suppress subcutaneous fat border AND internal gas pockets
                  that are geometrically consistent with normal bowel/stomach.
       - Head: erode skull boundary deeply, suppress bone.
+
+    All thresholds come from TRIAGE_CONFIG (no inline magic numbers).
+    Air suppression is handled by _suppress_air_components().
     """
+    if config is None:
+        config = TRIAGE_CONFIG
+
     search_mask = body_mask.copy()
     
-    # Distance transform (reused across all regions)
+    # Distance transform (reused across all regions and in _suppress_air_components)
     dist = ndimage.distance_transform_edt(body_mask)
     
-    # Adaptive bone threshold
-    # Use P99 to capture the dense cortical bone at the top of the distribution.
-    # The floor of 350 HU ensures that contrast-enhanced vessels (~200 HU) are NOT
-    # suppressed as bone, while all types of bone (>350) are caught.
+    # ── Adaptive bone threshold ──
+    # P99 captures dense cortical bone at the top of the distribution.
+    # The config floor ensures contrast-enhanced vessels (~200 HU) are NOT
+    # suppressed as bone, while all bone (> floor) is caught.
     body_sample = hu_array[body_mask][::8]
     if body_sample.size > 0:
         p99 = float(np.percentile(body_sample, 99))
     else:
-        p99 = 350.0
-    bone_threshold = max(p99, 350.0)
+        p99 = config["bone_threshold_floor_hu"]
+    bone_threshold = max(p99, config["bone_threshold_floor_hu"])
     
-    # Bone suppression: threshold + morphological dilation to catch partial-volume edges
-    # Use >= so that pixels at EXACTLY the threshold (e.g., skull at 800 when p99=800) are caught
+    # Bone suppression: threshold + dilation to catch partial-volume edges
     bone_candidates = (hu_array >= bone_threshold) & body_mask
-    # 3 iterations of dilation: catches the bone itself + 3px of partial-volume edge
-    # around it (important for thick cortical bone in pelvis, skull, femur)
     bone_dilated = ndimage.binary_dilation(bone_candidates, iterations=3)
     
-    struct_full = ndimage.generate_binary_structure(2, 2)
-    
+    # ── Per-region boundary erosion and bone suppression ──
+    erosion_px = config["boundary_erosion_px"]
     if region == "head":
-        # Deep skull erosion (skull is thick, ~8-12mm)
-        search_mask = search_mask & (dist > 8)
+        search_mask = search_mask & (dist > erosion_px.get("head", 8))
         search_mask = search_mask & ~bone_dilated
-        # Suppress CSF ventricles (expected anatomy, HU 0-15)
-        # CSF is low-density fluid that would otherwise appear as a hypodense outlier
+        # Suppress CSF ventricles (expected anatomy, HU ~0-15) to avoid
+        # hypodense outlier false positives
         csf_mask = (hu_array < 15) & (hu_array > -10) & search_mask
         search_mask = search_mask & ~csf_mask
-        
+
     elif region == "chest":
-        # Erode outer boundary
-        search_mask = search_mask & (dist > 4)
+        search_mask = search_mask & (dist > erosion_px.get("chest", 4))
         search_mask = search_mask & ~bone_dilated
-        
-        # Suppress normal chest air structures (lungs, trachea, bronchi)
-        air_mask = (hu_array < -500) & body_mask
-        air_labels, air_n = ndimage.label(air_mask, structure=struct_full)
-        if air_n > 0:
-            air_sizes = np.bincount(air_labels.ravel())
-            air_sizes[0] = 0
-            for label_id in range(1, air_n + 1):
-                sz = air_sizes[label_id]
-                comp_air = (air_labels == label_id)
-                comp_mean = float(np.mean(hu_array[comp_air]))
-                
-                if sz > 5000 and comp_mean > -980:
-                    # Large air field with typical lung density (-850 +/- 100 HU)
-                    # Always suppress -- these are expected bilateral lungs
-                    search_mask = search_mask & ~comp_air
-                elif sz < 2000:
-                    # Small airway: trachea (~500-1000px), bronchi (~200-600px)
-                    search_mask = search_mask & ~(air_labels == label_id)
-                elif sz > 5000 and comp_mean <= -980:
-                    # Large air at near-vacuum density: leaked background air
-                    # from body mask dilation, NOT pneumothorax.
-                    # Real PTX density is -900 to -960; background is -1024.
-                    search_mask = search_mask & ~comp_air
-                # Medium air (2000-5000px): potential pneumothorax -- KEEP
-        
+        # Suppress normal chest air (lungs, trachea, bronchi) via unified helper
+        air_suppress = _suppress_air_components(hu_array, body_mask, dist, "chest", config)
+        search_mask = search_mask & ~air_suppress
+
     elif region == "abdomen":
-        # Subcutaneous fat: within 15px of boundary AND fat-density
-        subcutaneous_fat = (dist < 15) & (hu_array < -30) & (hu_array > -200)
+        # Subcutaneous fat band: near boundary AND fat HU range
+        subq_band = config["abdomen_subq_fat_band_px"]
+        subcutaneous_fat = (dist < subq_band) & (hu_array < -30) & (hu_array > -200)
         search_mask = search_mask & ~subcutaneous_fat
         search_mask = search_mask & ~bone_dilated
-        
         # Suppress normal internal gas pockets (bowel, stomach)
-        # Strategy: find connected air regions that are compact and moderate-sized
-        air_mask = (hu_array < -200) & body_mask & (dist > 15)  # internal air only
-        air_labels, air_n = ndimage.label(air_mask, structure=struct_full)
-        if air_n > 0:
-            air_sizes = np.bincount(air_labels.ravel())
-            air_sizes[0] = 0
-            air_slices = ndimage.find_objects(air_labels)
-            for label_id in range(1, air_n + 1):
-                sz = air_sizes[label_id]
-                if sz < 50:  # tiny noise
-                    search_mask = search_mask & ~(air_labels == label_id)
-                    continue
-                sl = air_slices[label_id - 1]
-                if sl is None:
-                    continue
-                y_sl, x_sl = sl
-                w = x_sl.stop - x_sl.start
-                h = y_sl.stop - y_sl.start
-                bbox_area = w * h
-                solidity = sz / float(bbox_area) if bbox_area > 0 else 0
-                
-                # Compute mean HU of this air pocket
-                comp_mask_air = (air_labels == label_id)
-                air_mean_hu = float(np.mean(hu_array[comp_mask_air]))
-                
-                # Normal bowel gas: compact, moderate size, moderate density (-200 to -500 HU)
-                # Pathological free air: very low density (< -700 HU), often large, 
-                #   irregular, and in non-dependent (anterior/superior) locations
-                is_normal_gas = (
-                    sz < 5000 
-                    and solidity > 0.25 
-                    and air_mean_hu > -700  # bowel gas is typically -200 to -500 HU
-                )
-                if is_normal_gas:
-                    search_mask = search_mask & ~(air_labels == label_id)
-                    
+        air_suppress = _suppress_air_components(hu_array, body_mask, dist, "abdomen", config)
+        search_mask = search_mask & ~air_suppress
+
     elif region == "neck":
-        # Neck: suppress airway (trachea, pharynx), spine, and boundary
-        search_mask = search_mask & (dist > 5)
+        search_mask = search_mask & (dist > erosion_px.get("default", 5))
         search_mask = search_mask & ~bone_dilated
-        # Suppress ALL internal air structures (trachea, pharynx, larynx are all expected)
-        air_mask = (hu_array < -200) & body_mask
-        air_labels, air_n = ndimage.label(air_mask, structure=struct_full)
-        if air_n > 0:
-            air_sizes = np.bincount(air_labels.ravel())
-            air_sizes[0] = 0
-            for label_id in range(1, air_n + 1):
-                # In neck, suppress any air structure — airways are expected everywhere
-                search_mask = search_mask & ~(air_labels == label_id)
-                
+        # Suppress ALL internal air (trachea, pharynx, larynx are all expected)
+        air_suppress = _suppress_air_components(hu_array, body_mask, dist, "neck", config)
+        search_mask = search_mask & ~air_suppress
+
     elif region == "pelvis":
-        search_mask = search_mask & (dist > 5)
+        search_mask = search_mask & (dist > erosion_px.get("default", 5))
         search_mask = search_mask & ~bone_dilated
-        # Suppress compact internal gas (rectum, bladder gas)
-        air_mask = (hu_array < -200) & body_mask & (dist > 10)
-        air_labels, air_n = ndimage.label(air_mask, structure=struct_full)
-        if air_n > 0:
-            air_sizes = np.bincount(air_labels.ravel())
-            air_sizes[0] = 0
-            for label_id in range(1, air_n + 1):
-                if air_sizes[label_id] < 2000:
-                    search_mask = search_mask & ~(air_labels == label_id)
+        # Suppress compact internal gas (rectum, bladder)
+        air_suppress = _suppress_air_components(hu_array, body_mask, dist, "pelvis", config)
+        search_mask = search_mask & ~air_suppress
+
     else:
         # Spine, Extremity, Unknown — suppress bone + boundary
-        search_mask = search_mask & (dist > 5)
+        search_mask = search_mask & (dist > erosion_px.get("default", 5))
         search_mask = search_mask & ~bone_dilated
-        # Suppress internal air in generic/unknown regions
-        air_mask = (hu_array < -500) & body_mask & (dist > 10)
-        search_mask = search_mask & ~air_mask
+        # Suppress all air in generic/unknown regions
+        air_suppress = _suppress_air_components(hu_array, body_mask, dist, "other", config)
+        search_mask = search_mask & ~air_suppress
 
     # ── Universal post-suppression cleanup ──
-    # After bone removal, gaps where bone was may contain background air (-1024 HU)
-    # that would contaminate the statistical baseline. Remove these residual air
-    # pixels, but ONLY in regions where air is NOT the detection target.
-    # In chest and abdomen, we intentionally keep air so pneumothorax and
-    # pneumoperitoneum can be detected.
+    # After bone removal, gaps may contain background air (-1024 HU) that would
+    # contaminate the statistical baseline.  Remove these residual air pixels
+    # ONLY in regions where air is NOT the detection target.
     if region not in ("chest", "abdomen"):
         search_mask = search_mask & (hu_array > -500)
 
@@ -622,17 +712,41 @@ def _step_7_geometric_filtering_and_confidence(
     search_mask: np.ndarray,
     body_mask: np.ndarray,
     region: str,
-) -> List[Finding]:
+    config: dict = None,
+) -> Tuple[List[Finding], List[Finding]]:
     """
     Apply geometric sanity checks and assign confidence scores.
-    
+
+    Returns a tuple of (findings, borderline_findings):
+
+    findings:
+        Confidence >= config["confidence_gate_display"] (default 0.30).
+        These are shown live on the frontend via ws_server.py.
+
+    borderline_findings:
+        Confidence in [config["confidence_gate_borderline"], config["confidence_gate_display"])
+        i.e. [0.10, 0.30) by default.
+        NOT shown on the frontend, but passed into VolumeAccumulator alongside
+        normal findings so they reach finding_tracker → seed_clusterer → Path A.
+        This gives Path A more raw material to attempt corroboration against
+        Path B's independently-found candidates — the key reason for this tier.
+
+    Anything below confidence_gate_borderline (< 0.10) is dropped as noise.
+
     Key improvements:
       - Border-touching components are rejected.
       - Elongated structures (aspect > 6) are penalized heavily (likely vessels/artifacts).
       - Low-solidity components (scattered noise) are rejected.
       - Confidence starts at 0.5 and must be EARNED through evidence, not given.
     """
-    findings = []
+    if config is None:
+        config = TRIAGE_CONFIG
+
+    display_gate = config["confidence_gate_display"]
+    borderline_gate = config["confidence_gate_borderline"]
+
+    findings: List[Finding] = []
+    borderline_findings: List[Finding] = []
     
     for comp in components:
         area = comp["area"]
@@ -647,23 +761,90 @@ def _step_7_geometric_filtering_and_confidence(
         bbox_area = w * h
         solidity = area / float(bbox_area)
         
-        # Too thin/elongated -> likely vessel cross-section or beam artifact
+        # Too thin/elongated → likely vessel cross-section or beam artifact
         if aspect > 6.0:
             continue
             
-        # Too scattered -> noise
+        # Too scattered → noise
         if solidity < 0.15:
             continue
         
+        # Image-boundary rejection: components whose bounding box touches
+        # the image edge are virtually always CT table, scanner gantry, or
+        # background air leaking through the body mask — never true findings.
+        img_h, img_w = search_mask.shape
+        img_area = img_h * img_w
+        if x <= 1 or y <= 1 or (x + w) >= img_w - 1 or (y + h) >= img_h - 1:
+            continue
+
+        # ── CT gantry / table arc rejection ───────────────────────────────────
+        # The CT scanner gantry appears as a large arc at the top of the FOV
+        # with extreme negative HU (~−900 to −1000). Three complementary rules:
+
+        # 1. Oversized bbox: a real intra-organ finding is NEVER larger than
+        #    12% of the image area. The gantry arc bbox is typically 30–80%.
+        bbox_fraction = bbox_area / float(img_area)
+        if bbox_fraction > 0.12:
+            continue
+
+        # 2. Body containment: at least 40% of the component's pixels must
+        #    fall inside the body mask. Gantry/table pixels are outside it.
+        pixels_in_body = np.sum(comp["mask"] & body_mask)
+        if area > 0 and (pixels_in_body / area) < 0.40:
+            continue
+
+        # 3. Top-edge gantry arc: bboxes whose top edge is in the top 5% of
+        #    the image are almost certainly scanner hardware, not tissue.
+        if y < img_h * 0.05:
+            continue
+
         # Border touching: if the component mask touches the search mask boundary
         comp_dilated = ndimage.binary_dilation(comp["mask"], iterations=1)
         border_contact = np.sum(comp_dilated & ~search_mask)
         if border_contact > area * 0.3:
             continue
-        
+
+        # ── Outer-body dilation band check ────────────────────────────────────
+        # The body mask in _step_1 is dilated 15px outward into subcutaneous
+        # fat.  Findings whose CENTROID falls in this outer band are almost
+        # certainly in fat or skin — not inside any organ.
+        # Strategy: use the distance transform of the UNDILATED body mask (if
+        # available via body_mask_eroded) or proxy via dist_from_body_center.
+        # We use the simpler proxy here: if the component centroid is very
+        # close to the body mask boundary (dist <= outer_band_px), cap confidence.
+        cy, cx = comp["centroid"]
+        outer_band_px = config.get("outer_body_band_px", 18) if config else 18
+        centroid_in_band = False
+        try:
+            cy_int = int(round(cy))
+            cx_int = int(round(cx))
+            if 0 <= cy_int < body_mask.shape[0] and 0 <= cx_int < body_mask.shape[1]:
+                # Compute distance from centroid to body mask edge using a local crop
+                local_pad = outer_band_px + 5
+                y0 = max(0, cy_int - local_pad)
+                y1_loc = min(body_mask.shape[0], cy_int + local_pad + 1)
+                x0 = max(0, cx_int - local_pad)
+                x1_loc = min(body_mask.shape[1], cx_int + local_pad + 1)
+                local_mask = body_mask[y0:y1_loc, x0:x1_loc]
+                local_dist = ndimage.distance_transform_edt(local_mask)
+                local_cy = cy_int - y0
+                local_cx = cx_int - x0
+                if 0 <= local_cy < local_dist.shape[0] and 0 <= local_cx < local_dist.shape[1]:
+                    dist_to_edge = local_dist[local_cy, local_cx]
+                    centroid_in_band = dist_to_edge <= outer_band_px
+        except Exception:
+            pass  # distance check is best-effort — never fail hard
+
         # ── Confidence calculation (start conservative, earn confidence) ──
         conf = 0.4  # conservative base
-        
+
+        # Findings in the outer fat/skin band get confidence capped at the
+        # borderline gate so they never reach the display tier at Phase 1.
+        # The organ postfilter in Phase 2 will give a definitive verdict.
+        if centroid_in_band:
+            outer_cap = (config.get("confidence_gate_borderline", 0.10) + 0.05) if config else 0.15
+            conf = min(conf, outer_cap)
+
         evidence_count = comp.get("evidence_count", 3)
         global_z = comp.get("global_z", 3.5)
         local_contrast = comp.get("local_contrast", 80)
@@ -712,10 +893,6 @@ def _step_7_geometric_filtering_and_confidence(
         
         conf = max(0.0, min(1.0, conf))
         
-        # Final confidence gate: below 0.3 is noise
-        if conf < 0.3:
-            continue
-        
         # ── Severity score ──
         # Based on statistical extremity and physical size
         z_contribution = min(1.0, global_z / 10.0) * 0.6
@@ -742,9 +919,17 @@ def _step_7_geometric_filtering_and_confidence(
             severity_score=round(severity, 2),
             anomaly_type=anomaly_type,
         )
-        findings.append(f)
-        
-    return findings
+
+        # ── Two-tier output ──
+        # Display tier: shown live on frontend
+        if conf >= display_gate:
+            findings.append(f)
+        # Borderline tier: feeds Path A only, never shown on frontend
+        elif conf >= borderline_gate:
+            borderline_findings.append(f)
+        # Below borderline_gate: drop as noise (< 0.10 confidence)
+
+    return findings, borderline_findings
 
 
 # ─── Step 9/10: Emergency Score & Action ─────────────────────────────────────
@@ -801,7 +986,12 @@ def screen_slice(
     Universal CT Slice Triage Screening.
     
     Processes a single 2D HU array through the complete 10-step pipeline
-    and returns a TriageResult with findings, emergency score, and action.
+    and returns a TriageResult with findings, borderline_findings, emergency
+    score, and action.
+
+    findings:           Confidence >= 0.30 — shown live on frontend.
+    borderline_findings: Confidence [0.10, 0.30) — feeds Path A corroboration
+                        only; NOT pushed to frontend WebSocket.
     """
     t_start = time.perf_counter()
 
@@ -811,8 +1001,9 @@ def screen_slice(
         elapsed = (time.perf_counter() - t_start) * 1000
         return TriageResult(
             slice_number=slice_id, body_region="unknown", scan_type="unknown",
-            statistics={}, findings=[], emergency_score=0, action="CONTINUE",
-            processing_time_ms=round(elapsed, 2), failure_reason=fail_reason,
+            statistics={}, findings=[], borderline_findings=[], emergency_score=0,
+            action="CONTINUE", processing_time_ms=round(elapsed, 2),
+            failure_reason=fail_reason,
         )
 
     # Step 1: Body Mask
@@ -822,7 +1013,7 @@ def screen_slice(
     scan_type = _step_2A_scan_type(hu_array, body_mask)
     region = _step_2B_body_region(hu_array, body_mask, body_part_hint)
     
-    # Step 3: Anatomy Suppression
+    # Step 3: Anatomy Suppression (uses TRIAGE_CONFIG)
     search_mask = _step_3_anatomy_suppression(hu_array, body_mask, region)
     
     # Step 4: Adaptive Baseline
@@ -835,8 +1026,8 @@ def screen_slice(
     validated_comps = _step_6_local_context_validation(raw_comps, hu_array, search_mask, stats)
     num_validated = len(validated_comps)
     
-    # Step 7/8: Geometric Filtering & Confidence
-    findings = _step_7_geometric_filtering_and_confidence(
+    # Step 7/8: Geometric Filtering & Confidence — two-tier output
+    findings, borderline_findings = _step_7_geometric_filtering_and_confidence(
         validated_comps, stats, search_mask, body_mask, region
     )
     
@@ -844,7 +1035,7 @@ def screen_slice(
     if history_tracker:
         history_tracker.add_slice_findings(slice_id, findings)
     
-    # Step 9/10: Score and Action
+    # Step 9/10: Score and Action (based on display-tier findings only)
     score, action = _step_9_10_score_and_action(findings)
     
     elapsed = (time.perf_counter() - t_start) * 1000
@@ -853,7 +1044,8 @@ def screen_slice(
         f"Slice {slice_id} | {region.title()} | {scan_type.title()} | "
         f"Mean: {stats['mean']:.1f} | Std: {stats['std']:.1f} | "
         f"Comps (Raw/Valid): {num_raw}/{num_validated} | "
-        f"Findings: {len(findings)} | Score: {score} | {action} | {elapsed:.1f}ms"
+        f"Findings: {len(findings)} (display) + {len(borderline_findings)} (borderline) | "
+        f"Score: {score} | {action} | {elapsed:.1f}ms"
     )
     logger.info(log_msg)
 
@@ -863,6 +1055,7 @@ def screen_slice(
         scan_type=scan_type,
         statistics={k: round(v, 2) for k, v in stats.items()},
         findings=findings,
+        borderline_findings=borderline_findings,
         emergency_score=score,
         action=action,
         processing_time_ms=round(elapsed, 2),

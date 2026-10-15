@@ -26,6 +26,7 @@ import logging
 import threading
 import asyncio
 import multiprocessing
+import multiprocessing.shared_memory
 from datetime import datetime, timezone
 
 import numpy as np
@@ -197,7 +198,14 @@ class Phase1Pipeline:
 
         # ── Step 4: Triage Screening ──
         body_part_hint = slice_data.get("body_part", "") or slice_data.get("study_description", "")
-        triage_result = screen_slice(hu_array, body_part_hint=body_part_hint)
+        triage_result = screen_slice(hu_array, slice_id=instance_number, body_part_hint=body_part_hint)
+
+        # Record this slice's body_region guess for later majority-vote capture
+        # at Phase 2 trigger time.  Dict keyed by instance_number to handle
+        # out-of-order arrival safely.
+        if not hasattr(self, "_triage_regions_by_instance"):
+            self._triage_regions_by_instance: dict = {}
+        self._triage_regions_by_instance[instance_number] = triage_result.body_region
 
         # ── Step 5: Feed VolumeAccumulator (non-blocking, Package 1) ──
         # Accumulator receives the HU-transformed array and findings
@@ -223,11 +231,16 @@ class Phase1Pipeline:
             "body_part": slice_data.get("body_part", ""),
             "study_description": slice_data.get("study_description", ""),
             "series_description": slice_data.get("series_description", ""),
+            "clinical_meta": slice_data.get("clinical_meta", {}),
         }
+        # CRITICAL (G1 fix): pass display findings AND borderline findings into
+        # the accumulator so they reach finding_tracker → seed_clusterer → Path A.
+        # ws_server.py still only serialises triage_result.findings (display tier)
+        # so borderline findings NEVER appear on the frontend.
         self.accumulator.add(
             instance_number,
             hu_array,  # HU-transformed, not raw pixel array
-            triage_result.findings,
+            triage_result.findings + triage_result.borderline_findings,
             spacing_meta,
         )
 
@@ -405,6 +418,23 @@ class Phase1Pipeline:
 
             self._check_phase2_trigger()
 
+    def _collect_phase1_region_votes(self) -> list:
+        """
+        Return the list of per-slice body_region guesses recorded during
+        the current series, then clear the buffer for the next series.
+
+        Excludes "unknown" votes (no data) so the majority vote is not
+        skewed by slices where the histogram heuristic gave up entirely.
+
+        Returns:
+            List of non-unknown body_region strings, one per processed slice.
+        """
+        regions = getattr(self, "_triage_regions_by_instance", {})
+        votes = [r for r in regions.values() if r and r != "unknown"]
+        # Reset for the next series
+        self._triage_regions_by_instance = {}
+        return votes
+
     def _check_phase2_trigger(self) -> None:
         """
         Check if the volume accumulator is ready and spawn Phase 2.
@@ -419,6 +449,39 @@ class Phase1Pipeline:
                     self.accumulator.export_volume()
                 )
                 series_meta = self.accumulator.get_series_metadata()
+
+                # ── Prior-study comparator (for the report COMPARISON section) ──
+                try:
+                    from .prior_study_lookup import find_prior_studies
+                    exports_dir = os.path.abspath(
+                        os.path.join(os.path.dirname(__file__), "..", "exports")
+                    )
+                    series_meta["prior_studies"] = find_prior_studies(
+                        exports_dir,
+                        series_meta.get("patient_id", ""),
+                        series_meta.get("study_instance_uid", ""),
+                    )
+                except Exception as _prior_err:
+                    logger.warning("Prior-study lookup failed (non-fatal): %s", _prior_err)
+                    series_meta["prior_studies"] = []
+
+                # ── G4 fix: capture phase1_guessed_region BEFORE reset() ──
+                # Majority-vote over all slices' body_region guesses.
+                # Injected into series_meta so it survives the multiprocessing
+                # boundary (no IPC or shared memory needed).
+                # Must happen BEFORE accumulator.reset() which clears slice data.
+                region_votes = self._collect_phase1_region_votes()
+                if region_votes:
+                    from collections import Counter
+                    majority_region = Counter(region_votes).most_common(1)[0][0]
+                    series_meta["phase1_guessed_region"] = majority_region
+                    logger.info(
+                        "Phase 2 trigger: phase1_guessed_region='%s' "
+                        "(majority vote from %d slices, distribution: %s)",
+                        majority_region,
+                        len(region_votes),
+                        dict(Counter(region_votes)),
+                    )
 
                 logger.info(
                     "Phase 2 trigger fired: volume shape=%s, "
@@ -435,14 +498,24 @@ class Phase1Pipeline:
                     f"spacing {spacing}"
                 )
 
-                # Spawn Phase 2 as a separate process for clean memory
-                # teardown of TotalSegmentator's C++-backed tensors.
-                from phase2_segmentation.lifecycle_manager import run_phase2
+                # ── Shared-memory transfer (Windows spawn cannot pickle large arrays) ──
+                # Writing the volume to a SharedMemory block lets us pass only
+                # a tiny (name, shape, dtype) tuple across the process boundary
+                # instead of pickling 200-400 MB through a Windows pipe.
+                from phase2_segmentation.lifecycle_manager import run_phase2_shm
+
+                shm = multiprocessing.shared_memory.SharedMemory(
+                    create=True, size=volume.nbytes
+                )
+                shm_arr = np.ndarray(volume.shape, dtype=volume.dtype, buffer=shm.buf)
+                np.copyto(shm_arr, volume)
 
                 p = multiprocessing.Process(
-                    target=run_phase2,
+                    target=run_phase2_shm,
                     args=(
-                        volume,
+                        shm.name,
+                        volume.shape,
+                        str(volume.dtype),
                         findings_per_slice,
                         instance_numbers,
                         spacing,
@@ -452,6 +525,30 @@ class Phase1Pipeline:
                     daemon=True,
                 )
                 p.start()
+
+                # On Windows the shared-memory segment is a named file mapping;
+                # it stays alive as long as at least one handle is open.
+                # We keep the parent handle open briefly after p.start() so the
+                # child has time to open its own handle, then close (not unlink)
+                # — the child calls unlink() after copying the data.
+                # A 2-second sleep in a background thread avoids blocking the
+                # main pipeline loop.
+                import threading as _threading
+                _shm_ref = shm   # keep alive in closure
+
+                def _close_shm_after_delay(s, delay=2.0):
+                    import time as _time
+                    _time.sleep(delay)
+                    try:
+                        s.close()
+                    except Exception:
+                        pass
+
+                _threading.Thread(
+                    target=_close_shm_after_delay,
+                    args=(_shm_ref,),
+                    daemon=True,
+                ).start()
 
                 logger.info(
                     "Phase 2 subprocess spawned (PID=%s)",

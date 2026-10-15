@@ -1,22 +1,3 @@
-"""
-ct_machine_emulator.py — Clinical CT Scanner Emulator
-
-This script acts as a real CT machine for Phase 1 testing. 
-Instead of sending random slices from a folder, it:
-  1. Scans a dataset directory (like TCIA).
-  2. Groups all files logically by Patient ID -> Study UID -> Series UID.
-  3. Sorts the slices within a series by their exact InstanceNumber.
-  4. Connects to our DICOM Listener (SCP) and streams the slices in order,
-     simulating the precise timing and sequence of a live hospital CT scan.
-
-Usage:
-    # Run the ingestion pipeline first in another terminal:
-    python -m phase1_ingestion.pipeline
-
-    # Then run the emulator:
-    python -m phase1_ingestion.ct_machine_emulator --dir "path/to/dataset"
-"""
-
 import os
 import time
 import argparse
@@ -35,10 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_patient_registry(dicom_dir: str) -> dict:
-    """
-    Scans the directory and builds a hierarchical registry:
-    PatientID -> StudyInstanceUID -> SeriesInstanceUID -> list of dicts(InstanceNumber, filepath)
-    """
+
     print(f"[{time.strftime('%H:%M:%S')}] Scanning directory: {dicom_dir}")
     
     dcm_files = []

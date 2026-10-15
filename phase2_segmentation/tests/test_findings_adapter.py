@@ -82,14 +82,14 @@ def test_to_structured_findings_basic():
     assert "CAND-001" in cand_map
     assert "CAND-002" in cand_map
     
-    assert cand_map["CAND-001"]["type"] == "lesion"
+    assert cand_map["CAND-001"]["type"] == "soft-tissue lesion"   # HU-derived (45 HU)
     assert cand_map["CAND-001"]["location"] == "Liver"
-    assert cand_map["CAND-001"]["confidence"] == 0.85
+    assert "confidence" not in cand_map["CAND-001"]               # internal score never exported
     assert cand_map["CAND-001"]["shape"]["volume_cc"] == 12.5
     assert cand_map["CAND-001"]["shape"]["margin"] == "well-defined"
     assert cand_map["CAND-001"]["density_hu"]["mean"] == 45.0
     
-    assert cand_map["CAND-002"]["type"] == "cyst"
+    assert cand_map["CAND-002"]["type"] == "fluid collection"     # HU-derived
 
 def test_to_structured_findings_empty():
     series_meta = {

@@ -1,27 +1,36 @@
-"""
-validator.py
-------------
-Report validator – the anti-hallucination gate.
-
-Before the LLM output is accepted, it is compared against the Structured Findings JSON
-across four axes:
-
-    1.  Numbers       – every integer and decimal from the JSON must be present.
-    2.  Measurements  – every dimension must be reproduced exactly.
-    3.  Densities     – every HU value must be reproduced.
-    4.  Key terms     – organs, anomaly types, location words.
-
-If any check fails the LLM output is REJECTED.
-"""
-
 from __future__ import annotations
 
 import logging
 import re
-from typing import Set, NamedTuple
+from typing import Optional, Set, NamedTuple
 
 from app.models import StructuredFindings, ValidationResult, ValidatorDetails
 from app.utils import extract_numbers, extract_words, format_dimension_string
+from services.template_engine import TemplateEngine
+
+_NUM_TOLERANCE = 0.051   # template rounds to 1 decimal; accept that, nothing looser
+
+
+def _number_present(req: str, llm_numbers: Set[str]) -> bool:
+    """True if ``req`` appears in the LLM text exactly or equal after display rounding."""
+    if req in llm_numbers:
+        return True
+    try:
+        r = float(req)
+    except ValueError:
+        return False
+    for t in llm_numbers:
+        try:
+            if abs(float(t) - r) <= _NUM_TOLERANCE:
+                return True
+        except ValueError:
+            continue
+    return False
+
+
+def _is_volume_key(key: str) -> bool:
+    k = key.lower()
+    return k == "volume" or k.endswith("_cc")
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +65,7 @@ class ReportValidator:
         self,
         findings: StructuredFindings,
         llm_text: str,
+        reference_text: Optional[str] = None,
     ) -> ValidationResult:
         """
         Multi-level validation with strong anti-hallucination design:
@@ -67,12 +77,20 @@ class ReportValidator:
         failed_check = None
         reason = ""
 
-        # LEVEL 1: MANDATORY FIELD VALIDATION
-        mandatory_check = self._validate_mandatory_fields(findings, llm_text)
-        if not mandatory_check.passed:
+        # LEVEL 0: SECTION HEADERS — must be present and intact
+        header_check = self._validate_section_headers(llm_text)
+        if not header_check.passed:
             details.medical_terms = False
-            failed_check = "mandatory_fields"
-            reason = mandatory_check.reason
+            failed_check = "section_headers"
+            reason = header_check.reason
+
+        # LEVEL 1: MANDATORY FIELD VALIDATION
+        if not failed_check:
+            mandatory_check = self._validate_mandatory_fields(findings, llm_text)
+            if not mandatory_check.passed:
+                details.medical_terms = False
+                failed_check = "mandatory_fields"
+                reason = mandatory_check.reason
         
         # LEVEL 2A: NUMBERS VALIDATION
         if not failed_check:
@@ -81,6 +99,14 @@ class ReportValidator:
                 details.numbers = False
                 failed_check = "numbers"
                 reason = numbers_check.reason
+
+        # LEVEL 2A': INVENTED NUMBERS — nothing may appear that the template did not contain
+        if not failed_check and reference_text:
+            invented = extract_numbers(llm_text) - extract_numbers(reference_text)
+            if invented:
+                details.numbers = False
+                failed_check = "numbers"
+                reason = f"NUMBERS: Not present in source report - {sorted(invented)[:5]}"
 
         # LEVEL 2B: MEASUREMENTS VALIDATION  
         if not failed_check:
@@ -151,9 +177,12 @@ class ReportValidator:
         
         for organ in findings.organs:
             # Check organ name is present (ALWAYS mandatory)
+            # Check organ name is present (ALWAYS mandatory). Accept either the raw
+            # key words or the display label the template uses (single source of truth).
             organ_words = extract_words(organ.organ.lower())
-            if not organ_words.issubset(llm_words):
-                missing_organ_words = organ_words - llm_words
+            label_words = extract_words(TemplateEngine._label(organ.organ).lower())
+            if not (organ_words.issubset(llm_words) or label_words.issubset(llm_words)):
+                missing_organ_words = label_words - llm_words
                 return ValidationCheck(
                     False, 
                     f"MANDATORY: Organ name missing - '{' '.join(missing_organ_words)}' not found in report"
@@ -230,7 +259,7 @@ class ReportValidator:
         req_numbers, _, _, _ = self._extract_from_json(findings)
         
         llm_numbers = extract_numbers(llm_text)
-        missing_numbers = req_numbers - llm_numbers
+        missing_numbers = {n for n in req_numbers if not _number_present(n, llm_numbers)}
         if missing_numbers:
             return ValidationCheck(
                 False,
@@ -278,7 +307,7 @@ class ReportValidator:
             return ValidationCheck(True)
         
         llm_densities = self._extract_density_values(llm_text)
-        norm_req_densities = {self._norm(m) for m in req_densities}
+        norm_req_densities = {self._norm_hu(m) for m in req_densities}
         missing_densities = norm_req_densities - llm_densities
         if missing_densities:
             return ValidationCheck(
@@ -360,29 +389,35 @@ class ReportValidator:
 
     def _extract_density_values(self, text: str) -> Set[str]:
         """
-        Extract density values from text, handling ranges like '-10 to 45 HU'.
-        Returns normalized set of density strings like '18 hu', '-10 hu', etc.
+        Extract HU density values from report text.
+
+        Matches patterns the template emits:
+          - simple:   "18 HU"  or  "30 HU"
+          - range:    "-10 to 45 HU"  (both numbers are captured separately)
+
+        Strategy: anchor on every \\bHU\\b token and look *backwards* up to
+        30 characters for the last decimal/integer number.  This avoids the
+        false-positive problem of scanning 50 chars *forward* from every number
+        in the text (which captured millimetre values near density keywords).
+
+        Returns normalised strings via _norm_hu, e.g. '18 hu', '-10 hu'.
         """
-        densities = set()
-        
-        # First, get all numbers that appear in density contexts
-        for match in re.finditer(r'-?\d+(?:\.\d+)?', text):
-            num = match.group()
-            start, end = match.span()
-            
-            # Look for 'HU' within reasonable distance after the number
-            context_after = text[end:end + 50]  # look ahead up to 50 chars
-            context_before = text[max(0, start-20):start]  # look back up to 20 chars
-            
-            # Check if this number is in a density context
-            if ('HU' in context_after or 'hu' in context_after.lower()) and \
-               any(keyword in context_before.lower() or keyword in context_after.lower() 
-                   for keyword in ['density', 'range:', 'mean', 'sd', 'std']):
-                densities.add(self._norm(f"{num} HU"))
-        
+        densities: Set[str] = set()
+        for m in re.finditer(r'\bHU\b', text, re.IGNORECASE):
+            before = text[max(0, m.start() - 40): m.start()]
+            # Capture ALL numbers in the look-back window so that range patterns
+            # like "-10 to 45 HU" contribute both bounds ('-10 hu' and '45 hu').
+            nums = re.findall(r'-?\d+(?:\.\d+)?', before)
+            for n in nums:
+                densities.add(self._norm_hu(f"{n} HU"))
         return densities
 
     def _norm(self, s: str) -> str:
+        """Normalise a millimetre measurement string (e.g. '22.4 x 14.1 mm').
+        Strips embedded 'mm', canonicalises × / x / by separators, collapses
+        whitespace, lowercases, and appends a single trailing ' mm'.
+        Do NOT use this for HU density strings — use _norm_hu instead.
+        """
         # 1. Strip out all 'mm' units (we will safely append a single one at the end)
         s = re.sub(r"\s*mm\s*", " ", s, flags=re.IGNORECASE)
 
@@ -395,8 +430,27 @@ class ReportValidator:
         # 4. Re-append the standard unit
         return s + " mm"
 
+    @staticmethod
+    def _norm_hu(s: str) -> str:
+        """Normalise a Hounsfield-unit density string (e.g. '18 HU', '-10 HU').
+        Lowercases and collapses whitespace; does NOT append 'mm'.
+        """
+        return re.sub(r"\s+", " ", s).strip().lower()
+
     def _fmt(self, val: float) -> str:
-        return str(int(val)) if val == int(val) else str(val)
+        # Must mirror template_engine._fmt (integers bare, otherwise 1 decimal)
+        return str(int(val)) if val == int(val) else f"{val:.1f}"
+
+    @staticmethod
+    def _validate_section_headers(llm_text: str) -> ValidationCheck:
+        required_headers = ["INDICATION:", "TECHNIQUE:", "FINDINGS:", "IMPRESSION:"]
+        missing = [h for h in required_headers if h not in llm_text]
+        if missing:
+            return ValidationCheck(
+                False,
+                f"SECTION_HEADERS: Missing required section(s): {missing}"
+            )
+        return ValidationCheck(True)
 
     def _extract_from_json(self, findings: StructuredFindings) -> tuple[Set[str], Set[str], Set[str], Set[str]]:
         numbers: Set[str] = set()
@@ -408,21 +462,16 @@ class ReportValidator:
             terms.update(extract_words(organ.organ))
             if organ.location:
                 terms.update(extract_words(organ.location))
-            
-            # NOTE: anomaly count (e.g. "1") is intentionally NOT added to
-            # required numbers. The LLM may legitimately rephrase "1 anomaly"
-            # as "a lesion" — that is valid medical English and should not
-            # be rejected. Clinical numbers (measurements, densities,
-            # confidence) are enforced below.
-            
+
             if organ.dimensions_mm:
-                dims = {k: v for k, v in organ.dimensions_mm.as_dict().items() if v is not None}
-                if dims:
-                    for v in dims.values():
-                        numbers.add(self._fmt(v))
-                    dim_str = format_dimension_string(dims).replace("\u200b", "") # cleanup zero width
-                    measurements.add(f"{dim_str}")
-            
+                all_dims = {k: v for k, v in organ.dimensions_mm.as_dict().items() if v is not None}
+                for k, v in all_dims.items():
+                    numbers.add(self._fmt(v))          # volume (cc) and linear values alike
+                # Only linear dimensions form an "A x B x C mm" measurement string
+                linear = {k: v for k, v in all_dims.items() if not _is_volume_key(k)}
+                if linear:
+                    measurements.add(format_dimension_string(linear).replace("\u200b", ""))
+
             if organ.mean_density_hu is not None:
                 val = self._fmt(organ.mean_density_hu)
                 numbers.add(val)
@@ -436,7 +485,7 @@ class ReportValidator:
                     s = anomaly.shape
                     if s.margin:
                         terms.update(extract_words(s.margin))
-                    
+
                     axes = []
                     if s.long_axis_mm is not None:
                         val = self._fmt(s.long_axis_mm)
@@ -448,31 +497,29 @@ class ReportValidator:
                         axes.append(val)
                     if axes:
                         measurements.add(" x ".join(axes) + " mm")
-                    
+
                     if s.volume_cc is not None:
                         numbers.add(self._fmt(s.volume_cc))
-                    if s.sphericity is not None:
-                        numbers.add(self._fmt(s.sphericity))
-                
+                    # sphericity is an internal shape descriptor, not a reported
+                    # measurement — intentionally not mandatory.
+
                 if anomaly.density_hu:
                     d = anomaly.density_hu
                     val = self._fmt(d.mean)
                     numbers.add(val)
                     densities.add(f"{val} HU")
-                    
+
                     if d.min is not None and d.max is not None:
                         min_v = self._fmt(d.min)
                         max_v = self._fmt(d.max)
                         numbers.update([min_v, max_v])
                         densities.add(f"{min_v} HU")
                         densities.add(f"{max_v} HU")
-                    
-                    if d.std is not None:
-                        std_v = self._fmt(d.std)
-                        numbers.add(std_v)
-                        densities.add(f"{std_v} HU")
 
-                if anomaly.confidence is not None:
-                    numbers.add(str(round(anomaly.confidence * 100)))
-                    
+                    # density std is likewise an internal statistic, not mandatory.
+
+                # confidence is intentionally excluded: it is an internal
+                # model score, not a measured clinical value, and must not
+                # appear in the report text.
+
         return numbers, measurements, densities, terms

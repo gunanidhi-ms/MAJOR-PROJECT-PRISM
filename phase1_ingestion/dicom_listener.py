@@ -201,6 +201,39 @@ class DICOMListener:
             patient_age = str(getattr(ds, "PatientAge", ""))
             patient_sex = str(getattr(ds, "PatientSex", ""))
 
+            # ── Extract technique / clinical-context tags (report enrichment) ──
+            def _clean(tag_name):
+                val = getattr(ds, tag_name, None)
+                if val is None:
+                    return ""
+                if isinstance(val, (list, tuple)) or type(val).__name__ == "MultiValue":
+                    return " / ".join(str(v).strip() for v in val if str(v).strip())
+                return str(val).strip()
+
+            clinical_meta = {
+                "study_date": _clean("StudyDate") or _clean("AcquisitionDate"),
+                "study_time": _clean("StudyTime"),
+                "accession_number": _clean("AccessionNumber"),
+                "referring_physician": _clean("ReferringPhysicianName"),
+                "manufacturer": _clean("Manufacturer"),
+                "manufacturer_model": _clean("ManufacturerModelName"),
+                "institution": _clean("InstitutionName"),
+                "protocol_name": _clean("ProtocolName"),
+                "kvp": _clean("KVP"),
+                "convolution_kernel": _clean("ConvolutionKernel"),
+                "contrast_agent": _clean("ContrastBolusAgent"),
+                "contrast_route": _clean("ContrastBolusRoute"),
+                "contrast_volume_ml": _clean("ContrastBolusVolume"),
+                "patient_position": _clean("PatientPosition"),
+                "reason_for_study": (
+                    _clean("ReasonForStudy")
+                    or _clean("ReasonForTheRequestedProcedure")
+                    or _clean("RequestedProcedureDescription")
+                    or _clean("AdmittingDiagnosesDescription")
+                    or _clean("AdditionalPatientHistory")
+                ),
+            }
+
             # ── Extract pixel array ──
             pixel_array = ds.pixel_array.copy()
 
@@ -266,6 +299,7 @@ class DICOMListener:
                     "slice_thickness": slice_thickness,
                     "image_position_patient": ipp_vec,
                     "image_orientation_patient": image_orientation_patient,
+                    "clinical_meta": clinical_meta,
                 }
                 self._on_slice_received(slice_data)
 

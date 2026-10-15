@@ -1,17 +1,3 @@
-"""
-models.py
----------
-Pydantic data-models for Phase 3 – Radiology Report Generation.
-
-These models define:
-  • The structured-findings JSON that arrives from Phase 2.
-  • The internal report representation.
-  • All API request / response schemas.
-
-No organ-specific or disease-specific logic lives here; the models are
-deliberately generic so that any organ type works without code changes.
-"""
-
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -63,11 +49,11 @@ class Anomaly(BaseModel):
     """A single detected anomaly within an organ."""
 
     anomaly_id: str
-    type: str                          # e.g. "lesion", "calculus", "cyst"
-    location: str                      # anatomical sub-location
+    type: str
+    location: str
     shape: Optional[AnomalyShape] = None
     density_hu: Optional[DensityHU] = None
-    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    sub_location: Optional[str] = None   # zone within the host organ (Phase 2 anatomy context)
 
     model_config = {"extra": "allow"}
 
@@ -81,6 +67,9 @@ class OrganFinding(BaseModel):
     mean_density_hu: Optional[float] = None
     location: Optional[str] = None
     anomalies: Optional[List[Anomaly]] = Field(default_factory=list)
+    adjacent_structures: Optional[List[str]] = None   # structures in surface contact
+    touches_fov_edge: Optional[bool] = None           # organ cut by scan boundary
+    unassigned: Optional[bool] = None                 # lesions with no organ label
 
     model_config = {"extra": "allow"}
 
@@ -96,12 +85,21 @@ class StructuredFindings(BaseModel):
     study_id: str
     modality: str
     protocol: Optional[str] = None
+    region: Optional[str] = None
     organs: List[OrganFinding] = Field(..., min_length=1)
     study_date: Optional[str] = None
     patient_id: Optional[str] = None
     patient_name: Optional[str] = None
     patient_age: Optional[str] = None
     patient_sex: Optional[str] = None
+    # ── Report-enrichment context (Phase 1 DICOM headers / Phase 2 QC) ──
+    indication: Optional[str] = None
+    referring_physician: Optional[str] = None
+    accession_number: Optional[str] = None
+    technique: Optional[Dict[str, Any]] = None
+    comparison: Optional[Dict[str, Any]] = None
+    volume_qc: Optional[Dict[str, Any]] = None
+    orientation_verified: Optional[bool] = None
 
     model_config = {"extra": "allow"}
 

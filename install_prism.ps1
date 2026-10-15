@@ -28,18 +28,26 @@ if (-Not (Test-Path "venv")) {
     Write-Host "Virtual environment 'venv' already exists." -ForegroundColor Green
 }
 
-# Activate venv
+# Resolve venv paths directly to ensure correct binaries are always called
+$venvPython = (Resolve-Path ".\venv\Scripts\python.exe").Path
+$venvPip = (Resolve-Path ".\venv\Scripts\pip.exe").Path
+$venvScripts = (Resolve-Path ".\venv\Scripts").Path
+
+# Prepend venv\Scripts to session Path
+if ($env:Path -notlike "$venvScripts*") {
+    $env:Path = "$venvScripts;$env:Path"
+}
+$env:VIRTUAL_ENV = (Resolve-Path ".\venv").Path
+
+# Activate venv if script exists
 $activateScript = ".\venv\Scripts\Activate.ps1"
 if (Test-Path $activateScript) {
-    & $activateScript
-} else {
-    Write-Host "Failed to find venv activation script." -ForegroundColor Red
-    exit 1
+    try { & $activateScript } catch { }
 }
 
-# Upgrade pip
+# Upgrade pip using explicit venv python
 Write-Host "Upgrading pip..."
-python -m pip install --upgrade pip --quiet
+& $venvPython -m pip install --upgrade pip --quiet
 
 # 3. Detect GPU and Install PyTorch (CUDA if GPU present, else CPU)
 Write-Host "`n[3/6] Detecting GPU for PyTorch / TotalSegmentator acceleration..." -ForegroundColor Yellow
@@ -59,16 +67,16 @@ if (Get-Command "nvidia-smi" -ErrorAction SilentlyContinue) {
 
 if ($gpuDetected) {
     Write-Host "Attempting CUDA PyTorch installation (cu124)..." -ForegroundColor Green
-    try {
-        pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
-        Write-Host "CUDA PyTorch installed successfully." -ForegroundColor Green
-    } catch {
+    & $venvPip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+    if ($LASTEXITCODE -ne 0) {
         Write-Host "CUDA wheel not available for this Python version. Installing standard PyTorch..." -ForegroundColor Yellow
-        pip install torch torchvision
+        & $venvPip install torch torchvision
+    } else {
+        Write-Host "CUDA PyTorch installed successfully." -ForegroundColor Green
     }
 } else {
     Write-Host "No NVIDIA GPU detected. Installing standard CPU PyTorch..." -ForegroundColor Yellow
-    pip install torch torchvision
+    & $venvPip install torch torchvision
     Write-Host "CPU PyTorch installed." -ForegroundColor Green
 }
 
@@ -77,21 +85,21 @@ Write-Host "`n[4/6] Installing Python dependencies..." -ForegroundColor Yellow
 
 if (Test-Path "requirements.txt") {
     Write-Host "Installing from root requirements.txt..."
-    pip install -r requirements.txt
+    & $venvPip install -r requirements.txt
     Write-Host "Python dependencies installed." -ForegroundColor Green
 } else {
     Write-Host "Root requirements.txt not found. Installing per-phase..." -ForegroundColor Yellow
     if (Test-Path "phase1_ingestion\requirements.txt") {
         Write-Host "Installing Phase 1 dependencies..."
-        pip install -r phase1_ingestion\requirements.txt
+        & $venvPip install -r phase1_ingestion\requirements.txt
     }
     if (Test-Path "phase2_segmentation\requirements.txt") {
         Write-Host "Installing Phase 2 dependencies..."
-        pip install -r phase2_segmentation\requirements.txt
+        & $venvPip install -r phase2_segmentation\requirements.txt
     }
     if (Test-Path "phase3_reporting\requirements.txt") {
         Write-Host "Installing Phase 3 dependencies..."
-        pip install -r phase3_reporting\requirements.txt
+        & $venvPip install -r phase3_reporting\requirements.txt
     }
 }
 
@@ -99,44 +107,100 @@ if (Test-Path "requirements.txt") {
 Write-Host "`n[5/6] Setting up Ollama (AI Report Generation)..." -ForegroundColor Yellow
 
 $PRISM_MODEL = "llama3.2:3b"
+$ollamaDefaultDir = "$env:LOCALAPPDATA\Programs\Ollama"
 
+# 5.1 Locate or add Ollama to current session PATH
+if (Test-Path "$ollamaDefaultDir\ollama.exe") {
+    if ($env:Path -notlike "*$ollamaDefaultDir*") {
+        $env:Path = "$ollamaDefaultDir;$env:Path"
+    }
+}
+
+# 5.2 Install Ollama if not found
 if (-Not (Get-Command "ollama" -ErrorAction SilentlyContinue)) {
     Write-Host "Ollama is NOT installed. Attempting to install via winget..." -ForegroundColor Yellow
     if (Get-Command "winget" -ErrorAction SilentlyContinue) {
         try {
-            winget install -e --id Ollama.Ollama --accept-source-agreements --accept-package-agreements
-            Write-Host "Ollama installed via winget." -ForegroundColor Green
-            $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+            # Run winget with Start-Process so it doesn't deadlock the PowerShell console pipes
+            $wingetArgs = "install -e --id Ollama.Ollama --accept-source-agreements --accept-package-agreements --silent"
+            $p = Start-Process -FilePath "winget" -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
+            
+            # The Ollama Windows installer spawns: cmd.exe /c "ollama app.exe" --hide --fast-startup
+            # Because cmd.exe runs synchronously without 'start', it holds the terminal open forever.
+            # Terminate the waiting cmd.exe wrapper (leaves the background ollama app running).
+            Start-Sleep -Seconds 2
+            Get-CimInstance Win32_Process | Where-Object { 
+                $_.Name -eq "cmd.exe" -and $_.CommandLine -like "*ollama app.exe*" 
+            } | ForEach-Object {
+                Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+            }
+
+            if (Test-Path "$ollamaDefaultDir\ollama.exe") {
+                if ($env:Path -notlike "*$ollamaDefaultDir*") {
+                    $env:Path = "$ollamaDefaultDir;$env:Path"
+                }
+                Write-Host "Ollama installed via winget." -ForegroundColor Green
+            }
         } catch {
-            Write-Host "winget install failed. Please install Ollama manually from https://ollama.com/" -ForegroundColor Red
-            Write-Host "After installing, run: ollama pull $PRISM_MODEL" -ForegroundColor Yellow
+            Write-Host "winget install failed." -ForegroundColor Red
         }
-    } else {
-        Write-Host "winget is not available. Please download Ollama from https://ollama.com/" -ForegroundColor Yellow
-        Write-Host "After installing, run: ollama pull $PRISM_MODEL" -ForegroundColor Yellow
+    }
+
+    if (-Not (Get-Command "ollama" -ErrorAction SilentlyContinue)) {
+        Write-Host "Please download and install Ollama manually from: https://ollama.com/" -ForegroundColor Red
+        Write-Host "After installing, re-run: .\install_prism.ps1" -ForegroundColor Yellow
     }
 }
 
+# 5.3 Verify Ollama server daemon is active and responding
 if (Get-Command "ollama" -ErrorAction SilentlyContinue) {
-    # Remove incompatible multimodal model if present
-    $modelList = (ollama list 2>&1) -join "`n"
+    Write-Host "Checking Ollama server connection..." -ForegroundColor Yellow
+    $serverRunning = $false
+    try {
+        $health = Invoke-WebRequest -Uri "http://localhost:11434" -TimeoutSec 2 -UseBasicParsing -ErrorAction SilentlyContinue
+        if ($health.StatusCode -eq 200) { $serverRunning = $true }
+    } catch {}
+
+    if (-Not $serverRunning) {
+        Write-Host "Ollama server is not running. Starting background service..." -ForegroundColor Yellow
+        Start-Process -FilePath "ollama" -ArgumentList "serve" -WindowStyle Hidden
+        $retries = 0
+        while (-Not $serverRunning -and $retries -lt 10) {
+            Start-Sleep -Seconds 1
+            $retries++
+            try {
+                $health = Invoke-WebRequest -Uri "http://localhost:11434" -TimeoutSec 1 -UseBasicParsing -ErrorAction SilentlyContinue
+                if ($health.StatusCode -eq 200) { $serverRunning = $true }
+            } catch {}
+        }
+    }
+
+    if ($serverRunning) {
+        Write-Host "Ollama server is active." -ForegroundColor Green
+    } else {
+        Write-Host "Warning: Ollama server did not respond on http://localhost:11434." -ForegroundColor Yellow
+    }
+
+    # 5.4 Remove incompatible multimodal model if present
+    $modelList = ""
+    try {
+        $modelList = (ollama list 2>&1) -join "`n"
+    } catch {}
+
     if ($modelList -match "llama3.2-vision") {
         Write-Host "Removing incompatible llama3.2-vision model..." -ForegroundColor Yellow
-        ollama rm llama3.2-vision 2>$null
+        & ollama rm llama3.2-vision 2>$null
         Write-Host "llama3.2-vision removed." -ForegroundColor Green
     }
 
-    # Check model
-    $hasModel = $false
+    # 5.5 Check or pull recommended PRISM model
     if ($modelList -match "llama3\.2:3b") {
-        $hasModel = $true
-    }
-
-    if (-Not $hasModel) {
-        Write-Host "Pulling '$PRISM_MODEL' (2.0 GB - recommended for PRISM)..." -ForegroundColor Yellow
-        ollama pull $PRISM_MODEL
-    } else {
         Write-Host "Model '$PRISM_MODEL' is ready." -ForegroundColor Green
+    } else {
+        Write-Host "Pulling '$PRISM_MODEL' (2.0 GB - recommended for PRISM)..." -ForegroundColor Yellow
+        Write-Host "Downloading model weights from Ollama library (this may take a few minutes)..." -ForegroundColor DarkGray
+        & ollama pull $PRISM_MODEL
+        Write-Host "Model '$PRISM_MODEL' downloaded successfully." -ForegroundColor Green
     }
 }
 

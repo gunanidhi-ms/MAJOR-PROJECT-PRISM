@@ -34,6 +34,19 @@
 - [x] Package 7: Confidence Fusion, Scoring & Phase 3 Handoff
 - [x] Package 8: Testing, Calibration & Final Report
 
+**Report Enrichment (cross-phase)** — ✅ Implemented (see [Section 19](#19-report-enrichment-clinical-context-localisation--impression-synthesis))
+- [x] Clinical indication, DICOM-derived technique and prior-study comparison in the report
+- [x] Intra-organ sub-localisation and organ-contact commentary
+- [x] Anatomical positions (side, vertebral level) for unassigned ("Unclassified") lesions
+- [x] Organ-volume deviations promoted to a first-class Impression category
+- [x] Grouped, de-templated Impression synthesis
+
+**ML False Positive Reduction** — 🔄 Roadmap (see [Section 20](#20-ml-false-positive-reduction-fpr--roadmap))
+- [ ] XGBoost/LightGBM classifier on existing radiomic features
+- [ ] Evaluation on KiTS23 / LIDC-IDRI public datasets (IoU-based, no medical knowledge required)
+- [ ] AUROC, sensitivity at 2 FP/image, FP-reduction % metrics
+- [ ] `fpr_score` passed through to Phase 3 for report confidence annotation
+
 ---
 
 ## Table of Contents
@@ -56,6 +69,8 @@
 16. [License / References](#16-license--references)
 17. [End-to-End Diagnostic Workflow & Architecture Updates](#17-end-to-end-diagnostic-workflow--architecture-updates)
 18. [Complete Step-by-Step User Guide](#18-complete-step-by-step-user-guide)
+19. [Report Enrichment: Clinical Context, Localisation & Impression Synthesis](#19-report-enrichment-clinical-context-localisation--impression-synthesis)
+20. [ML False Positive Reduction (FPR) — Roadmap](#20-ml-false-positive-reduction-fpr--roadmap)
 
 ---
 
@@ -728,7 +743,7 @@ The scanner control panel in `LiveViewer.jsx` is driven by a deterministic 3-sta
 1. **New Report Trigger (`/` → `/live`):** Clicking "New Report" on the Dashboard routes directly to the Live CT Viewport (`/live`).
 2. **Real-Time DICOM Ingestion & Triage (Phase 1):** Slices stream at 20+ fps via WebSocket. The viewport renders windowed CT imagery, interactive window/level presets, and live statistical bounding box overlays.
 3. **Autonomous 3D Segmentation & AI Sweep (Phase 2):** When slice accumulation completes, Phase 2 is launched automatically with hardware-adaptive timeout scaling. A floating **Pipeline Progress Panel** displays active phase indicators (Phase 1 ✅, Phase 2 🔄, Phase 3 ⏳), an animated progress bar, and a live elapsed timer.
-4. **AI Report Synthesis & Auto-Navigation (Phase 3 → `/report/:studyId`):** When the Phase 3 LLM completes the draft report, the Live Viewer displays a 3-second countdown and automatically navigates the radiologist directly to the **Draft Report Editor** (`/report/:studyId`).
+4. **AI Report Synthesis & Auto-Navigation (Phase 3 → `/report/:studyId`):** When Phase 3 completes, the Live Viewer displays a 3-second countdown and navigates directly to the **Draft Report Editor**. The generated report follows a full clinical radiology format: **Indication**, **Technique**, **Findings** (every organ segmented by TotalSegmentator, grouped by body system — normal organs listed as unremarkable with HU density and volume, anomalous organs with quantitative measurements), and **Impression** (concise bullet summary of significant findings).
 5. **Review, In-Place Editing, Signing, and PDF Export:** The radiologist reviews findings, makes edits, draws a digital signature, locks the finalized report, and downloads a publication-grade PDF.
 6. **Graceful Auto-Shutdown:** When the browser tab is closed or the radiologist clicks "Shutdown System", browser Beacon signals trigger `/api/system/shutdown`, cleanly killing all backend and frontend background processes.
 
@@ -805,10 +820,17 @@ SKIP_LLM=false                                # Set true to bypass LLM and use t
 REPORTS_DIR=./storage/reports                 # JSON report persistence directory
 ```
 
-### Why `llama3.2:3b` is the Standard Model for PRISM
-In PRISM, Phase 3 utilizes a two-tier architecture:
-1. **Deterministic Template Engine:** Extracts all quantitative values, bounding volumes, HU densities, and organ anatomical classifications with zero hallucinations.
-2. **LLM Grammar & Clinical Synthesis:** Polishes the deterministic output into fluent, professional radiology prose and impression summaries.
+### Phase 3 Report Architecture
+
+PRISM Phase 3 generates reports using a two-tier pipeline:
+
+1. **Deterministic Template Engine (`template_engine.py`):** Converts Phase 2 TotalSegmentator output directly into a structured clinical report with zero hallucination. All numerical values (HU, volumes, dimensions) come exclusively from Phase 2 `statistics.json`. Produces four mandatory sections:
+   - **INDICATION:** Derived from patient demographics, modality, body region
+   - **TECHNIQUE:** Modality, contrast phase (inferred from organ HU values), multiplanar reconstruction
+   - **FINDINGS:** Every organ TotalSegmentator segmented, grouped by body system. Normal organs appear as `Unremarkable. Mean density X HU. Volume Y cc.`; anomalous organs list quantitative anomaly detail.
+   - **IMPRESSION:** Auto-generated bullet summary of anomalous organs; `"No acute or significant findings"` for normal studies.
+
+2. **LLM Grammar Refinement (`llm_service.py`):** `llama3.2:3b` polishes prose fluency without altering any factual content. A strict system prompt forbids altering numbers, section headers, or organ entries. Validator rejects and falls back to template output if any number is altered.
 
 | Model | Size | Hardware Fit | Inference Time | Recommendation |
 |---|---|---|---|---|
@@ -1314,10 +1336,17 @@ The 3 skips are pre-existing TotalSegmentator GPU integration tests unrelated to
   - `"AUTO_CONFIRMED"`: If `corroborated == True` and `fused_confidence >= 0.85` and `emergency_score >= 35`.
   - `"MANUAL_REVIEW"`: All other non-suppressed candidates.
 
-**2. Handoff Serialization** ([`phase2_api.py`](phase2_segmentation/phase2_api.py) — new)
-- Converts the final list of `Candidate` objects into the precise schema required by `findings_output.json`.
-- Integrates seamlessly with `lifecycle_manager.py` as Stage 5.
+**2. Handoff Serialization** ([`phase2_api.py`](phase2_segmentation/phase2_api.py))
+- Converts the final list of `Candidate` objects into a `StructuredFindings` payload.
+- Passes both `organ_stats` (full TotalSegmentator `statistics.json` dict) and `region` (detected body region) into the payload, ensuring Phase 3 receives the complete anatomical picture, not just anomaly candidates.
 - Writes `findings.json` to the work directory alongside `temp_seg.nii` and `statistics.json`.
+
+**3. Comprehensive Organ Coverage** ([`findings_adapter.py`](phase2_segmentation/findings_adapter.py))
+- Iterates `organ_stats` as the **primary organ list** (every organ TotalSegmentator detected).
+- Normal organs (no candidates passing confidence/volume thresholds) appear in `StructuredFindings.organs` with `status="normal"`, whole-organ HU mean, and volume.
+- Anomalous organs have their `status="anomaly_detected"` and full quantitative anomaly detail.
+- Organs with candidates but not in `organ_stats` are also included as a safety net.
+- This ensures Phase 3 always generates a complete organ-by-organ report, matching clinical radiology standards.
 
 #### Acceptance Checklist Results
 
@@ -1616,4 +1645,276 @@ Start the entire end-to-end PRISM ecosystem with a single command.
 2. Confirm the archive modal to automatically zip all raw DICOMs, pipeline telemetry, and reports into `patient_archives/`.
 3. The interface resets all patient fields and slice buffers back to `ready` — you can immediately enter the next patient's details and click `▶ Start Scan` without restarting the backend or frontend!
 
+---
 
+## 19. Report Enrichment: Clinical Context, Localisation & Impression Synthesis
+
+This section documents the cross-phase upgrade that makes the draft report read like a CT report instead of a measurement dump. Every new statement is either read from the DICOM header or is a geometric fact about the segmentation — PRISM still never diagnoses.
+
+### 19.1 What changed, by phase
+
+| Phase | Change | File |
+|---|---|---|
+| **1 – Ingestion** | Reads technique/clinical tags (scanner, model, kVp, kernel, contrast agent/route/volume, patient position, study date, referrer, accession, reason for study / requested procedure) from every slice | `phase1_ingestion/dicom_listener.py` |
+| | Accumulator keeps the first non-empty value per tag and exposes them (`protocol`, `clinical_indication`, `technique`, …) in `get_series_metadata()` | `phase1_ingestion/volume_accumulator.py` |
+| | **Volume QC** at export: duplicate slice positions, z-gaps, thick slices, non-square pixels, inconsistent/non-standard orientation → `volume_qc` | `phase1_ingestion/volume_accumulator.py` |
+| | **Prior-study lookup**: earlier archived studies for the same `PatientID` (current StudyUID excluded) | `phase1_ingestion/prior_study_lookup.py`, `pipeline.py` |
+| **2 – Segmentation** | New `anatomy_context.py`: orientation inferred from anatomy, organ FOV-truncation flag, true surface contacts, intra-organ sub-location, and side / vertebral level / paravertebral position for unassigned lesions | `phase2_segmentation/anatomy_context.py` |
+| | Adapter forwards indication, technique, comparison, QC, `sub_location`, `adjacent_structures`, `touches_fov_edge`; unassigned lesions now carry shape/HU and a position description | `phase2_segmentation/findings_adapter.py` |
+| | Fixed: organs were emitted twice when `organ_stats` was empty | `phase2_segmentation/findings_adapter.py` |
+| **3 – Reporting** | New optional contract fields | `phase3_reporting/app/models.py` |
+| | New `COMPARISON:` section; header-driven `TECHNIQUE:`; `INDICATION:` includes the clinical question | `phase3_reporting/services/template_engine.py` |
+| | Volume deviations are a separate, first-listed Impression category; Impression is grouped by body system | `phase3_reporting/services/template_engine.py` |
+| | LLM prompt preserves the new headers and numbered lists | `phase3_reporting/app/prompts.py` |
+
+### 19.2 Data flow
+
+```
+DICOM tags ─► dicom_listener ─► pipeline.spacing_meta ─► VolumeAccumulator
+                                                         ├─ technique / indication / study_date
+                                                         └─ volume_qc (at export)
+pipeline ── prior_study_lookup(exports/) ─► series_meta.prior_studies
+series_meta ─► Phase 2 ─► TotalSegmentator label map
+                         └─ anatomy_context.build_anatomy_context()
+                              orientation · contacts · sub_location · unassigned position
+findings_adapter ─► StructuredFindings JSON ─► Phase 3 template engine ─► report
+```
+
+### 19.3 New optional fields in the Phase 2 → Phase 3 payload
+
+All fields are optional; older payloads still validate.
+
+```jsonc
+{
+  "indication": "abdominal pain",
+  "technique": { "manufacturer": "...", "model": "...", "kvp": "120",
+                 "convolution_kernel": "B30f", "contrast_agent": "...",
+                 "contrast_route": "IV", "slice_thickness_mm": 5.0 },
+  "comparison": { "prior_studies": [ { "archive": "...zip", "archived_on": "2026-01-02" } ] },
+  "volume_qc": { "slice_count": 120, "z_extent_mm": 600.0, "warnings": [] },
+  "orientation_verified": true,
+  "organs": [ {
+    "organ": "liver",
+    "adjacent_structures": ["stomach", "portal_vein_and_splenic_vein"],
+    "touches_fov_edge": false,
+    "anomalies": [ { "sub_location": "lateral, posterior portion", "...": "..." } ]
+  }, {
+    "organ": "unclassified", "unassigned": true,
+    "anomalies": [ { "location": "right paravertebral region, at the T10 level; closest segmented structures: ..." } ]
+  } ]
+}
+```
+
+### 19.4 Behaviour reference
+
+- **Indication.** Shown verbatim when the header carries one; otherwise the report states it was not provided. Keyword routing (`_INDICATION_RULES`) maps the indication to relevant body systems so the Impression can say whether abnormalities fall in the relevant systems. It never infers a diagnosis.
+- **Technique.** Scanner, slice thickness, kVp, kernel and contrast come from the header. If contrast tags are absent the report says *"not recorded in the DICOM header"* (with an inference hint from vascular HU worded as such). Oral contrast is reported only if the header says so. The old unverifiable "multiplanar reformats" claim was removed.
+- **Comparison.** Lists archived priors (date from the archive filename) and states that automated image comparison is **not** performed; otherwise "No prior comparator study available".
+- **Organ coverage filter.** TotalSegmentator attempts all 104 organ labels on every scan. When a scan does not cover an organ (e.g. an abdomen/pelvis CT that barely clips the lung bases), TS still returns a tiny fragment mask. `findings_adapter` now suppresses any organ whose measured volume falls below a per-class minimum coverage threshold (`_MIN_COVERAGE_CC`). This prevents ghost entries such as `Vertebrae T12: 0.1 cc`, `Rib Left 11: 0.3 cc`, or `Right Upper Lobe: 14.4 cc` appearing in an abdomen report. Suppressed organs are logged at INFO level.
+- **Sub-localisation.** Centroid position inside the host organ in patient terms (lungs: central/peripheral, anterior/posterior, upper/lower; other organs: medial/lateral or right/left-sided, anterior/posterior, superior/inferior). Skipped for axes < 15 mm.
+- **Orientation safety.** Left/right, anterior/posterior and superior/inferior are inferred from paired L/R organs, spine-vs-body centroid and vertebral order. If any axis cannot be verified, directional wording is suppressed and only vertebral level and nearest structures are reported.
+- **Organ relationships.** Contacts come from mask dilation (~3 mm), not bounding-box overlap. Large lesions (≥ 50 mm) add a mass-effect advisory; for hepatic lesions the report states that biliary dilatation and portal/hepatic venous patency are **not assessable** from segmentation and need radiologist review (TotalSegmentator does not segment the intrahepatic biliary tree).
+- **Unclassified lesions.** One numbered line each with position (side, paravertebral, vertebral level, nearest structures), size, volume and HU — replacing the repeated "within the Unclassified".
+- **Volume deviations.** Reduced/enlarged organs (with "marked" at < 50 % / > 150 % of the reference bound) lead the Impression. Volumes under 10 % of the lower bound add a verification caveat (true absence/atrophy vs segmentation limitation vs incomplete coverage); organs touching the scan boundary are flagged as partially included.
+- **Impression.** Numbered points grouped by body system with counts, bilateral flag and largest lesion size, a cross-system summary, one shared closing statement (no longer repeated on every line) and QC caveats.
+
+### 19.5 Validator / template alignment
+
+The validator and template engine were originally out of sync (12 pre-existing test failures). In the current release all discrepancies are resolved:
+
+| Issue | Fix |
+|---|---|
+| Density normaliser applied mm-unit logic to HU strings | Added `_norm_hu()` — lowercases, collapses whitespace, does **not** append `mm` |
+| Range patterns (`-10 to 45 HU`) only captured the bound closest to `HU` | Extractor now anchors on every `HU` token and adds **all** numbers in the preceding 40-char window |
+| Validator required `sphericity` and density `std` in the report text | Both removed from mandatory set — they are internal metrics not printed by the template |
+| Validator treated `volume_cc` as a linear measurement | `_is_volume_key()` now excludes volume keys from the mm-measurement string |
+| Organ-label mismatch (lung-lobe, kidney cyst, Oesophagus) | Validator accepts either the raw JSON key words or the display label produced by `TemplateEngine._label()` |
+| Invented-number hallucination undetected | Added `reference_text` parameter; numbers present in LLM output but absent from the template are rejected |
+| Ghost organs in report (ribs, vertebrae, heart on abdomen CT) | `_MIN_COVERAGE_CC` per-class filter in `findings_adapter` — organs below ~20% of expected volume excluded |
+
+### 19.6 Known limitations
+
+- The Phase 1 **triage screen** heuristics were not changed; `phase1_ingestion/tests/test_triage_screen.py` has pre-existing failures unrelated to this work.
+- Prior studies are matched by `PatientID` and archive filename only; no image registration or lesion-level comparison is done.
+- Reference volume ranges are generic adult values (`_ORGAN_REFS`); there is no age/sex adjustment yet.
+- Sub-location is approximate (organ bounding-box thirds), not a true lobar-segment (e.g. Couinaud) assignment. The report text says "approximate location" explicitly.
+- Volume caveat: when an organ `touches_fov_edge`, the report text states the measured volume **may be underestimated if the organ extends beyond the scan boundary**. This is flagged in the Impression too, but cannot be auto-corrected without a larger FOV rescan.
+
+
+### 19.7 Tests
+
+```powershell
+# Full Phase 3 suite (88 tests, all pass)
+cd phase3_reporting; ..\venv\Scripts\python.exe -m pytest tests -q
+
+# Phase 3 report content and validator (focused)
+cd phase3_reporting; ..\venv\Scripts\python.exe -m pytest tests/test_report_enrichment.py tests/test_validator.py -v
+
+# Phase 2 anatomy context + adapter
+cd ..; venv\Scripts\python.exe -m pytest phase2_segmentation/tests/test_anatomy_context.py phase2_segmentation/tests/test_findings_adapter.py -q
+```
+
+#### 19.7.1 Clinical indication UI field
+
+The **Generate** page (`prism-react/src/pages/Generate.tsx`) now has a free-text **Clinical Indication** field above the Generate button. When filled in it is injected into the payload as the `indication` key, overriding the DICOM-tag value from Phase 1. Left blank, the DICOM-derived value (or the "not provided" fallback) is used unchanged.
+
+
+---
+
+## 20. ML False Positive Reduction (FPR) — Roadmap
+
+### 20.1 The problem
+
+PRISM's Phase 1 triage and Phase 2 candidate detection are currently **rule-based** (z-score thresholds, HU range checks). Rules do not understand anatomy — a bowel loop at the same HU as a renal cyst looks identical to a threshold. This produces false positives that consume radiologist review time.
+
+A **False Positive Reduction (FPR)** classifier sits between Phase 2 and Phase 3 and scores each candidate: *"Is this a real finding or a detection artefact?"*
+
+### 20.2 What is already ML in PRISM
+
+| Component | Technology | ML? |
+|---|---|---|
+| Phase 1 triage | Z-score / intensity statistics | ❌ Rule-based |
+| Phase 2 segmentation | **TotalSegmentator** (nnU-Net, 104 organs) | ✅ Deep learning |
+| Phase 2 candidate scoring | Statistical thresholds | ❌ Rule-based |
+| Phase 3 report | Template + Ollama LLM | ✅ LLM |
+| **FPR classifier** | XGBoost / LightGBM (planned) | 🔄 Planned |
+
+The segmentation is already deep learning. FPR adds a trained second-stage classifier on top of the features already extracted.
+
+### 20.3 Where false positives originate
+
+```
+Phase 1 triage
+  └── flags any voxel cluster with unusual HU / z-score
+        → normal fat lobules, vessels, bowel loops → all flagged
+
+Phase 2 candidate detection
+  └── anything outside expected HU range for that organ
+        → motion artefact, partial-volume effect, beam-hardening → flagged
+```
+
+### 20.4 Proposed FPR architecture
+
+```
+Phase 2 output (candidates + features)
+         │
+         ▼
+ ┌───────────────────┐
+ │   FPR Classifier  │  inputs (already computed by PRISM):
+ │  XGBoost / LGBM   │  • mean_density_hu, min_hu, max_hu, std_hu
+ │                   │  • volume_cc, long_axis_mm, short_axis_mm
+ │                   │  • sphericity, margin type
+ │                   │  • sub_location (e.g. "peripheral, lower")
+ │                   │  • adjacent_structures (e.g. portal vein)
+ │                   │  • touches_fov_edge
+ │                   │  • organ (e.g. liver, right_kidney)
+ │                   │  • patient age, sex
+ └───────────────────┘
+         │
+         ▼
+  fpr_score  (0.0 – 1.0 true-positive probability)
+         │
+   threshold (e.g. 0.3)
+    ├── score ≥ threshold → forwarded to Phase 3 (report it)
+    └── score <  threshold → suppressed (logged, not reported)
+```
+
+No new feature extraction is needed — every input listed above is already produced by `findings_adapter.py` and `anatomy_context.py`.
+
+### 20.5 How to evaluate without a radiologist
+
+> **You do not need to be a doctor to evaluate this model.**
+> The doctors already annotated the public datasets. Your role is systems engineering: run PRISM, compare outputs to the labels, measure numbers.
+
+#### 20.5.1 Public datasets (ground truth provided)
+
+| Dataset | Organs / findings | Access |
+|---|---|---|
+| **KiTS23** | Kidney + tumour masks | `kits-challenge.s3.us-east-2.amazonaws.com` |
+| **LiTS** | Liver + lesion masks | `competitions.codalab.org/competitions/17094` |
+| **LIDC-IDRI** | Lung nodules + 4-radiologist agreement | `wiki.cancerimagingarchive.net` |
+| **TCIA** | Many organ-specific annotated CTs | `cancerimagingarchive.net` |
+
+#### 20.5.2 Evaluation logic (pure geometry, no medical knowledge)
+
+```python
+for candidate in prism_phase2_candidates:
+    # IoU = Intersection over Union — pure 3D geometry
+    overlap = compute_iou(candidate.bbox_3d, ground_truth_mask)
+
+    if overlap > 0.1:          # candidate overlaps a labelled finding
+        label = "true_positive"
+    else:                       # candidate is in normal tissue
+        label = "false_positive"
+
+# You never need to know *why* something is a tumour.
+# You only check: does your box overlap the annotated box?
+```
+
+IoU is geometry. No medical interpretation required.
+
+#### 20.5.3 Proxy metrics (no labels needed at all)
+
+While building, before you have annotated data:
+
+| Proxy metric | What it signals |
+|---|---|
+| Flagging rate on DICOM studies tagged `StudyDescription = Normal` | Lower = fewer FPs |
+| Sphericity distribution of candidates | Real lesions cluster 0.7–1.0; FPs are irregular |
+| Candidate HU vs known tissue-type HU bands | FPs often fall inside normal fat or vessel ranges |
+| Count of candidates that overlap normal TotalSegmentator mask voxels | Overlap = likely FP |
+
+#### 20.5.4 TotalSegmentator as pseudo-ground-truth
+
+You already run TotalSegmentator. Any PRISM candidate that sits **inside a normal organ mask** but was not expected (e.g. high-HU voxel inside liver parenchyma that TotalSegmentator says is normal liver) can be treated as a pseudo-FP label. This gives you a self-supervised training signal **from your own pipeline** without any external dataset.
+
+### 20.6 Metrics to report
+
+| Metric | Definition | Target |
+|---|---|---|
+| **AUROC** | Rank quality of TP vs FP | > 0.85 |
+| **Sensitivity at 2 FP/image** | Clinical CAD standard | > 0.80 |
+| **FP reduction %** | `(fp_before − fp_after) / fp_before × 100` | > 40 % |
+| **False negative rate** | Real findings suppressed by FPR model | < 5 % |
+
+Compute AUROC with `sklearn.metrics.roc_auc_score`. FROC curve with `pylidc` (for LIDC-IDRI).
+
+### 20.7 What to write in your project report
+
+> *"Ground truth annotations were sourced from the KiTS23 challenge dataset, where labels were provided by board-certified radiologists. The author's contribution was designing and evaluating an automated false positive reduction classifier using these pre-existing annotations. No independent medical interpretation was performed."*
+
+Every published medical imaging ML paper says this. It is the standard framing for engineering-track work.
+
+### 20.8 Planned file structure
+
+```
+phase2_segmentation/
+  fpr_model/
+    feature_extractor.py   ← pulls features from StructuredFindings + anatomy_context
+    train.py               ← XGBoost training script, cross-validation
+    predict.py             ← scores each candidate at inference time
+    evaluate.py            ← FROC curve, AUROC, FP reduction %
+    model.pkl              ← trained artifact (not committed; generated by train.py)
+    datasets/
+      kits23_loader.py     ← loads KiTS23 masks and PRISM candidate pairs
+      lidc_loader.py       ← loads LIDC-IDRI annotations
+```
+
+The `fpr_score` field is already defined on the `Anomaly` model in `phase3_reporting/app/models.py` as an optional float. The template engine and validator will pass it through unchanged.
+
+### 20.9 Recommended execution order
+
+```
+Step 1 — Download KiTS23 (kidney) or LIDC-IDRI (lung)  ~10–20 GB
+Step 2 — Run PRISM Phase 2 on 20–50 CTs → save candidates as JSON
+Step 3 — Run evaluate.py: compare candidates vs masks → generate TP/FP labels
+Step 4 — Train XGBoost on the labelled features (train.py)
+Step 5 — Measure AUROC and FROC before/after FPR model
+Step 6 — Report: "FPR reduced false positives by X% at 80% sensitivity"
+```
+
+> [!NOTE]
+> Steps 1–6 require no medical knowledge. Step 3 is pure 3D bounding-box overlap (IoU). Step 4 is standard supervised ML. Step 5 is `sklearn` metrics.
+
+> [!TIP]
+> Start with KiTS23 — it has the simplest file structure (one NIfTI volume, one NIfTI segmentation per patient) and a Python data loader on PyPI: `pip install kits23`.

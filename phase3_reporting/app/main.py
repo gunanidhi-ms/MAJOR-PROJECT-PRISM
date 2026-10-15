@@ -1,17 +1,3 @@
-"""
-main.py
--------
-FastAPI application entry point for Phase 3 – PRISM Radiology Report Generator.
-
-Start the server
-~~~~~~~~~~~~~~~~
-    # from the phase3_reporting/ directory:
-    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-
-    # or via the helper script:
-    python -m app.main
-"""
-
 from __future__ import annotations
 
 import sys

@@ -1,23 +1,4 @@
-"""
-lifecycle_manager.py — Phase 2 Subprocess Lifecycle & RAM Watchdog
 
-Orchestrates the full Phase 2 volume-processing pipeline:
-    1. Assemble NIfTI from HU volume (volume_builder)
-    2. Run TotalSegmentator segmentation (segment_runner)
-    3. Monitor RAM throughout via psutil
-    4. Guarantee temp file cleanup on success AND failure
-    5. Log peak RAM and processing times
-
-This module is designed to run inside a multiprocessing.Process spawned
-by pipeline.py, ensuring complete memory isolation from the real-time
-Phase 1 path.
-
-Usage:
-    from phase2_segmentation.lifecycle_manager import Phase2LifecycleManager
-
-    manager = Phase2LifecycleManager(work_dir="phase2_work")
-    result = manager.run(volume, spacing, series_meta)
-"""
 
 import os
 import sys
@@ -33,7 +14,7 @@ import urllib.request
 import json
 import numpy as np
 
-# ── Silence harmless WinError 10054 in asyncio ProactorEventLoop on Windows ────
+# Silence harmless WinError 10054 on Windows asyncio ProactorEventLoop
 if sys.platform == "win32":
     try:
         import asyncio
@@ -52,7 +33,7 @@ if sys.platform == "win32":
 
 logger = logging.getLogger(__name__)
 
-# ── Constants ──────────────────────────────────────────────────────────────────
+
 
 RAM_BUDGET_GB = 3.0          # Hard ceiling for peak RAM usage
 RAM_POLL_INTERVAL_SEC = 5.0  # How often to check RAM during segmentation
@@ -258,6 +239,7 @@ class Phase2LifecycleManager:
         spacing: Tuple[float, float, float],
         series_meta: Optional[Dict[str, str]] = None,
         findings_per_slice: Optional[list] = None,
+        instance_numbers: Optional[list] = None,
     ) -> Phase2Result:
         """
         Execute the complete Phase 2 processing pipeline.
@@ -270,6 +252,10 @@ class Phase2LifecycleManager:
             spacing: (row_mm, col_mm, z_mm) from export_volume().
             series_meta: Optional dict with series_instance_uid, modality, etc.
                          from VolumeAccumulator.get_series_metadata().
+            findings_per_slice: Per-slice Phase 1 findings from VolumeAccumulator.
+            instance_numbers: Spatially-ordered DICOM instance numbers (same Z
+                order as the assembled volume). Used to build instance→z mapping
+                for the organ postfilter.
 
         Returns:
             Phase2Result with processing outcomes.
@@ -379,6 +365,31 @@ class Phase2LifecycleManager:
                 result.num_organs_detected = len(patient_stats)
                 result.region = detect_region(present_labels)
 
+                # ── Region agreement logging ──
+                # Log (phase1_guessed_region, package3_actual_region) per series
+                # so logs/region_agreement.csv accumulates a confusion matrix for
+                # empirically recalibrating _step_2B_body_region thresholds.
+                # phase1_guessed_region was captured at trigger time in pipeline.py
+                # (majority-vote across all slices) and threaded through series_meta
+                # so it survives the multiprocessing boundary.
+                phase1_guess = (series_meta or {}).get("phase1_guessed_region", "")
+                if phase1_guess:
+                    try:
+                        from phase1_ingestion.region_agreement_log import log_region_agreement
+                        log_region_agreement(
+                            series_uid=series_uid,
+                            phase1_guess=phase1_guess,
+                            package3_actual=result.region,
+                        )
+                        logger.info(
+                            "Region agreement logged: phase1='%s' vs actual='%s' "
+                            "(match=%s)",
+                            phase1_guess, result.region,
+                            phase1_guess.lower() == result.region.lower(),
+                        )
+                    except Exception as _log_err:
+                        logger.warning("Failed to log region agreement: %s", _log_err)
+
                 # Write rich patient-specific statistics and region to disk exclusively in seg_dir
                 import json
                 os.makedirs(seg_dir, exist_ok=True)
@@ -441,13 +452,111 @@ class Phase2LifecycleManager:
                     t_score_start = time.perf_counter()
                     score_candidates(candidates, result.region)
                     result.findings_path = export_findings(candidates, self._work_dir, series_meta or {}, result.region)
-                    trigger_phase3(candidates, series_meta or {})
+
+                    anatomy = None
+                    try:
+                        from phase2_segmentation.anatomy_context import build_anatomy_context
+                        anatomy = build_anatomy_context(seg_arr, cmap, spacing, candidates)
+                    except Exception as _anat_err:
+                        logger.warning(
+                            "Anatomy context failed non-fatally (report will omit "
+                            "sub-localisation / contacts): %s", _anat_err, exc_info=True,
+                        )
+
+                    trigger_phase3(
+                        candidates,
+                        series_meta or {},
+                        organ_stats=result.organ_stats,
+                        region=result.region,
+                        anatomy=anatomy,
+                    )
 
                     logger.info(
                         "Stage 5 complete (scoring + handoff): %.2fs, %d findings exported",
                         time.perf_counter() - t_score_start,
                         sum(1 for c in candidates if not c.suppressed),
                     )
+
+                    # ── Stage 6: Organ Post-Filter (Zero Hallucination Validation) ──
+                    # Uses the nnU-Net segmentation mask from Stage 2 to retroactively
+                    # validate every Phase 1 triage finding:
+                    #   a) Suppress findings outside all organ masks (fat/air/artifact)
+                    #   b) Suppress findings within normal HU range for their organ
+                    #   c) Relabel survivors with zero-hallucination labels
+                    # Broadcast the validated findings to the frontend as a retro update.
+                    try:
+                        from phase2_segmentation.organ_postfilter import (
+                            postfilter_phase1_findings,
+                            build_instance_to_z,
+                        )
+
+                        # Build {instance_number → z_index} using the spatially-ordered
+                        # instance list from export_volume() — this matches seg_arr's Z axis.
+                        ordered_instances = list(instance_numbers) if instance_numbers else []
+                        instance_to_z = build_instance_to_z(ordered_instances)
+
+                        # Restructure findings_per_slice into {instance_number: [findings]}
+                        # findings_per_slice from VolumeAccumulator is a list of
+                        # {instance_number, findings} dicts (one per slice).
+                        findings_by_inst: Dict[int, list] = {}
+                        for fs in (findings_per_slice or []):
+                            if isinstance(fs, dict):
+                                inst = fs.get("instance_number", 0)
+                                findings_by_inst[inst] = fs.get("findings", [])
+                            elif isinstance(fs, (list, tuple)) and len(fs) == 2:
+                                inst, flist = fs
+                                findings_by_inst[int(inst)] = flist
+
+                        validated_findings = postfilter_phase1_findings(
+                            findings_per_instance=findings_by_inst,
+                            instance_to_z=instance_to_z,
+                            seg_arr=seg_arr,
+                            cmap=cmap,
+                            organ_stats=patient_stats,
+                        )
+
+                        # Persist validated findings alongside other Phase 2 outputs
+                        import json as _json
+                        vf_path = os.path.join(seg_dir, "validated_phase1_findings.json")
+                        try:
+                            os.makedirs(seg_dir, exist_ok=True)
+                            with open(vf_path, "w") as _f:
+                                _json.dump(
+                                    {
+                                        str(inst): flist
+                                        for inst, flist in validated_findings.items()
+                                    },
+                                    _f, indent=2,
+                                )
+                            logger.info(
+                                "Stage 6 complete: validated Phase 1 findings saved to %s",
+                                vf_path,
+                            )
+                        except Exception as _e:
+                            logger.warning("Stage 6: failed to save validated findings: %s", _e)
+
+                        # Broadcast retroactive update to frontend
+                        _organ_validated_count = sum(
+                            1 for flist in validated_findings.values()
+                            for fd in flist
+                            if fd.get("organ_validated", False)
+                        )
+                        self._emit_event(
+                            phase="organ_postfilter",
+                            status="completed",
+                            study_id=series_uid,
+                        )
+                        logger.info(
+                            "Stage 6: %d organ-validated findings broadcast to frontend",
+                            _organ_validated_count,
+                        )
+
+                    except Exception as _pf_err:
+                        logger.warning(
+                            "Stage 6 (organ_postfilter) failed non-fatally: %s",
+                            _pf_err, exc_info=True,
+                        )
+
                 else:
                     logger.warning(
                         "Stage 4 skipped — no findings_per_slice provided to run()"
@@ -639,6 +748,91 @@ def run_phase2(
         cleanup_on_failure=False,
     )
 
-    result = manager.run(volume, spacing, series_meta, findings_per_slice=findings_per_slice)
+    result = manager.run(
+        volume,
+        spacing,
+        series_meta,
+        findings_per_slice=findings_per_slice,
+        instance_numbers=instance_numbers,
+    )
 
     return result
+
+
+def run_phase2_shm(
+    shm_name: str,
+    shape: tuple,
+    dtype_str: str,
+    findings_per_slice: list,
+    instance_numbers: list,
+    spacing: Tuple[float, float, float],
+    series_meta: Optional[Dict[str, str]] = None,
+) -> Phase2Result:
+    """
+    Shared-memory entry point for Phase 2 — called by pipeline.py on Windows.
+
+    Windows multiprocessing uses 'spawn' which pickles all Process args.
+    Pickling a 200-400 MB numpy array through a named pipe raises:
+        OSError: [Errno 22] Invalid argument — when serializing numpy.ndarray
+
+    Instead, pipeline.py writes the volume to a named SharedMemory block and
+    passes only the lightweight (shm_name, shape, dtype) metadata here.
+    This function attaches to that block, reconstructs the array in-process,
+    calls the normal Phase 2 pipeline, then unlinks the shared memory.
+
+    Args:
+        shm_name:           Name of the SharedMemory block created by the parent.
+        shape:              Volume shape tuple, e.g. (310, 512, 512).
+        dtype_str:          numpy dtype string, e.g. 'float32'.
+        findings_per_slice: Per-slice Phase 1 findings list.
+        instance_numbers:   DICOM InstanceNumbers in slice order.
+        spacing:            (row_mm, col_mm, z_mm) voxel spacing.
+        series_meta:        Optional DICOM metadata dict.
+
+    Returns:
+        Phase2Result with processing outcomes.
+    """
+    import multiprocessing.shared_memory as _shm_mod
+
+    # Configure logging for this subprocess
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [Phase2/%(name)s] %(levelname)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
+    shm = None
+    try:
+        # Attach to the shared memory block written by the parent
+        shm = _shm_mod.SharedMemory(name=shm_name, create=False)
+        volume = np.ndarray(shape, dtype=np.dtype(dtype_str), buffer=shm.buf)
+        # Make a contiguous private copy so we can safely unlink shm early
+        volume = np.array(volume, copy=True)
+    finally:
+        if shm is not None:
+            shm.close()
+            try:
+                shm.unlink()   # Release the OS segment — only call once, here
+            except Exception:
+                pass           # Already unlinked by parent (non-fatal)
+
+    logger.info(
+        "Phase 2 subprocess (shm) started: %d slices, volume shape=%s",
+        len(instance_numbers),
+        volume.shape,
+    )
+
+    manager = Phase2LifecycleManager(
+        work_dir=os.path.join("phase2_work", f"run_{int(time.time())}"),
+        ram_budget_gb=RAM_BUDGET_GB,
+        cleanup_on_success=False,
+        cleanup_on_failure=False,
+    )
+
+    return manager.run(
+        volume,
+        spacing,
+        series_meta,
+        findings_per_slice=findings_per_slice,
+        instance_numbers=instance_numbers,
+    )

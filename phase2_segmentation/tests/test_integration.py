@@ -168,7 +168,8 @@ class TestEndToEndPipeline:
                 sample_hu_volume, 
                 realistic_spacing, 
                 sample_series_metadata,
-                findings_per_slice=findings_per_slice
+                findings_per_slice=findings_per_slice,
+                instance_numbers=instance_numbers
             )
 
 
@@ -376,4 +377,4 @@ class TestPackage7Integration:
             
             for c in result.candidates:
                 if not c.suppressed:
-                    assert c.gate in {"AUTO_CONFIRMED", "MANUAL_REVIEW"}
+                    assert c.gate in {"AUTO_CONFIRMED", "MANUAL_REVIEW"}

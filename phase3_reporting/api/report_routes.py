@@ -1,18 +1,3 @@
-"""
-report_routes.py
-----------------
-FastAPI router for Phase 3 – Radiology Report Generation.
-
-Endpoints
-~~~~~~~~~
-    POST  /generate-report        Generate a draft report from findings JSON.
-    GET   /report/{study_id}      Retrieve the current draft.
-    PUT   /report/{study_id}      Radiologist edits (findings / impression).
-    POST  /sign-report            Finalise and persist a signed report.
-    GET   /health                 Liveness / Ollama status check.
-    GET   /reports                List all stored reports (admin / QA).
-"""
-
 from __future__ import annotations
 
 import logging
@@ -123,7 +108,9 @@ async def generate_report(
 
     # ── Step 3: Validation ───────────────────────────────────────────── #
     if source == "llm":
-        validation_result = validator.validate(findings, refined_text)
+        validation_result = validator.validate(
+            findings, refined_text, reference_text=template_result.findings_text
+        )
         if not validation_result.validated:
             # Reject LLM output; fall back to template
             logger.warning(

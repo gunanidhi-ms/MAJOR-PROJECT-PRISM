@@ -6,10 +6,20 @@ and validates the triage engine against expected outcomes.
 
 Usage:
     python -m phase1_ingestion.test_triage_screen
+
+RNG discipline (important):
+    Every generator accepts an explicit `rng: np.random.Generator` parameter
+    and uses ONLY that instance for randomness. No generator touches the legacy
+    global np.random state. Each test case creates a fresh Generator from the
+    same seed, so test results are hermetic — order-independent and fully
+    reproducible regardless of which tests ran before them.
 """
 
 import numpy as np
 from phase1_ingestion.triage_screen import screen_slice
+
+# Fixed seed used for every test case's Generator.
+_TEST_SEED = 42
 
 
 # --- Helpers -----------------------------------------------------------------
@@ -42,15 +52,15 @@ def make_ring(shape, center, outer_r, inner_r, value, arr):
     return ring
 
 
-def add_noise(arr, mask, mean, std):
-    """Add Gaussian noise to a region defined by mask."""
+def add_noise(arr, mask, mean, std, rng: np.random.Generator):
+    """Add Gaussian noise to a region defined by mask. Uses explicit rng only."""
     region = mask if isinstance(mask, np.ndarray) else (arr == mask)
-    arr[region] = np.random.normal(mean, std, np.sum(region)).astype(np.float32)
+    arr[region] = rng.normal(mean, std, int(np.sum(region))).astype(np.float32)
 
 
 # --- Fake CT Generators -----------------------------------------------------
 
-def gen_normal_head():
+def gen_normal_head(rng: np.random.Generator = None):
     """Normal head CT: skull ring + uniform brain parenchyma + CSF ventricles.
     
     Anatomy:
@@ -59,42 +69,48 @@ def gen_normal_head():
       - Brain parenchyma: N(35, 8) HU
       - CSF ventricles: N(8, 3) HU
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Skull ring (bone)
     make_ring((512, 512), (256, 256), (200, 180), (185, 165), 900.0, arr)
     # Brain parenchyma (fills inside skull)
     brain_mask = make_ellipse((512, 512), (256, 256), (185, 165), 35.0, arr)
-    add_noise(arr, brain_mask, 35, 8)
+    add_noise(arr, brain_mask, 35, 8, rng)
     # CSF ventricles
     vent_mask = make_ellipse((512, 512), (250, 256), (18, 30), 8.0, arr)
-    add_noise(arr, vent_mask, 8, 3)
+    add_noise(arr, vent_mask, 8, 3, rng)
     return arr
 
 
-def gen_head_hemorrhage():
+def gen_head_hemorrhage(rng: np.random.Generator = None):
     """Head CT with acute intracerebral hemorrhage (~72 HU, ~25px radius).
     
     The hemorrhage is well within the brain, at a density clearly above
     normal parenchyma (35 HU) but below bone (900 HU).
     """
-    arr = gen_normal_head()
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
+    arr = gen_normal_head(rng)
     bleed_mask = make_circle((512, 512), (220, 310), 25, 72.0, arr)
-    add_noise(arr, bleed_mask, 72, 4)
+    add_noise(arr, bleed_mask, 72, 4, rng)
     return arr
 
 
-def gen_head_massive_hemorrhage():
+def gen_head_massive_hemorrhage(rng: np.random.Generator = None):
     """Head CT with massive hemorrhage (~78 HU, ~50x45 px ellipse = ~7000px area).
     
     This represents a large parenchymal hematoma that should trigger URGENT.
     """
-    arr = gen_normal_head()
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
+    arr = gen_normal_head(rng)
     bleed_mask = make_ellipse((512, 512), (230, 300), (50, 45), 78.0, arr)
-    add_noise(arr, bleed_mask, 78, 5)
+    add_noise(arr, bleed_mask, 78, 5, rng)
     return arr
 
 
-def gen_normal_chest():
+def gen_normal_chest(rng: np.random.Generator = None):
     """Normal chest CT: body wall + bilateral lungs + mediastinum + spine.
     
     Anatomy:
@@ -104,27 +120,29 @@ def gen_normal_chest():
       - Spine: 600 HU (will be suppressed as bone)
       - Sternum: 500 HU (will be suppressed as bone)
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Body wall
     body_mask = make_ellipse((512, 512), (270, 256), (200, 220), 30.0, arr)
-    add_noise(arr, body_mask, 30, 20)
+    add_noise(arr, body_mask, 30, 20, rng)
     # Left lung
     ll_mask = make_ellipse((512, 512), (240, 160), (140, 80), -850.0, arr)
-    add_noise(arr, ll_mask, -850, 25)
+    add_noise(arr, ll_mask, -850, 25, rng)
     # Right lung
     rl_mask = make_ellipse((512, 512), (240, 350), (140, 80), -850.0, arr)
-    add_noise(arr, rl_mask, -850, 25)
+    add_noise(arr, rl_mask, -850, 25, rng)
     # Spine
     make_ellipse((512, 512), (380, 256), (20, 18), 600.0, arr)
     # Sternum
     make_rect(arr, 80, 110, 250, 262, 500.0)
     # Heart
     heart_mask = make_ellipse((512, 512), (280, 240), (50, 55), 50.0, arr)
-    add_noise(arr, heart_mask, 50, 10)
+    add_noise(arr, heart_mask, 50, 10, rng)
     return arr
 
 
-def gen_chest_with_pneumothorax():
+def gen_chest_with_pneumothorax(rng: np.random.Generator = None):
     """Chest CT with right-sided pneumothorax (air in pleural space).
     
     Key: The PTX crescent must be physically SEPARATED from the lung by
@@ -133,27 +151,29 @@ def gen_chest_with_pneumothorax():
       2. Filling the gap between the old and new lung boundary with soft tissue
       3. Placing PTX air OUTSIDE this soft tissue barrier
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     yy, xx = np.ogrid[:512, :512]
     
     # Body wall
     body_mask = make_ellipse((512, 512), (270, 256), (200, 220), 30.0, arr)
-    add_noise(arr, body_mask, 30, 20)
+    add_noise(arr, body_mask, 30, 20, rng)
     
     # Left lung (normal, full size)
     ll_mask = make_ellipse((512, 512), (240, 160), (140, 80), -850.0, arr)
-    add_noise(arr, ll_mask, -850, 25)
+    add_noise(arr, ll_mask, -850, 25, rng)
     
     # Right lung (SMALLER -- collapsed due to PTX)
     rl_mask = make_ellipse((512, 512), (240, 350), (120, 60), -850.0, arr)
-    add_noise(arr, rl_mask, -850, 25)
+    add_noise(arr, rl_mask, -850, 25, rng)
     
     # Visceral pleura: thick band of soft tissue around the collapsed right lung
     # This MUST be thick enough (>= 8px) to break air connectivity at the -500 HU threshold
     pleura_outer = ((yy - 240) / 128.0) ** 2 + ((xx - 350) / 68.0) ** 2 <= 1
     pleura_inner = ((yy - 240) / 120.0) ** 2 + ((xx - 350) / 60.0) ** 2 <= 1
     pleura_band = pleura_outer & ~pleura_inner
-    arr[pleura_band] = np.random.normal(30, 5, np.sum(pleura_band)).astype(np.float32)
+    arr[pleura_band] = rng.normal(30, 5, int(np.sum(pleura_band))).astype(np.float32)
     
     # PTX crescent: air OUTSIDE the pleural barrier, INSIDE the body wall
     # Only on the right (anterior-lateral) side, NOT touching the pleura
@@ -165,18 +185,18 @@ def gen_chest_with_pneumothorax():
     # CRITICAL: Ensure PTX does not bleed outside the body wall into background air
     body_wall_inner = ((yy - 270) / 190.0) ** 2 + ((xx - 256) / 210.0) ** 2 <= 1
     ptx_region = ptx_region & body_wall_inner
-    arr[ptx_region] = np.random.normal(-960, 8, np.sum(ptx_region)).astype(np.float32)
+    arr[ptx_region] = rng.normal(-960, 8, int(np.sum(ptx_region))).astype(np.float32)
     
     # Spine and sternum
     make_ellipse((512, 512), (380, 256), (20, 18), 600.0, arr)
     make_rect(arr, 80, 110, 250, 262, 500.0)
     # Heart
     heart_mask = make_ellipse((512, 512), (280, 240), (50, 55), 50.0, arr)
-    add_noise(arr, heart_mask, 50, 10)
+    add_noise(arr, heart_mask, 50, 10, rng)
     return arr
 
 
-def gen_normal_abdomen():
+def gen_normal_abdomen(rng: np.random.Generator = None):
     """Normal abdomen CT: body wall + fat ring + internal organs + bowel gas.
     
     Anatomy:
@@ -187,13 +207,15 @@ def gen_normal_abdomen():
       - Spine: 650 HU (bone, will be suppressed)
       - Small bowel gas pockets: -300 to -400 HU (normal, compact, should be suppressed)
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Body
     body_mask = make_ellipse((512, 512), (256, 256), (210, 200), 45.0, arr)
-    add_noise(arr, body_mask, 45, 15)
+    add_noise(arr, body_mask, 45, 15, rng)
     # Fat ring
     fat_ring = make_ring((512, 512), (256, 256), (210, 200), (195, 185), -80.0, arr)
-    add_noise(arr, fat_ring, -80, 15)
+    add_noise(arr, fat_ring, -80, 15, rng)
     # Liver
     make_ellipse((512, 512), (230, 340), (60, 70), 60.0, arr)
     # Spleen
@@ -207,7 +229,7 @@ def gen_normal_abdomen():
     return arr
 
 
-def gen_abdomen_with_free_air():
+def gen_abdomen_with_free_air(rng: np.random.Generator = None):
     """Abdomen CT with pathological free air (pneumoperitoneum).
     
     Free air rises to non-dependent areas and is characteristically:
@@ -217,7 +239,9 @@ def gen_abdomen_with_free_air():
     
     This should NOT be suppressed by the bowel gas filter.
     """
-    arr = gen_normal_abdomen()
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
+    arr = gen_normal_abdomen(rng)
     # Large crescent of free air deep inside the body (well past dist>15 boundary)
     # at y=100-130 (well within the body ellipse which extends to ~y=46)
     # This ensures dist > 15 so it enters the air analysis path
@@ -227,16 +251,18 @@ def gen_abdomen_with_free_air():
     return arr
 
 
-def gen_normal_pelvis():
+def gen_normal_pelvis(rng: np.random.Generator = None):
     """Normal pelvis CT: pelvic bones + bladder + rectum.
     
     Key: Pelvic bones are large but should be completely suppressed
     by the bone threshold + dilation. Rectal gas is expected.
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Body
     body_mask = make_ellipse((512, 512), (256, 256), (200, 220), 40.0, arr)
-    add_noise(arr, body_mask, 40, 12)
+    add_noise(arr, body_mask, 40, 12, rng)
     # Pelvic bones (bilateral iliac crests)
     make_ellipse((512, 512), (256, 130), (80, 30), 700.0, arr)
     make_ellipse((512, 512), (256, 380), (80, 30), 700.0, arr)
@@ -244,13 +270,13 @@ def gen_normal_pelvis():
     make_ellipse((512, 512), (360, 256), (25, 30), 700.0, arr)
     # Bladder (fluid-filled)
     blad_mask = make_ellipse((512, 512), (230, 256), (40, 45), 15.0, arr)
-    add_noise(arr, blad_mask, 15, 5)
+    add_noise(arr, blad_mask, 15, 5, rng)
     # Rectal gas (normal, compact, small)
     make_circle((512, 512), (310, 256), 10, -300.0, arr)
     return arr
 
 
-def gen_neck():
+def gen_neck(rng: np.random.Generator = None):
     """Normal neck CT: spine + trachea + pharynx + soft tissue.
     
     Key characteristics that distinguish neck from abdomen:
@@ -258,10 +284,12 @@ def gen_neck():
       - Central airway (trachea/pharynx)
       - Small cervical spine
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Small oval body (much smaller than abdomen/chest)
     body_mask = make_ellipse((512, 512), (256, 256), (100, 85), 40.0, arr)
-    add_noise(arr, body_mask, 40, 10)
+    add_noise(arr, body_mask, 40, 10, rng)
     # Cervical spine (small)
     make_ellipse((512, 512), (305, 256), (12, 11), 700.0, arr)
     # Trachea (central air)
@@ -271,26 +299,30 @@ def gen_neck():
     return arr
 
 
-def gen_extremity():
+def gen_extremity(rng: np.random.Generator = None):
     """Normal extremity (femur cross-section): cortical bone + marrow + muscle.
     
     Small limb cross-section with bone ring and marrow cavity.
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Muscle
     muscle_mask = make_circle((512, 512), (256, 256), 80, 50.0, arr)
-    add_noise(arr, muscle_mask, 50, 12)
+    add_noise(arr, muscle_mask, 50, 12, rng)
     # Cortical bone ring
     make_ring((512, 512), (256, 256), (20, 20), (12, 12), 900.0, arr)
     # Medullary cavity (bone marrow)
     marrow_mask = make_circle((512, 512), (256, 256), 12, 30.0, arr)
-    add_noise(arr, marrow_mask, 30, 8)
+    add_noise(arr, marrow_mask, 30, 8, rng)
     return arr
 
 
-def gen_contrast_enhanced_abdomen():
+def gen_contrast_enhanced_abdomen(rng: np.random.Generator = None):
     """Contrast-enhanced abdomen: enhanced vessels and kidneys (150-250 HU)."""
-    arr = gen_normal_abdomen()
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
+    arr = gen_normal_abdomen(rng)
     # Aorta (enhanced)
     make_circle((512, 512), (300, 256), 12, 200.0, arr)
     # Kidney cortices (enhanced)
@@ -299,52 +331,60 @@ def gen_contrast_enhanced_abdomen():
     return arr
 
 
-def gen_spine_only():
+def gen_spine_only(rng: np.random.Generator = None):
     """Spine-focused CT: vertebral body + cortical shell + spinal canal."""
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Paraspinal muscles
     body_mask = make_ellipse((512, 512), (256, 256), (150, 120), 45.0, arr)
-    add_noise(arr, body_mask, 45, 12)
+    add_noise(arr, body_mask, 45, 12, rng)
     # Vertebral body (all bone at uniform density so threshold catches it)
     make_ellipse((512, 512), (300, 256), (30, 25), 900.0, arr)
     # Spinal canal (CSF)
     canal_mask = make_circle((512, 512), (310, 256), 8, 10.0, arr)
-    add_noise(arr, canal_mask, 10, 3)
+    add_noise(arr, canal_mask, 10, 3, rng)
     # Spinous process (same bone density)
     make_rect(arr, 325, 370, 252, 260, 900.0)
     return arr
 
 
-def gen_completely_uniform():
+def gen_completely_uniform(rng: np.random.Generator = None):
     """Perfectly uniform slice -- should never flag anything."""
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     body_mask = make_ellipse((512, 512), (256, 256), (200, 200), 40.0, arr)
-    add_noise(arr, body_mask, 40, 5)
+    add_noise(arr, body_mask, 40, 5, rng)
     return arr
 
 
-def gen_high_noise_slice():
+def gen_high_noise_slice(rng: np.random.Generator = None):
     """High-noise (low-dose) reconstruction -- noise should NOT flag."""
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     body_mask = make_ellipse((512, 512), (256, 256), (200, 200), 40.0, arr)
-    add_noise(arr, body_mask, 40, 40)
+    add_noise(arr, body_mask, 40, 40, rng)
     return arr
 
 
-def gen_chest_with_trachea():
+def gen_chest_with_trachea(rng: np.random.Generator = None):
     """Upper chest with prominent trachea + main bronchi.
     
     All airways should be suppressed as expected chest anatomy.
     """
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
     arr = np.full((512, 512), -1024.0, dtype=np.float32)
     # Body
     body_mask = make_ellipse((512, 512), (270, 256), (190, 210), 30.0, arr)
-    add_noise(arr, body_mask, 30, 18)
+    add_noise(arr, body_mask, 30, 18, rng)
     # Large bilateral lungs (> 25% body area for chest auto-detection)
     ll_mask = make_ellipse((512, 512), (240, 160), (130, 75), -850.0, arr)
-    add_noise(arr, ll_mask, -850, 25)
+    add_noise(arr, ll_mask, -850, 25, rng)
     rl_mask = make_ellipse((512, 512), (240, 350), (130, 75), -850.0, arr)
-    add_noise(arr, rl_mask, -850, 25)
+    add_noise(arr, rl_mask, -850, 25, rng)
     # Trachea
     make_circle((512, 512), (260, 256), 12, -950.0, arr)
     # Main bronchi (smaller, branching left and right)
@@ -355,16 +395,18 @@ def gen_chest_with_trachea():
     return arr
 
 
-def gen_abdomen_multiple_bowel_gas():
+def gen_abdomen_multiple_bowel_gas(rng: np.random.Generator = None):
     """Abdomen with many (10+) small bowel gas pockets -- all should be suppressed."""
-    arr = gen_normal_abdomen()
+    if rng is None:
+        rng = np.random.default_rng(_TEST_SEED)
+    arr = gen_normal_abdomen(rng)
     gas_positions = [
         (200, 220, 6), (220, 300, 7), (250, 190, 5), (280, 330, 8),
         (300, 200, 4), (310, 270, 6), (320, 310, 5), (260, 240, 7),
         (340, 280, 4), (250, 350, 5), (290, 180, 6),
     ]
     for cy, cx, r in gas_positions:
-        make_circle((512, 512), (cy, cx), r, np.random.uniform(-400, -250), arr)
+        make_circle((512, 512), (cy, cx), r, rng.uniform(-400, -250), arr)
     return arr
 
 
@@ -449,16 +491,15 @@ TEST_CASES = [
              "Free intraperitoneal air (<-800 HU). Large free air triggers urgent."),
     
     TestCase("Pneumothorax", gen_chest_with_pneumothorax, "CHEST",
-             "WATCH", (1, 5),
-             "Right-sided PTX crescent, separated from lung by pleural line."),
+             "URGENT REVIEW", (1, 5),
+             "Right-sided PTX crescent, separated from lung by pleural line. "
+             "Detected by both old and new code at score=50 with seed=42."),
 ]
 
 
 # --- Test Runner --------------------------------------------------------------
 
 def run_all_tests():
-    np.random.seed(42)
-    
     passed = 0
     failed = 0
     results = []
@@ -469,8 +510,11 @@ def run_all_tests():
     print()
     
     for tc in TEST_CASES:
-        np.random.seed(42)  # reproducible per test
-        hu_array = tc.generator()
+        # Each test creates a FRESH Generator from the fixed seed.
+        # Results are hermetic: independent of test-case ordering and of
+        # any other RNG consumption anywhere in the process.
+        rng = np.random.default_rng(_TEST_SEED)
+        hu_array = tc.generator(rng)
         result = screen_slice(hu_array, slice_id=0, body_part_hint=tc.hint)
         
         # Check action

@@ -62,6 +62,7 @@ export default function Generate() {
   const [loading, setLoading] = useState(false);
   const [loadingCase, setLoadingCase] = useState(false);
   const [pipelineActive, setPipelineActive] = useState(-1);
+  const [clinicalIndication, setClinicalIndication] = useState('');
 
   const loadCase = useCallback(async (caseId: string) => {
     setSelectedCase(caseId);
@@ -124,6 +125,12 @@ export default function Generate() {
     }, 700);
 
     try {
+      // Inject the free-text clinical indication if provided; it overrides the
+      // DICOM-derived value from Phase 1.  Left blank → existing indication preserved.
+      if (clinicalIndication.trim()) {
+        payload = { ...payload, indication: clinicalIndication.trim() };
+      }
+
       const result = await prismApi.generateReport(payload);
       clearInterval(stageInterval);
       setPipelineActive(2);
@@ -287,7 +294,38 @@ export default function Generate() {
               </p>
             )}
 
-            <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+            {/* Clinical Indication override */}
+            <div style={{ marginBottom: 16 }}>
+              <label
+                htmlFor="clinical-indication"
+                style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#94a3b8',
+                  textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}
+              >
+                Clinical Indication
+                <span style={{ fontWeight: 400, textTransform: 'none', color: '#334155', marginLeft: 6 }}>
+                  (overrides DICOM header — leave blank to use header value)
+                </span>
+              </label>
+              <input
+                id="clinical-indication"
+                type="text"
+                value={clinicalIndication}
+                onChange={(e) => setClinicalIndication(e.target.value)}
+                placeholder="e.g. right flank pain, haematuria, follow-up post nephrectomy…"
+                style={{
+                  width: '100%', boxSizing: 'border-box',
+                  padding: '10px 14px', fontSize: 13,
+                  color: '#e2e8f0', background: '#060b12',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: 8, outline: 'none',
+                  transition: 'border-color 200ms ease',
+                }}
+                onFocus={(e) => (e.target.style.borderColor = 'rgba(0,212,255,0.4)')}
+                onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.07)')}
+              />
+            </div>
+
+            <div style={{ marginTop: 4, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
               <Button
                 onClick={generateReport}
                 loading={loading}
